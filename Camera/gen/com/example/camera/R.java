@@ -8,7 +8,21 @@
 package com.example.camera;
 
 public final class R {
+    public static final class anim {
+        public static final int tempview_show=0x7f040000;
+    }
     public static final class attr {
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int animat_id=0x7f010000;
+    }
+    public static final class color {
+        public static final int main_menu_bg=0x7f050000;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -17,25 +31,69 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
+        public static final int bottom_bar_height=0x7f060003;
+        public static final int shutter_bottom_size=0x7f060005;
+        public static final int thumbnail_imageview_size=0x7f060002;
+        public static final int top_menu_bar_height=0x7f060004;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int btn_camera_all=0x7f020000;
+        public static final int btn_camera_all_click=0x7f020001;
+        public static final int btn_shutter=0x7f020002;
+        public static final int have_new_effect_flag=0x7f020003;
+        public static final int ic_camera_top_bar_flash_off_normal=0x7f020004;
+        public static final int ic_camera_top_bar_my_center=0x7f020005;
+        public static final int ic_camera_top_bar_my_center_normal=0x7f020006;
+        public static final int ic_camera_top_bar_my_center_pressed=0x7f020007;
+        public static final int ic_camera_top_bar_setting=0x7f020008;
+        public static final int ic_camera_top_bar_setting_click=0x7f020009;
+        public static final int ic_camera_top_bar_setting_normal=0x7f02000a;
+        public static final int ic_camera_top_bar_sw_camera=0x7f02000b;
+        public static final int ic_camera_top_bar_sw_camera_click=0x7f02000c;
+        public static final int ic_camera_top_bar_sw_camera_normal=0x7f02000d;
+        public static final int ic_launcher=0x7f02000e;
+        public static final int icon_modebtn=0x7f02000f;
+        public static final int setbar_bg=0x7f020010;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int FrameLayout1=0x7f0a0000;
+        public static final int action_settings=0x7f0a000a;
+        public static final int btn_other=0x7f0a0004;
+        public static final int btn_shutter=0x7f0a0003;
+        public static final int btn_thumbnail=0x7f0a0002;
+        public static final int container=0x7f0a0001;
+        public static final int sony_btn_cloud_home=0x7f0a0005;
+        public static final int sony_btn_flash_mode=0x7f0a0008;
+        public static final int sony_btn_other_setting=0x7f0a0009;
+        public static final int sony_btn_switch_camera=0x7f0a0007;
+        public static final int sony_img_mode_function_new_red_point=0x7f0a0006;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
+        public static final int camera=0x7f030000;
+        public static final int camera_bottom_bar=0x7f030001;
+        public static final int camera_top_bar=0x7f030002;
     }
     public static final class menu {
-        public static final int main=0x7f070000;
+        public static final int main=0x7f090000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        /**  存储文件文件夹 
+         */
+        public static final int Files=0x7f070003;
+        /**  图像文件夹 
+         */
+        public static final int Image=0x7f070004;
+        /**  缩略图文件夹 
+         */
+        public static final int Thumbnail=0x7f070005;
+        /**  视频文件夹 
+         */
+        public static final int Vedio=0x7f070006;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int hello_world=0x7f070002;
     }
     public static final class style {
         /** 
@@ -59,10 +117,39 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f080001;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a TempImageView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #TempImageView_animat_id com.example.camera:animat_id}</code></td><td></td></tr>
+           </table>
+           @see #TempImageView_animat_id
+         */
+        public static final int[] TempImageView = {
+            0x7f010000
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.camera.R.attr#animat_id}
+          attribute's value can be found in the {@link #TempImageView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.camera:animat_id
+        */
+        public static final int TempImageView_animat_id = 0;
+    };
 }

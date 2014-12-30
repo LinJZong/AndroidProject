@@ -3,5 +3,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="thumbnail_imageview_size">41.0dip</dimen>
+    <dimen name="bottom_bar_height">75.0dip</dimen>
+    <dimen name="top_menu_bar_height">45.0dip</dimen>
+    <dimen name="shutter_bottom_size">62.0dip</dimen>
 
 </resources>

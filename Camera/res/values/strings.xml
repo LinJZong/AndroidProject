@@ -4,5 +4,13 @@
     <string name="app_name">Camera</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <!-- 存储文件文件夹 -->
+    <string name="Files">Files</string>
+    <!-- 图像文件夹 -->
+    <string name="Image">Image</string>
+    <!-- 缩略图文件夹 -->
+    <string name="Thumbnail">Thumbnail/</string>
+    <!-- 视频文件夹 -->
+    <string name="Vedio">Vedio</string>
 
 </resources>
