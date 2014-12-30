@@ -95,7 +95,6 @@ public class CameraAty extends Activity implements View.OnClickListener{
 		case R.id.btn_shutter:
 			view.setClickable(false);
 			container.takePicture();
-			System.out.println();
 			break;
 		case R.id.btn_thumbnail:
 
