@@ -1,6 +1,7 @@
 package com.linj.camera.view;
 
 import com.example.camera.R;
+import com.linj.camera.view.CameraContainer.TakePictureListener;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,12 +12,18 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 
-/**
- * 临时ImageView，在执行完一个动画后自动隐藏
- * @author linj
- *
- */
+
+/** 
+* @ClassName: TempImageView 
+* @Description:   临时ImageView，在执行完一个动画后自动隐藏
+* @author LinJ
+* @date 2014-12-31 上午9:45:34 
+*  
+*/
 public class TempImageView extends ImageView implements AnimationListener{
+	
+	private final static String TAG="TempImageView";
+	
 	/**
 	 * 不存在的动画ID
 	 */
@@ -24,9 +31,11 @@ public class TempImageView extends ImageView implements AnimationListener{
 	/**
 	 * 设置的动画效果ID
 	 */
-	private int animatID=NO_ID;
+	private int mAnimationID=NO_ID;
 
-
+    /** 拍照动作监听接口  */ 
+    private TakePictureListener mListener;
+	
 	public TempImageView(Context context) {
 		// TODO Auto-generated constructor stub
 		super(context);
@@ -35,7 +44,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 	public TempImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TempImageView);
-		animatID = a.getResourceId(R.styleable.TempImageView_animat_id, NO_ID);
+		mAnimationID = a.getResourceId(R.styleable.TempImageView_animat_id, NO_ID);
 		a.recycle();
 		setVisibility(View.GONE);
 	}
@@ -50,6 +59,8 @@ public class TempImageView extends ImageView implements AnimationListener{
 	public void onAnimationEnd(Animation animation) {
 		// TODO Auto-generated method stub
 		setVisibility(View.GONE);
+		//相机监听接口不为空，则执行拍照结束操作
+		if (mListener!=null) mListener.onAnimtionEnd();
 	}
 
 	@Override
@@ -58,31 +69,44 @@ public class TempImageView extends ImageView implements AnimationListener{
 
 	}
 
-	/**
-	 * 开始动画
-	 */
+	
+	/**  
+	* @Description: 开始动画
+	* @param    
+	* @return void    
+	* @throws 
+	*/
 	public void startAnimation(){
 		startAnimation(null);
 	}
 
 
+	/** 
+	* @Description: 开始动画
+	* @param @param resourceID 动画资源的ID  
+	* @return void    
+	* @throws 
+	*/
 	public void startAnimation(int resourceID){
-		animatID=resourceID;
+		mAnimationID=resourceID;
 		startAnimation();
 	}
-	/**
-	 * 开始动画
-	 */
+	
 	public void startAnimation(Animation animation){
 		if(animation!=null){
 			animation.setAnimationListener(this);
 			super.startAnimation(animation);
 			return;
 		}
-		if(animatID!=NO_ID){
-			animation=AnimationUtils.loadAnimation(getContext(), animatID);
+		if(mAnimationID!=NO_ID){
+			animation=AnimationUtils.loadAnimation(getContext(), mAnimationID);
 			animation.setAnimationListener(this);
 			super.startAnimation(animation);
 		}
+	}
+
+
+	public void setListener(TakePictureListener mListener) {
+		this.mListener = mListener;
 	}
 }

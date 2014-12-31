@@ -9,7 +9,8 @@ package com.example.camera;
 
 public final class R {
     public static final class anim {
-        public static final int tempview_show=0x7f040000;
+        public static final int focusview_show=0x7f040000;
+        public static final int tempview_show=0x7f040001;
     }
     public static final class attr {
         /** <p>Must be an integer value, such as "<code>100</code>".
@@ -41,34 +42,47 @@ containing a value of this type.
     public static final class drawable {
         public static final int btn_camera_all=0x7f020000;
         public static final int btn_camera_all_click=0x7f020001;
-        public static final int btn_shutter=0x7f020002;
-        public static final int have_new_effect_flag=0x7f020003;
-        public static final int ic_camera_top_bar_flash_off_normal=0x7f020004;
-        public static final int ic_camera_top_bar_my_center=0x7f020005;
-        public static final int ic_camera_top_bar_my_center_normal=0x7f020006;
-        public static final int ic_camera_top_bar_my_center_pressed=0x7f020007;
-        public static final int ic_camera_top_bar_setting=0x7f020008;
-        public static final int ic_camera_top_bar_setting_click=0x7f020009;
-        public static final int ic_camera_top_bar_setting_normal=0x7f02000a;
-        public static final int ic_camera_top_bar_sw_camera=0x7f02000b;
-        public static final int ic_camera_top_bar_sw_camera_click=0x7f02000c;
-        public static final int ic_camera_top_bar_sw_camera_normal=0x7f02000d;
-        public static final int ic_launcher=0x7f02000e;
-        public static final int icon_modebtn=0x7f02000f;
-        public static final int setbar_bg=0x7f020010;
+        public static final int btn_flash_auto=0x7f020002;
+        public static final int btn_flash_off=0x7f020003;
+        public static final int btn_flash_on=0x7f020004;
+        public static final int btn_flash_torch=0x7f020005;
+        public static final int btn_shutter=0x7f020006;
+        public static final int focus=0x7f020007;
+        public static final int focus_succeed=0x7f020008;
+        public static final int have_new_effect_flag=0x7f020009;
+        public static final int ic_camera_top_bar_flash_auto_click=0x7f02000a;
+        public static final int ic_camera_top_bar_flash_auto_normal=0x7f02000b;
+        public static final int ic_camera_top_bar_flash_off_click=0x7f02000c;
+        public static final int ic_camera_top_bar_flash_off_normal=0x7f02000d;
+        public static final int ic_camera_top_bar_flash_on_click=0x7f02000e;
+        public static final int ic_camera_top_bar_flash_on_normal=0x7f02000f;
+        public static final int ic_camera_top_bar_flash_torch_click=0x7f020010;
+        public static final int ic_camera_top_bar_flash_torch_normal=0x7f020011;
+        public static final int ic_camera_top_bar_my_center=0x7f020012;
+        public static final int ic_camera_top_bar_my_center_normal=0x7f020013;
+        public static final int ic_camera_top_bar_my_center_pressed=0x7f020014;
+        public static final int ic_camera_top_bar_setting=0x7f020015;
+        public static final int ic_camera_top_bar_setting_click=0x7f020016;
+        public static final int ic_camera_top_bar_setting_normal=0x7f020017;
+        public static final int ic_camera_top_bar_sw_camera=0x7f020018;
+        public static final int ic_camera_top_bar_sw_camera_click=0x7f020019;
+        public static final int ic_camera_top_bar_sw_camera_normal=0x7f02001a;
+        public static final int ic_launcher=0x7f02001b;
+        public static final int icon_modebtn=0x7f02001c;
+        public static final int setbar_bg=0x7f02001d;
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
         public static final int action_settings=0x7f0a000a;
+        public static final int btn_cloud_home=0x7f0a0005;
+        public static final int btn_flash_mode=0x7f0a0008;
         public static final int btn_other=0x7f0a0004;
+        public static final int btn_other_setting=0x7f0a0009;
         public static final int btn_shutter=0x7f0a0003;
+        public static final int btn_switch_camera=0x7f0a0007;
         public static final int btn_thumbnail=0x7f0a0002;
         public static final int container=0x7f0a0001;
-        public static final int sony_btn_cloud_home=0x7f0a0005;
-        public static final int sony_btn_flash_mode=0x7f0a0008;
-        public static final int sony_btn_other_setting=0x7f0a0009;
-        public static final int sony_btn_switch_camera=0x7f0a0007;
-        public static final int sony_img_mode_function_new_red_point=0x7f0a0006;
+        public static final int img_mode_function_new_red_point=0x7f0a0006;
     }
     public static final class layout {
         public static final int camera=0x7f030000;

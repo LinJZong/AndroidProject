@@ -5,6 +5,7 @@
     android:layout_alignParentBottom="true"
     android:background="@color/main_menu_bg"
     android:baselineAligned="false"
+    android:clickable="true"
     android:gravity="center"
     android:orientation="horizontal"
     android:weightSum="5.0" >

@@ -5,6 +5,7 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
     android:background="@color/main_menu_bg"
+    android:clickable="true"
     android:orientation="horizontal" >
 
     <RelativeLayout
@@ -14,19 +15,21 @@
         android:gravity="center" >
 
         <ImageView
-            android:id="@+id/sony_btn_cloud_home"
+            android:id="@+id/btn_cloud_home"
             android:layout_width="@dimen/top_menu_bar_height"
             android:layout_height="fill_parent"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/ic_camera_top_bar_my_center" />
 
         <ImageView
-            android:id="@+id/sony_img_mode_function_new_red_point"
+            android:id="@+id/img_mode_function_new_red_point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/sony_btn_cloud_home"
+            android:layout_alignRight="@id/btn_cloud_home"
             android:layout_marginRight="5.0dip"
             android:layout_marginTop="9.0dip"
-            android:background="@drawable/have_new_effect_flag" />
+            android:background="@drawable/have_new_effect_flag"
+            android:contentDescription="@string/app_name" />
     </RelativeLayout>
 
     <View
@@ -35,24 +38,27 @@
         android:layout_weight="1.0" />
 
     <ImageView
-        android:id="@+id/sony_btn_switch_camera"
+        android:id="@+id/btn_switch_camera"
         android:layout_width="44.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-         android:src="@drawable/ic_camera_top_bar_sw_camera"  />
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_camera_top_bar_sw_camera" />
 
     <ImageView
-        android:id="@+id/sony_btn_flash_mode"
+        android:id="@+id/btn_flash_mode"
         android:layout_width="44.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-         android:src="@drawable/ic_camera_top_bar_flash_off_normal" />
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_flash_off" />
 
     <ImageView
-        android:id="@+id/sony_btn_other_setting"
+        android:id="@+id/btn_other_setting"
         android:layout_width="44.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/ic_camera_top_bar_setting" />
 
 </LinearLayout>

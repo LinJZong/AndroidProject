@@ -14,13 +14,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 
-/**
- * 文件操作工具类
- * @author linj
- *
- */
-
+/** 
+* @ClassName: FileOperateUtil 
+* @Description:  文件操作工具类
+* @author LinJ
+* @date 2014-12-31 上午9:44:38 
+*  
+*/
 public class FileOperateUtil {
+	private final static String TAG="FileOperateUtil";
 
 	public final static int ROOT=0;//根目录
 	public final static int TYPE_IMAGE=1;//图片
