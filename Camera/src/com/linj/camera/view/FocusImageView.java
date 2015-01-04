@@ -3,6 +3,7 @@ package com.linj.camera.view;
 import com.example.camera.R;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,15 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.RelativeLayout;
 
+/** 
+* @ClassName: FocusImageView 
+* @Description:聚焦时显示的ImagView  
+* @author LinJ
+* @date 2015-1-4 下午2:55:34 
+*  
+*/
 public class FocusImageView extends ImageView implements AnimationListener{
 	private static final int NO_ID=-1;
 	private int mFocusImg=NO_ID;
@@ -31,13 +40,13 @@ public class FocusImageView extends ImageView implements AnimationListener{
 	 *  @param x 触屏的x坐标
 	 *  @param y 触屏的y坐标
 	 */
-	public void show(float  x,float y){
+	public void show(Point point){
 		if (mFocusImg==NO_ID||mFocusSucceedImg==NO_ID) 
 			throw new RuntimeException("Animation is null");
 		//根据触摸的坐标设置聚焦图案的位置
-		FrameLayout.LayoutParams params=(LayoutParams) getLayoutParams();
-		params.topMargin=(int) y-getHeight()/2;
-		params.leftMargin=(int) x-getWidth()/2;
+		RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams) getLayoutParams();
+		params.topMargin= point.y-getHeight()/2;
+		params.leftMargin=point.x-getWidth()/2;
 		setLayoutParams(params);	
 		//设置控件可见，并开始动画
 		setVisibility(View.VISIBLE);
@@ -69,17 +78,7 @@ public class FocusImageView extends ImageView implements AnimationListener{
 	@Override
 	public void onAnimationEnd(Animation animation) {
 		// TODO Auto-generated method stub
-		setImageResource(mFocusSucceedImg);
 		
-		//1秒后隐藏View
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				setVisibility(View.GONE);
-			}
-		}, 1000);
 		
 	}
 

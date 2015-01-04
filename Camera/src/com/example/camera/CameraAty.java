@@ -1,15 +1,19 @@
 package com.example.camera;
 
 import java.io.File;
+import java.util.List;
 
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -47,6 +51,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		mThumbButton.setOnClickListener(this);
 		mShutterButton.setOnClickListener(this);
 		mFlashView.setOnClickListener(this);
+		
 
 		mSaveRoot="test";
 		mContainer.setRootPath(mSaveRoot);
@@ -58,11 +63,13 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	 */
 	private void initThumbnail() {
 		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, mSaveRoot);
-		File[] files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
-		if(files!=null&&files.length>0){
-			Bitmap thumbBitmap=BitmapFactory.decodeFile(files[files.length-1].getAbsolutePath());
+		List<File> files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
+		if(files!=null&&files.size()>0){
+			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(files.size()-1).getAbsolutePath());
 			if(thumbBitmap!=null)
 				mThumbButton.setImageBitmap(thumbBitmap);
+		}else {
+			mThumbButton.setImageBitmap(null);
 		}
 
 	}
@@ -76,13 +83,14 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			mContainer.takePicture(this);
 			break;
 		case R.id.btn_thumbnail:
-
+			Log.i(TAG,findViewById(R.id.testl).getHeight()+"");
+            //startActivity(new Intent(this,TestActivity.class));
 			break;
 		case R.id.btn_flash_mode:
-			if(mContainer.getFlashMode()==FlashMode.OFF){
-				mContainer.setFlashMode(FlashMode.ON);
-				mFlashView.setImageResource(R.drawable.btn_flash_on);
-			}else if (mContainer.getFlashMode()==FlashMode.ON) {
+			if(mContainer.getFlashMode()==FlashMode.ON){
+				mContainer.setFlashMode(FlashMode.OFF);
+				mFlashView.setImageResource(R.drawable.btn_flash_off);
+			}else if (mContainer.getFlashMode()==FlashMode.OFF) {
 				mContainer.setFlashMode(FlashMode.AUTO);
 				mFlashView.setImageResource(R.drawable.btn_flash_auto);
 			}
@@ -91,8 +99,8 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				mFlashView.setImageResource(R.drawable.btn_flash_torch);
 			}
 			else if (mContainer.getFlashMode()==FlashMode.TORCH) {
-				mContainer.setFlashMode(FlashMode.OFF);
-				mFlashView.setImageResource(R.drawable.btn_flash_off);
+				mContainer.setFlashMode(FlashMode.ON);
+				mFlashView.setImageResource(R.drawable.btn_flash_on);
 			}
 			break;
 		default:
@@ -101,13 +109,21 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	}
 
 	@Override
-	public void onTakePictureEnd() {
+	public void onTakePictureEnd(Bitmap thumBitmap) {
 		mShutterButton.setClickable(true);	
 	}
 
 	@Override
-	public void onAnimtionEnd() {
-		//÷ÿ÷√Àı¬‘Õº
-		initThumbnail();
+	public void onAnimtionEnd(Bitmap bm) {
+		if(bm!=null){
+			//…˙≥…Àı¬‘Õº
+			Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
+			mThumbButton.setImageBitmap(thumbnail);
+		}
+	}
+	
+	@Override
+	protected void onResume() {		
+		super.onResume();
 	}
 }

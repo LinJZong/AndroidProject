@@ -7,7 +7,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -64,21 +69,21 @@ public class FileOperateUtil {
 	}
 
 	/**
-	 * 获取目标文件夹内指定后缀名的文件数组
+	 * 获取目标文件夹内指定后缀名的文件数组,按照修改日期排序
 	 * @param file 目标文件夹路径
 	 * @param format 指定后缀名
 	 * @return
 	 */
-	public static File[] listFiles(String file,final String format){
+	public static List<File> listFiles(String file,final String format){
 		return listFiles(new File(file), format);
 	}
 	/**
-	 * 获取目标文件夹内指定后缀名的文件数组
+	 * 获取目标文件夹内指定后缀名的文件数组,按照修改日期排序
 	 * @param file 目标文件夹
 	 * @param format 指定后缀名
 	 * @return
 	 */
-	public static File[] listFiles(File file,final String extension){
+	public static List<File> listFiles(File file,final String extension){
 		File[] files=null;
 		if(file==null||!file.exists()||!file.isDirectory())
 			return null;
@@ -90,7 +95,24 @@ public class FileOperateUtil {
 				return arg1.endsWith(extension);
 			}
 		});
-		return files;
+		if(files!=null){
+			List<File> list=Arrays.asList(files);
+			//按修改日期排序
+			Collections.sort(list, new Comparator<File>() {
+                public int compare(File file, File newFile) {
+                    if (file.lastModified() > newFile.lastModified()) {
+                        return 1;
+                    } else if (file.lastModified() == newFile.lastModified()) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+ 
+                }
+            });
+           return list;
+		}
+		return null;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.linj.camera.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.example.camera.R;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Area;
@@ -22,6 +24,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
@@ -34,8 +37,7 @@ import android.widget.Toast;
  * @date 2014-12-31 上午9:44:56 
  *  
  */
-public class CameraView extends SurfaceView implements SurfaceHolder.Callback
-,AutoFocusCallback{
+public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 
 	private final static String TAG="CameraView";
 
@@ -43,12 +45,19 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 	private Camera mCamera;
 
 	/** 当前闪光灯类型，默认为关闭 */ 
-	private FlashMode mFlashMode=FlashMode.OFF;
+	private FlashMode mFlashMode=FlashMode.ON;
+
+	/** 当前缩放级别  默认为0*/ 
+	private int mZoom=0;
+
+	/** 当前屏幕朝向  竖屏:true  横屏：false 此处的朝向不是Acitivty的朝向 而是重力感应获得的屏幕朝向*/ 
+	private boolean mCurrentOrientation=true;
 
 	public CameraView(Context context){
 		super(context);
 		//初始化容器
 		getHolder().addCallback(this);
+		mCamera = Camera.open();
 	}
 
 	public CameraView(Context context, AttributeSet attrs) {
@@ -71,7 +80,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 	 *  @param flashMode   
 	 */
 	public void setFlashMode(FlashMode flashMode) {
-		if(flashMode==mFlashMode) return;
+		if(mCamera==null) return;
 		mFlashMode = flashMode;
 		Camera.Parameters parameters=mCamera.getParameters();
 		switch (flashMode) {
@@ -97,21 +106,20 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 
 	/**  
 	 * 手动聚焦 
-	 *  @param x 触屏的x坐标
-	 *  @param y   触屏的y坐标
+	 *  @param point 触屏坐标
 	 */
-	public void onFocus(int x,int y){
+	public void onFocus(Point point,AutoFocusCallback callback){
 		Camera.Parameters parameters=mCamera.getParameters();
 		//不支持设置自定义聚焦，则使用自动聚焦，返回
 		if (parameters.getMaxNumFocusAreas()<=0) {
-			mCamera.autoFocus(this);
+			mCamera.autoFocus(callback);
 			return;
 		}
 		List<Area> areas=new ArrayList<Camera.Area>();
-		int left=x-300;
-		int top=y-300;
-		int right=x+300;
-		int bottom=y+300;
+		int left=point.x-300;
+		int top=point.y-300;
+		int right=point.x+300;
+		int bottom=point.y+300;
 		areas.add(new Area(new Rect(left,top,right,bottom), 100));
 		parameters.setFocusAreas(areas);
 		try {
@@ -121,9 +129,49 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		mCamera.autoFocus(this);
+		mCamera.autoFocus(callback);
 	}
 
+	/**  
+	 *  获取最大缩放级别，最大为40
+	 *  @return   
+	 */
+	public int getMaxZoom(){
+		if(mCamera==null) return -1;		
+		Camera.Parameters parameters=mCamera.getParameters();
+		if(!parameters.isZoomSupported()) return -1;
+		return parameters.getMaxZoom()>40?40:parameters.getMaxZoom();
+	}
+	/**  
+	 *  设置相机缩放级别
+	 *  @param zoom   
+	 */
+	public void setZoom(int zoom){
+		if(mCamera==null) return;
+		Camera.Parameters parameters=mCamera.getParameters();
+		if(!parameters.isZoomSupported()) return;
+		parameters.setZoom(zoom);
+		mCamera.setParameters(parameters);
+		mZoom=zoom;
+	}
+	public int getZoom(){
+		return mZoom;
+	}
+
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		try {
+			if(mCamera==null)
+				mCamera=Camera.open();
+			setCameraParameters();
+			mCamera.setPreviewDisplay(getHolder());
+		} catch (IOException e) {
+			Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
+			Log.e(TAG,e.getMessage());
+		}
+		mCamera.startPreview();
+	}
 
 
 	/**
@@ -144,7 +192,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 		if (sizeList.size()>0) {
 			Size cameraSize=sizeList.get(0);
 			for (Size size : sizeList) {
-				//小于500W像素
+				//小于100W像素
 				if (size.width*size.height<100*10000) {
 					cameraSize=size;
 					break;
@@ -156,44 +204,67 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 		parameters.setPictureFormat(ImageFormat.JPEG);       
 		parameters.setJpegQuality(100);
 		parameters.setJpegThumbnailQuality(100);
-		//自动校准
+		//自动聚焦模式
 		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//		if(parameters.isZoomSupported())
-//           parameters.setZoom(parameters.getMaxZoom());
-//		parameters.
 		mCamera.setParameters(parameters);
+		//设置闪光灯模式。此处主要是用于在相机摧毁后又重建，保持之前的状态
+		setFlashMode(mFlashMode);
+		//设置缩放级别
+		setZoom(mZoom);
+		//开启屏幕朝向监听
+		startOrientationChangeListener();
 	}
 
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		try {
-			mCamera = Camera.open();
-			setCameraParameters();
-			mCamera.setPreviewDisplay(getHolder());
-		} catch (IOException e) {
-			Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
-			Log.e(TAG,e.getMessage());
+	/**  
+	 *   启动屏幕朝向改变监听函数 用于在屏幕横竖屏切换时改变保存的图片的方向  
+	 */
+	private  void startOrientationChangeListener() {  
+		OrientationEventListener mOrEventListener = new OrientationEventListener(getContext()) {  
+			@Override  
+			public void onOrientationChanged(int rotation) {  
+				if (((rotation >= 0) && (rotation <= 45)) || (rotation >= 315)  
+						|| ((rotation >= 135) && (rotation <= 225))) {// portrait  
+					//朝向相同，不做处理
+					if(mCurrentOrientation)
+						return;
+					mCurrentOrientation = true;
+					updateCameraOrientation();
+				} else if (((rotation > 45) && (rotation < 135))  
+						|| ((rotation > 225) && (rotation < 315))) {// landscape  
+					if(!mCurrentOrientation)
+						return;
+					mCurrentOrientation=false;
+					updateCameraOrientation();
+				}  
+			}  
+		};  
+		mOrEventListener.enable();  
+	}  
+
+	/**  
+	 *   根据当前朝向修改保存图片的旋转角度
+	 */
+	private void updateCameraOrientation(){
+
+		if(mCamera!=null){
+			Camera.Parameters parameters = mCamera.getParameters();
+			//相机默认是横屏模式，当前为竖屏时，需要旋转90°
+			if (mCurrentOrientation) {
+				mCamera.setDisplayOrientation(90);//预览转90°
+				parameters.set("rotation", 90);//生成的图片转90°
+			}
+			else  {
+				parameters.set("orientation", "landscape");
+				parameters.set("rotation", 0);
+			}
+			mCamera.setParameters(parameters);
 		}
-		mCamera.startPreview();
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-
-		Camera.Parameters parameters = mCamera.getParameters();
-		Log.i(TAG, getResources().getConfiguration().orientation+"");
-		//判断屏幕朝向
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			mCamera.setDisplayOrientation(90);//预览转90°
-			parameters.set("rotation", 90);//生成的图片转90°
-			
-		}
-		else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			parameters.set("orientation", "landscape");
-			parameters.set("rotation", 0);
-		}
-		mCamera.setParameters(parameters);
+		updateCameraOrientation();
 	}
 
 	@Override
@@ -204,11 +275,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback
 		}
 		mCamera.release();
 		mCamera = null;
-	}
-
-	@Override
-	public void onAutoFocus(boolean success, Camera camera) {
-
 	}
 
 	/** 

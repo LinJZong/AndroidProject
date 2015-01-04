@@ -5,6 +5,9 @@ import com.linj.camera.view.CameraContainer.TakePictureListener;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -59,8 +62,12 @@ public class TempImageView extends ImageView implements AnimationListener{
 	public void onAnimationEnd(Animation animation) {
 		// TODO Auto-generated method stub
 		setVisibility(View.GONE);
+		Drawable drawable =  getDrawable();
+		Bitmap bm = null;
+		if(drawable!=null&&drawable instanceof BitmapDrawable)
+			 bm=((BitmapDrawable)drawable).getBitmap();
 		//相机监听接口不为空，则执行拍照结束操作
-		if (mListener!=null) mListener.onAnimtionEnd();
+		if (mListener!=null) mListener.onAnimtionEnd(bm);
 	}
 
 	@Override
@@ -105,7 +112,11 @@ public class TempImageView extends ImageView implements AnimationListener{
 		}
 	}
 
-
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+    	// TODO Auto-generated method stub
+    	super.setImageBitmap(bm);
+    }
 	public void setListener(TakePictureListener mListener) {
 		this.mListener = mListener;
 	}
