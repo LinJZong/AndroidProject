@@ -65,7 +65,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, mSaveRoot);
 		List<File> files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
 		if(files!=null&&files.size()>0){
-			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(files.size()-1).getAbsolutePath());
+			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(0).getAbsolutePath());
 			if(thumbBitmap!=null)
 				mThumbButton.setImageBitmap(thumbBitmap);
 		}else {
@@ -83,8 +83,8 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			mContainer.takePicture(this);
 			break;
 		case R.id.btn_thumbnail:
-			Log.i(TAG,findViewById(R.id.testl).getHeight()+"");
-            //startActivity(new Intent(this,TestActivity.class));
+			
+            startActivity(new Intent(this,AlbumAty.class));
 			break;
 		case R.id.btn_flash_mode:
 			if(mContainer.getFlashMode()==FlashMode.ON){

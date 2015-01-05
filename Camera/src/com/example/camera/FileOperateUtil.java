@@ -101,11 +101,11 @@ public class FileOperateUtil {
 			Collections.sort(list, new Comparator<File>() {
                 public int compare(File file, File newFile) {
                     if (file.lastModified() > newFile.lastModified()) {
-                        return 1;
+                        return -1;
                     } else if (file.lastModified() == newFile.lastModified()) {
                         return 0;
                     } else {
-                        return -1;
+                        return 1;
                     }
  
                 }

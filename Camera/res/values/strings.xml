@@ -12,5 +12,14 @@
     <string name="Thumbnail">Thumbnail/</string>
     <!-- 视频文件夹 -->
     <string name="Vedio">Vedio</string>
+    <string name="album_enter_select">选择</string>
+    <string name="api_cancel">取消</string>
+    <string name="album_photo_select_tip">项</string>
+    <string name="album_phoot_select_all">全选</string>
+    <string name="album_phoot_unselect_all">取消全选</string>
+    <string name="album_title">我的相册</string>
+    <string name="pgcommon_share">分享</string>
+    <string name="pgcommon_download">下载</string>
+    <string name="common_delete">删除</string>
 
 </resources>

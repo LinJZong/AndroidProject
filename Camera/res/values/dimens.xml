@@ -7,5 +7,10 @@
     <dimen name="bottom_bar_height">75.0dip</dimen>
     <dimen name="top_menu_bar_height">45.0dip</dimen>
     <dimen name="shutter_bottom_size">62.0dip</dimen>
-
+    <dimen name="album_header_bar_height">50.0dip</dimen>
+    <dimen name="title_view_left_back_padding_left">12.0dip</dimen>
+    <dimen name="title_view_left_back_padding_right">12.0dip</dimen>
+    <dimen name="album_header_btn_width">48.0dip</dimen>
+ <dimen name="album_rooter_bar_height">48.0dip</dimen>
+   <dimen name="album_rooter_bar_text_size">16.0sp</dimen>
 </resources>

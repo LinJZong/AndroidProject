@@ -21,7 +21,7 @@
             android:id="@+id/btn_thumbnail"
             android:layout_width="@dimen/thumbnail_imageview_size"
             android:layout_height="@dimen/thumbnail_imageview_size"
-            android:background="@drawable/setbar_bg"
+            android:background="@drawable/thumbnail_bg"
             android:contentDescription="@string/app_name"
             android:padding="1dip"
             android:scaleType="fitXY" />

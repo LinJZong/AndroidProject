@@ -2,5 +2,9 @@
 <resources>
 
     <color name="main_menu_bg">#e5111213</color>
+    <color name="common_title_bg">#ff111213</color>
+    <color name="primary_title_text_color">#ff888888</color>
+    <color name="common_title_text">#ff565555</color>
+    <color name="common_text_yellow">#ffffe049</color>
 
 </resources>

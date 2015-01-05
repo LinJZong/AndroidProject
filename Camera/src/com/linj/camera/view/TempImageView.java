@@ -17,16 +17,16 @@ import android.widget.ImageView;
 
 
 /** 
-* @ClassName: TempImageView 
-* @Description:   临时ImageView，在执行完一个动画后自动隐藏
-* @author LinJ
-* @date 2014-12-31 上午9:45:34 
-*  
-*/
+ * @ClassName: TempImageView 
+ * @Description:   临时ImageView，在执行完一个动画后自动隐藏
+ * @author LinJ
+ * @date 2014-12-31 上午9:45:34 
+ *  
+ */
 public class TempImageView extends ImageView implements AnimationListener{
-	
+
 	private final static String TAG="TempImageView";
-	
+
 	/**
 	 * 不存在的动画ID
 	 */
@@ -36,9 +36,9 @@ public class TempImageView extends ImageView implements AnimationListener{
 	 */
 	private int mAnimationID=NO_ID;
 
-    /** 拍照动作监听接口  */ 
-    private TakePictureListener mListener;
-	
+	/** 拍照动作监听接口  */ 
+	private TakePictureListener mListener;
+
 	public TempImageView(Context context) {
 		// TODO Auto-generated constructor stub
 		super(context);
@@ -65,7 +65,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 		Drawable drawable =  getDrawable();
 		Bitmap bm = null;
 		if(drawable!=null&&drawable instanceof BitmapDrawable)
-			 bm=((BitmapDrawable)drawable).getBitmap();
+			bm=((BitmapDrawable)drawable).getBitmap();
 		//相机监听接口不为空，则执行拍照结束操作
 		if (mListener!=null) mListener.onAnimtionEnd(bm);
 	}
@@ -76,29 +76,29 @@ public class TempImageView extends ImageView implements AnimationListener{
 
 	}
 
-	
+
 	/**  
-	* @Description: 开始动画
-	* @param    
-	* @return void    
-	* @throws 
-	*/
+	 * @Description: 开始动画
+	 * @param    
+	 * @return void    
+	 * @throws 
+	 */
 	public void startAnimation(){
 		startAnimation(null);
 	}
 
 
 	/** 
-	* @Description: 开始动画
-	* @param @param resourceID 动画资源的ID  
-	* @return void    
-	* @throws 
-	*/
+	 * @Description: 开始动画
+	 * @param @param resourceID 动画资源的ID  
+	 * @return void    
+	 * @throws 
+	 */
 	public void startAnimation(int resourceID){
 		mAnimationID=resourceID;
 		startAnimation();
 	}
-	
+
 	public void startAnimation(Animation animation){
 		if(animation!=null){
 			animation.setAnimationListener(this);
@@ -112,11 +112,11 @@ public class TempImageView extends ImageView implements AnimationListener{
 		}
 	}
 
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-    	// TODO Auto-generated method stub
-    	super.setImageBitmap(bm);
-    }
+	@Override
+	public void setImageBitmap(Bitmap bm) {
+		// TODO Auto-generated method stub
+		super.setImageBitmap(bm);
+	}
 	public void setListener(TakePictureListener mListener) {
 		this.mListener = mListener;
 	}
