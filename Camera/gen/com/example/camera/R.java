@@ -64,38 +64,39 @@ containing a value of this type.
         public static final int btn_flash_torch=0x7f02000b;
         public static final int btn_photopage_top_bar_selector=0x7f02000c;
         public static final int btn_shutter=0x7f02000d;
-        public static final int color_white_yellow=0x7f02000e;
-        public static final int focus=0x7f02000f;
-        public static final int focus_succeed=0x7f020010;
-        public static final int have_new_effect_flag=0x7f020011;
-        public static final int ic_camera_top_bar_flash_auto_click=0x7f020012;
-        public static final int ic_camera_top_bar_flash_auto_normal=0x7f020013;
-        public static final int ic_camera_top_bar_flash_off_click=0x7f020014;
-        public static final int ic_camera_top_bar_flash_off_normal=0x7f020015;
-        public static final int ic_camera_top_bar_flash_on_click=0x7f020016;
-        public static final int ic_camera_top_bar_flash_on_normal=0x7f020017;
-        public static final int ic_camera_top_bar_flash_torch_click=0x7f020018;
-        public static final int ic_camera_top_bar_flash_torch_normal=0x7f020019;
-        public static final int ic_camera_top_bar_my_center=0x7f02001a;
-        public static final int ic_camera_top_bar_my_center_normal=0x7f02001b;
-        public static final int ic_camera_top_bar_my_center_pressed=0x7f02001c;
-        public static final int ic_camera_top_bar_setting=0x7f02001d;
-        public static final int ic_camera_top_bar_setting_click=0x7f02001e;
-        public static final int ic_camera_top_bar_setting_normal=0x7f02001f;
-        public static final int ic_camera_top_bar_sw_camera=0x7f020020;
-        public static final int ic_camera_top_bar_sw_camera_click=0x7f020021;
-        public static final int ic_camera_top_bar_sw_camera_normal=0x7f020022;
-        public static final int ic_error=0x7f020023;
-        public static final int ic_launcher=0x7f020024;
-        public static final int ic_stub=0x7f020025;
-        public static final int icon_back02=0x7f020026;
-        public static final int icon_back02_click=0x7f020027;
-        public static final int icon_back2=0x7f020028;
-        public static final int icon_back2_click=0x7f020029;
-        public static final int icon_modebtn=0x7f02002a;
-        public static final int picture_setting_album_checkbox=0x7f02002b;
-        public static final int thumbnail_bg=0x7f02002c;
-        public static final int title_text_selector=0x7f02002d;
+        public static final int color_transparent_yellow=0x7f02000e;
+        public static final int color_white_yellow=0x7f02000f;
+        public static final int focus=0x7f020010;
+        public static final int focus_succeed=0x7f020011;
+        public static final int have_new_effect_flag=0x7f020012;
+        public static final int ic_camera_top_bar_flash_auto_click=0x7f020013;
+        public static final int ic_camera_top_bar_flash_auto_normal=0x7f020014;
+        public static final int ic_camera_top_bar_flash_off_click=0x7f020015;
+        public static final int ic_camera_top_bar_flash_off_normal=0x7f020016;
+        public static final int ic_camera_top_bar_flash_on_click=0x7f020017;
+        public static final int ic_camera_top_bar_flash_on_normal=0x7f020018;
+        public static final int ic_camera_top_bar_flash_torch_click=0x7f020019;
+        public static final int ic_camera_top_bar_flash_torch_normal=0x7f02001a;
+        public static final int ic_camera_top_bar_my_center=0x7f02001b;
+        public static final int ic_camera_top_bar_my_center_normal=0x7f02001c;
+        public static final int ic_camera_top_bar_my_center_pressed=0x7f02001d;
+        public static final int ic_camera_top_bar_setting=0x7f02001e;
+        public static final int ic_camera_top_bar_setting_click=0x7f02001f;
+        public static final int ic_camera_top_bar_setting_normal=0x7f020020;
+        public static final int ic_camera_top_bar_sw_camera=0x7f020021;
+        public static final int ic_camera_top_bar_sw_camera_click=0x7f020022;
+        public static final int ic_camera_top_bar_sw_camera_normal=0x7f020023;
+        public static final int ic_error=0x7f020024;
+        public static final int ic_launcher=0x7f020025;
+        public static final int ic_stub=0x7f020026;
+        public static final int icon_back02=0x7f020027;
+        public static final int icon_back02_click=0x7f020028;
+        public static final int icon_back2=0x7f020029;
+        public static final int icon_back2_click=0x7f02002a;
+        public static final int icon_modebtn=0x7f02002b;
+        public static final int picture_setting_album_checkbox=0x7f02002c;
+        public static final int thumbnail_bg=0x7f02002d;
+        public static final int title_text_selector=0x7f02002e;
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
@@ -174,11 +175,13 @@ containing a value of this type.
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
 
         
 
@@ -199,6 +202,7 @@ containing a value of this type.
          */
         public static final int AppTheme=0x7f080001;
         public static final int CheckBoxStyle=0x7f080002;
+        public static final int dialog=0x7f080003;
     }
     public static final class styleable {
         /** Attributes that can be used with a TempImageView.

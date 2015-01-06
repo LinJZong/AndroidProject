@@ -6,11 +6,13 @@ import java.util.List;
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
+import com.linj.camera.view.FilterImageView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,7 +33,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private final static String TAG="CameraAty";
 	private String mSaveRoot;
 	private CameraContainer mContainer;
-	private ImageButton mThumbButton;
+	private FilterImageView mThumbView;
 	private ImageButton mShutterButton;
 	private ImageView mFlashView;
 
@@ -44,11 +46,11 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		setContentView(R.layout.camera);
 
 		mContainer=(CameraContainer)findViewById(R.id.container);
-		mThumbButton=(ImageButton)findViewById(R.id.btn_thumbnail);
+		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
 		mShutterButton=(ImageButton)findViewById(R.id.btn_shutter);
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
 
-		mThumbButton.setOnClickListener(this);
+		mThumbView.setOnClickListener(this);
 		mShutterButton.setOnClickListener(this);
 		mFlashView.setOnClickListener(this);
 		
@@ -67,9 +69,9 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		if(files!=null&&files.size()>0){
 			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(0).getAbsolutePath());
 			if(thumbBitmap!=null)
-				mThumbButton.setImageBitmap(thumbBitmap);
+				mThumbView.setImageBitmap(thumbBitmap);
 		}else {
-			mThumbButton.setImageBitmap(null);
+			mThumbView.setImageBitmap(null);
 		}
 
 	}
@@ -118,7 +120,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		if(bm!=null){
 			//Éú³ÉËõÂÔÍ¼
 			Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
-			mThumbButton.setImageBitmap(thumbnail);
+			mThumbView.setImageBitmap(thumbnail);
 		}
 	}
 	

@@ -41,26 +41,9 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 	@Override
 	public void display(Bitmap bitmap, ImageView imageView) {
 		imageView.setImageDrawable(new RoundedDrawable(bitmap, cornerRadius, margin));
-//		imageView.setOnTouchListener(onTouchListener);
 	}
 
-	OnTouchListener onTouchListener=new OnTouchListener() {
 
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				Drawable drawable=v.getBackground();
-				drawable.setColorFilter(
-						Color.GRAY,PorterDuff.Mode.MULTIPLY);
-				v.setBackground(drawable);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				Drawable drawable=v.getBackground();
-				drawable.clearColorFilter();
-				v.setBackground(drawable);
-			}
-			return true;
-		}
-	};
 	public static class RoundedDrawable extends Drawable {
 
 		protected final float cornerRadius;
@@ -97,7 +80,6 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 
 		@Override
 		public void draw(Canvas canvas) {
-			Log.i("set","draw");
 			canvas.drawRoundRect(mRect, cornerRadius, cornerRadius, paint);
 
 		}

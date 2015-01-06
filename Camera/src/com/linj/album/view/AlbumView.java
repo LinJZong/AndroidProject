@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
+import com.linj.album.view.AlbumItemView.ViewHolder;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
@@ -37,15 +38,16 @@ import android.widget.Toast;
  *  
  */
 public class AlbumView extends GridView{
+	private final static String TAG="AlbumView";
 	/**  图片加载器 优化了了缓存  */ 
-	private ImageLoader imageLoader;
+	private ImageLoader mImageLoader;
 	/**  加载图片配置参数 */ 
-	private DisplayImageOptions options;	
+	private DisplayImageOptions mOptions;	
 	/**  当前是否处于编辑状态 true为编辑 */ 
 	private boolean mEditable;
 	public AlbumView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		imageLoader= ImageLoader.getInstance(context);
+		mImageLoader= ImageLoader.getInstance(context);
 		//设置网络图片加载参数
 		DisplayImageOptions.Builder builder= new DisplayImageOptions.Builder();
 		builder =builder
@@ -54,7 +56,9 @@ public class AlbumView extends GridView{
 				.cacheInMemory(true)//为了在本地修改图片后及时更新小图标 不在内存中缓存
 				.cacheOnDisk(false)
 				.displayer(new RoundedBitmapDisplayer(20));
-		options=builder.build();
+		mOptions=builder.build();
+		//隐藏垂直滚动条
+		setVerticalScrollBarEnabled(false);
 	}
 
 
@@ -124,6 +128,11 @@ public class AlbumView extends GridView{
 		return ((AlbumViewAdapter)getAdapter()).getSelectedItems();
 	}
 
+	public void notifyDataSetChanged() {
+		// TODO Auto-generated method stub
+		((AlbumViewAdapter)getAdapter()).notifyDataSetChanged();
+	}
+
 	/** 
 	 * @ClassName: OnCheckedChangeListener 
 	 * @Description:  图片选中后的监听接口，用以在activity内做回调处理
@@ -134,6 +143,8 @@ public class AlbumView extends GridView{
 	public interface OnCheckedChangeListener{
 		public void onCheckedChanged(Set<String> set);
 	}
+
+
 	/** 
 	 * @ClassName: AlbumViewAdapter 
 	 * @Description:  相册GridView适配器
@@ -141,7 +152,7 @@ public class AlbumView extends GridView{
 	 * @date 2015-1-5 下午5:14:14 
 	 *  
 	 */
-	public class AlbumViewAdapter extends BaseAdapter
+	public class AlbumViewAdapter extends BaseAdapter implements OnClickListener,CompoundButton.OnCheckedChangeListener
 	{
 
 		/** 加载的文件路径集合 */ 
@@ -154,74 +165,11 @@ public class AlbumView extends GridView{
 		AlbumView.OnCheckedChangeListener listener=null;
 
 
+
 		public AlbumViewAdapter(List<String> paths) {
 			super();
 			this.mPaths = paths;
 		}
-
-		private class ViewHolder {
-			ImageView imgThumbnail;//缩略图
-			CheckBox checkBox;//勾选框
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return mPaths.size();
-		}
-
-
-		@Override
-		public String getItem(int position) {
-			// TODO Auto-generated method stub
-			return mPaths.get(position);
-		}
-
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			final ViewHolder holder;
-			AlbumItemView view = (AlbumItemView)convertView;
-			if (view == null) {
-				view = new AlbumItemView(getContext());
-				holder = new ViewHolder();
-				holder.imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
-				holder.checkBox=(CheckBox)view.findViewById(R.id.checkbox);
-				holder.checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
-				view.setTag(holder);
-				view.setOnTouchListener(onTouchListener);
-			} else {
-				holder = (ViewHolder) view.getTag();
-			}
-
-			Object tag=holder.imgThumbnail.getTag();
-			String path=getItem(position);
-			//文件相同时，不替换
-			if(tag==null||!tag.equals(path)){
-				imageLoader.loadImage(path, holder.imgThumbnail, options, false,getContext());
-				holder.imgThumbnail.setTag(path);
-				holder.checkBox.setTag(path);
-			}
-			if (mEditable){ 
-				holder.checkBox.setVisibility(View.VISIBLE);
-				//设置Checkbox选中状态
-				holder.checkBox.setChecked(itemSelectedSet.contains(path));
-			}
-			else 
-				holder.checkBox.setVisibility(View.GONE);
-			return view;
-		}
-
-
-
-
 		/**  
 		 * 适配器内容改变时，重新绘制
 		 *  @param listener   
@@ -261,34 +209,55 @@ public class AlbumView extends GridView{
 			return itemSelectedSet;
 		}
 
-		//Checkbox状态改变监听函数
-		CompoundButton.OnCheckedChangeListener onCheckedChangeListener=new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
-				if(buttonView.getTag()==null) return;
-				if (isChecked) itemSelectedSet.add(buttonView.getTag().toString());
-				else itemSelectedSet.remove(buttonView.getTag().toString());
-				if(listener!=null) listener.onCheckedChanged(itemSelectedSet);
-			}
-		};
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mPaths.size();
+		}
 
-		View.OnTouchListener onTouchListener=new View.OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				return true;
-			}
-		};
-		
-		View.OnClickListener onClickListener=new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
+		@Override
+		public String getItem(int position) {
+			// TODO Auto-generated method stub
+			return mPaths.get(position);
+		}
 
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			AlbumItemView albumItemView = (AlbumItemView)convertView;
+			if (albumItemView == null) albumItemView = new AlbumItemView(getContext(),mImageLoader,mOptions);
+			albumItemView.setOnCheckedChangeListener(this);
+			//设置点击事件，将ItemClick事件转化为AlbumItemView的Click事件
+			albumItemView.setOnClickListener(this);
+			String path=getItem(position);
+			albumItemView.setTags(path,position, mEditable, itemSelectedSet.contains(path));
+			return albumItemView;
+		}
+
+		@Override
+		public void onClick(View v) {
+			if(getOnItemClickListener()!=null){
+				//这里取了上两层父类，因为真正触onClick的是FilterImageView
+				AlbumItemView view=(AlbumItemView)v.getParent().getParent();
+				getOnItemClickListener().onItemClick(AlbumView.this, view, view.getPosition(), 0L);
 			}
-		};
+		}
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			// TODO Auto-generated method stub
+			if(buttonView.getTag()==null) return;
+			if (isChecked) itemSelectedSet.add(buttonView.getTag().toString());
+			else itemSelectedSet.remove(buttonView.getTag().toString());
+			if(listener!=null) listener.onCheckedChanged(itemSelectedSet);
+		}
 	}
 }

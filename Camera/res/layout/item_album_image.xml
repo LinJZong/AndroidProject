@@ -4,7 +4,7 @@
     android:layout_height="86dip"
     android:background="@android:color/transparent" >
 
-    <ImageView
+    <com.linj.camera.view.FilterImageView
         android:id="@+id/imgThumbnail"
         android:layout_width="fill_parent"
         android:layout_height="86dip"

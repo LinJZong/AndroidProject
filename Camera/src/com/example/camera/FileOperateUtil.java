@@ -129,4 +129,22 @@ public class FileOperateUtil {
 			extension="."+extension;
 		return formatDate+extension;
 	}
+	
+	/**  
+	*  删除文件
+	*  @param path 文件目录
+	*  @return   
+	*/
+	public static boolean deleteFile(String path) {
+		boolean flag = false;
+
+		File file = new File(path);
+		if (!file.exists()) { // 文件不存在直接返回
+			return flag;
+		}
+
+		flag = file.delete();
+
+		return flag;
+	}
 }

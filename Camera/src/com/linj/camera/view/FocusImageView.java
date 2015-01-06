@@ -5,6 +5,7 @@ import com.example.camera.R;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -16,12 +17,12 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 /** 
-* @ClassName: FocusImageView 
-* @Description:聚焦时显示的ImagView  
-* @author LinJ
-* @date 2015-1-4 下午2:55:34 
-*  
-*/
+ * @ClassName: FocusImageView 
+ * @Description:聚焦时显示的ImagView  
+ * @author LinJ
+ * @date 2015-1-4 下午2:55:34 
+ *  
+ */
 public class FocusImageView extends ImageView implements AnimationListener{
 	private static final int NO_ID=-1;
 	private int mFocusImg=NO_ID;
@@ -52,19 +53,19 @@ public class FocusImageView extends ImageView implements AnimationListener{
 		setVisibility(View.VISIBLE);
 		startAnimation(mAnimation);	
 	}
-    
+
 	/**  
-	* 设置开始聚焦时的图片
-	*  @param focus   
-	*/
+	 * 设置开始聚焦时的图片
+	 *  @param focus   
+	 */
 	public void setFocusImg(int focus) {
 		this.mFocusImg = focus;
 	}
-    
+
 	/**  
-	*  设置聚焦成功显示的图片
-	*  @param focusSucceed   
-	*/
+	 *  设置聚焦成功显示的图片
+	 *  @param focusSucceed   
+	 */
 	public void setFocusSucceedImg(int focusSucceed) {
 		this.mFocusSucceedImg = focusSucceed;
 	}
@@ -77,9 +78,15 @@ public class FocusImageView extends ImageView implements AnimationListener{
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		// TODO Auto-generated method stub
-		
-		
+
+		//1秒后隐藏View 设置token为mFocusImageView防止被误删除
+		new Handler().postAtTime(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				setVisibility(View.GONE);
+			}
+		},SystemClock.uptimeMillis()+3000);
 	}
 
 	@Override
