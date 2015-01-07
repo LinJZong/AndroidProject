@@ -1,12 +1,15 @@
-package com.linj.camera.view;
+package com.linj.album.view;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 /** 
@@ -17,19 +20,21 @@ import android.widget.ImageView;
  *  
  */
 public class FilterImageView extends ImageView implements GestureDetector.OnGestureListener{
-	
+	private static final String TAG="FilterImageView";
 	/**   监听手势*/ 
 	private GestureDetector mGestureDetector;
 	public FilterImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mGestureDetector=new GestureDetector(context, this);
+	
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		//在cancel里将滤镜取消，注意不要捕获cacncel事件,mGestureDetector里有对cancel的捕获操作
  		//在滑动GridView时，AbsListView会拦截掉Move和UP事件，直接给子控件返回Cancel
-		if(event.getActionMasked()== MotionEvent.ACTION_CANCEL){
+		if(event.getActionMasked()== MotionEvent.ACTION_CANCEL
+				||event.getActionMasked()== MotionEvent.ACTION_UP){
 			removeFilter();
 		}
 		return mGestureDetector.onTouchEvent(event);
@@ -81,7 +86,7 @@ public class FilterImageView extends ImageView implements GestureDetector.OnGest
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		removeFilter();
+	
 		performClick();	
 		return false;
 	}

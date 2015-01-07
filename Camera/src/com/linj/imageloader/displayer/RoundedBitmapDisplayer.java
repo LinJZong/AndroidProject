@@ -44,7 +44,7 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 	}
 
 
-	public static class RoundedDrawable extends Drawable {
+	public static class RoundedDrawable extends Drawable{
 
 		protected final float cornerRadius;
 		protected final int margin;
@@ -74,10 +74,8 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 			// Resize the original bitmap to fit the new bound
 			Matrix shaderMatrix = new Matrix();
 			shaderMatrix.setRectToRect(mBitmapRect, mRect, Matrix.ScaleToFit.FILL);
-			bitmapShader.setLocalMatrix(shaderMatrix);
-
+			bitmapShader.setLocalMatrix(shaderMatrix);	
 		}
-
 		@Override
 		public void draw(Canvas canvas) {
 			canvas.drawRoundRect(mRect, cornerRadius, cornerRadius, paint);
@@ -88,11 +86,28 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 		public int getOpacity() {
 			return PixelFormat.TRANSLUCENT;
 		}
+		@Override
+		public void setFilterBitmap(boolean filter) {
+			paint.setFilterBitmap(filter);
+			invalidateSelf();
+		}
 
+		public void setAntiAlias(boolean aa) {
+			paint.setAntiAlias(aa);
+			invalidateSelf();
+		}
+		 @Override
+		    public void setDither(boolean dither) {
+		        paint.setDither(dither);
+		        invalidateSelf();
+		    }
 		@Override
 		public void setAlpha(int alpha) {
-			paint.setAlpha(alpha);
-			invalidateSelf();
+			int oldAlpha = paint.getAlpha();
+			if (alpha != oldAlpha) {
+				paint.setAlpha(alpha);
+				invalidateSelf();
+			}
 		}
 
 		@Override

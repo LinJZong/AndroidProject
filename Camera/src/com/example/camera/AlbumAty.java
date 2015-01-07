@@ -2,10 +2,11 @@ package com.example.camera;
 
 import java.util.Set;
 
-import com.linj.album.view.AlbumView;
+import com.linj.album.view.AlbumGridView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,12 +27,12 @@ import android.widget.Toast;
 * @date 2015-1-6 下午5:03:48 
 *  
 */
-public class AlbumAty extends Activity implements View.OnClickListener,AlbumView.OnCheckedChangeListener{
+public class AlbumAty extends Activity implements View.OnClickListener,AlbumGridView.OnCheckedChangeListener{
 	private final static String TAG="AlbumAty";
 	/**
 	 * 显示相册的View
 	 */
-	private AlbumView mAlbumView;
+	private AlbumGridView mAlbumView;
 
 	private String mSaveRoot;
 
@@ -48,7 +49,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumView
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.album);
 
-		mAlbumView=(AlbumView)findViewById(R.id.albumview);
+		mAlbumView=(AlbumGridView)findViewById(R.id.albumview);
 		mEnterView=(TextView)findViewById(R.id.header_bar_enter_selection);
 		mLeaveView=(TextView)findViewById(R.id.header_bar_leave_selection);
 		mSelectAllView=(TextView)findViewById(R.id.select_all);
@@ -68,7 +69,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumView
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (mAlbumView.getEditable()) return; 
-				Toast.makeText(AlbumAty.this, arg1.getClass().toString()+"", 1).show();
+				Intent intent=new Intent(AlbumAty.this,AlbumDetailAty.class);
+				startActivity(intent);
 			}
 		});
 		mAlbumView.setOnItemLongClickListener(new OnItemLongClickListener() {

@@ -234,8 +234,6 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		private static final int MODE_ZOOM = 1;
 		private int mode = MODE_INIT;// 初始状态 
 
-		/** 用于记录开始时候的坐标位置 */
-		private PointF startPoint = new PointF();
 		/** 用于记录拖拉图片移动的坐标位置 */
 
 		private float startDis;
@@ -248,7 +246,6 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			// 手指压下屏幕
 			case MotionEvent.ACTION_DOWN:
 				mode = MODE_INIT;
-				startPoint.set(event.getX(), event.getY());
 				break;
 			case MotionEvent.ACTION_POINTER_DOWN:
 				//如果mZoomSeekBar为null 表示该设备不支持缩放 直接跳过设置mode Move指令也无法执行

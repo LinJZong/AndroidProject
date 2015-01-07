@@ -17,7 +17,7 @@
         android:layout_weight="1.0"
         android:gravity="center" >
 
-        <com.linj.camera.view.FilterImageView
+        <com.linj.album.view.FilterImageView
             android:id="@+id/btn_thumbnail"
             android:layout_width="@dimen/thumbnail_imageview_size"
             android:layout_height="@dimen/thumbnail_imageview_size"

@@ -37,7 +37,7 @@ import android.widget.Toast;
  * @date 2015-1-5 下午5:09:08 
  *  
  */
-public class AlbumView extends GridView{
+public class AlbumGridView extends GridView{
 	private final static String TAG="AlbumView";
 	/**  图片加载器 优化了了缓存  */ 
 	private ImageLoader mImageLoader;
@@ -45,7 +45,8 @@ public class AlbumView extends GridView{
 	private DisplayImageOptions mOptions;	
 	/**  当前是否处于编辑状态 true为编辑 */ 
 	private boolean mEditable;
-	public AlbumView(Context context, AttributeSet attrs) {
+	
+	public AlbumGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mImageLoader= ImageLoader.getInstance(context);
 		//设置网络图片加载参数
@@ -53,7 +54,7 @@ public class AlbumView extends GridView{
 		builder =builder
 				.showImageOnLoading(R.drawable.ic_stub)
 				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(true)//为了在本地修改图片后及时更新小图标 不在内存中缓存
+				.cacheInMemory(true)
 				.cacheOnDisk(false)
 				.displayer(new RoundedBitmapDisplayer(20));
 		mOptions=builder.build();
@@ -83,14 +84,14 @@ public class AlbumView extends GridView{
 	 *  全选图片
 	 *  @param listener 选择图片后执行的回调函数   
 	 */
-	public void selectAll(AlbumView.OnCheckedChangeListener listener){
+	public void selectAll(AlbumGridView.OnCheckedChangeListener listener){
 		((AlbumViewAdapter)getAdapter()).selectAll(listener);
 	}
 	/**  
 	 * 取消全选图片
 	 *  @param listener   选择图片后执行的回调函数  
 	 */
-	public void unSelectAll(AlbumView.OnCheckedChangeListener listener){
+	public void unSelectAll(AlbumGridView.OnCheckedChangeListener listener){
 		((AlbumViewAdapter)getAdapter()).unSelectAll(listener);
 	}
 
@@ -107,7 +108,7 @@ public class AlbumView extends GridView{
 	 *  @param editable 是否可编辑   
 	 *  @param listener 选择图片后执行的回调函数  
 	 */
-	public void setEditable(boolean editable,AlbumView.OnCheckedChangeListener listener){
+	public void setEditable(boolean editable,AlbumGridView.OnCheckedChangeListener listener){
 		mEditable=editable;
 		((AlbumViewAdapter)getAdapter()).notifyDataSetChanged(listener);
 	}
@@ -162,7 +163,7 @@ public class AlbumView extends GridView{
 		Set<String> itemSelectedSet=new HashSet<String>();
 
 		/**  选中图片后执行的回调函数 */ 
-		AlbumView.OnCheckedChangeListener listener=null;
+		AlbumGridView.OnCheckedChangeListener listener=null;
 
 
 
@@ -174,7 +175,7 @@ public class AlbumView extends GridView{
 		 * 适配器内容改变时，重新绘制
 		 *  @param listener   
 		 */
-		public void notifyDataSetChanged(AlbumView.OnCheckedChangeListener listener) {
+		public void notifyDataSetChanged(AlbumGridView.OnCheckedChangeListener listener) {
 			//重置map
 			itemSelectedSet=new HashSet<String>();
 			this.listener=listener;
@@ -184,7 +185,7 @@ public class AlbumView extends GridView{
 		 * 选中所有文件
 		 *  @param listener   
 		 */
-		public void selectAll(AlbumView.OnCheckedChangeListener listener){
+		public void selectAll(AlbumGridView.OnCheckedChangeListener listener){
 			for (String path : mPaths) {
 				itemSelectedSet.add(path);
 			}
@@ -197,7 +198,7 @@ public class AlbumView extends GridView{
 		 *  取消选中所有文件
 		 *  @param listener   
 		 */
-		public void unSelectAll(AlbumView.OnCheckedChangeListener listener){
+		public void unSelectAll(AlbumGridView.OnCheckedChangeListener listener){
 			notifyDataSetChanged(listener);
 			if(listener!=null) listener.onCheckedChanged(itemSelectedSet);
 		}
@@ -247,7 +248,7 @@ public class AlbumView extends GridView{
 			if(getOnItemClickListener()!=null){
 				//这里取了上两层父类，因为真正触onClick的是FilterImageView
 				AlbumItemView view=(AlbumItemView)v.getParent().getParent();
-				getOnItemClickListener().onItemClick(AlbumView.this, view, view.getPosition(), 0L);
+				getOnItemClickListener().onItemClick(AlbumGridView.this, view, view.getPosition(), 0L);
 			}
 		}
 		@Override

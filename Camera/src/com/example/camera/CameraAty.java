@@ -3,10 +3,10 @@ package com.example.camera;
 import java.io.File;
 import java.util.List;
 
+import com.linj.album.view.FilterImageView;
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
-import com.linj.camera.view.FilterImageView;
 
 import android.app.Activity;
 import android.content.Intent;

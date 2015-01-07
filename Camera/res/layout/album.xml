@@ -14,17 +14,17 @@
         android:layout_gravity="top"
         layout="@layout/album_header_bar" />
 
-    <com.linj.album.view.AlbumView
+    <com.linj.album.view.AlbumGridView
         android:id="@+id/albumview"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
+        android:cacheColorHint="@android:color/transparent"
         android:gravity="center"
         android:horizontalSpacing="4dip"
+        android:listSelector="@android:color/transparent"
         android:numColumns="4"
         android:padding="4dip"
-        android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dip" />
 
@@ -33,7 +33,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:visibility="gone"
-        layout="@layout/album_bottom_bar" />
+        layout="@layout/album_bottom_bar"
+        android:visibility="gone" />
 
 </LinearLayout>

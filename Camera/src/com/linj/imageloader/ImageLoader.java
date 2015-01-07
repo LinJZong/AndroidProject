@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 
+import com.example.camera.AlbumAty;
 import com.linj.imageloader.ImageSizeUtil.ImageSize;
 
 import android.content.Context;
@@ -166,8 +167,8 @@ public class ImageLoader {
 	 * @param imageView
 	 * @throws InterruptedException 
 	 */
-	public void loadImage(final String path, final ImageView imageView,final DisplayImageOptions options,
-			final boolean isFromNet,final Context context) 
+	public void loadImage( String path,  ImageView imageView, DisplayImageOptions options,
+			 boolean isFromNet, Context context) 
 	{
 		options.displayer.display(BitmapFactory.decodeResource(context.getResources(),options.imageResOnLoading), imageView);
 		if (mUIHandler == null)
@@ -180,8 +181,12 @@ public class ImageLoader {
 					ImgBeanHolder holder = (ImgBeanHolder) msg.obj;
 					Bitmap bm = holder.bitmap;
 					ImageView view = holder.imageView;
-					if(bm!=null)
+					DisplayImageOptions options=holder.options;
+					Context context=holder.context;
+					if(bm!=null){
+						Log.i(TAG, options.displayer.getClass().toString());
 						options.displayer.display(bm, view);
+					}
 					else {
 						options.displayer.display(BitmapFactory.decodeResource(context.getResources(),options.imageResOnFail), view);
 					}
@@ -194,9 +199,9 @@ public class ImageLoader {
 
 		if (bm != null)
 		{
-			refreashBitmap(path, imageView, bm);
+			refreashBitmap(path, imageView, bm,options,context);
 		} else{
-			addTask(buildTask(path, imageView,options, isFromNet));
+			addTask(buildTask(path, imageView,options, isFromNet,context));
 		}
 
 	}
@@ -210,7 +215,7 @@ public class ImageLoader {
 	 * @return
 	 */
 	private Runnable buildTask(final String path, final ImageView imageView,final DisplayImageOptions options,
-			final boolean isFromNet)
+			final boolean isFromNet,final Context context)
 	{
 		return new Runnable()
 		{
@@ -249,7 +254,7 @@ public class ImageLoader {
 					addBitmapToLruCache(path, bm);
 				}
 				//发送消息至UI线程
-				refreashBitmap(path, imageView, bm);
+				refreashBitmap(path, imageView, bm,options,context);
 				//释放信号
 				mSemaphoreThreadPool.release();
 			}
@@ -320,13 +325,15 @@ public class ImageLoader {
 
 	}
 
-	private void refreashBitmap(final String path, final ImageView imageView,
-			Bitmap bm){
+	private void refreashBitmap(String path, ImageView imageView,
+			Bitmap bm,DisplayImageOptions options,Context context){
 		Message message = Message.obtain();
 		ImgBeanHolder holder = new ImgBeanHolder();
 		holder.bitmap = bm;
 		holder.path = path;
 		holder.imageView = imageView;
+		holder.options=options;
+		holder.context=context;
 		message.obj = holder;
 		mUIHandler.sendMessage(message);
 	}
@@ -440,5 +447,7 @@ public class ImageLoader {
 		Bitmap bitmap;
 		ImageView imageView;
 		String path;
+		DisplayImageOptions options;
+		Context context;
 	}
 }

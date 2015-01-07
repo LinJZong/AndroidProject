@@ -33,6 +33,11 @@
             android:label="@string/app_name" >
 
         </activity>
+         <activity
+            android:name="com.example.camera.AlbumDetailAty"
+            android:label="@string/app_name" >
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
 package com.linj.album.view;
 
 import com.example.camera.R;
-import com.linj.camera.view.FilterImageView;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
@@ -42,7 +41,7 @@ public class AlbumItemView extends FrameLayout  {
 
 	public AlbumItemView(Context context,ImageLoader imageLoader,DisplayImageOptions options) {
 		super(context);
-		inflate(context, R.layout.item_album_image, this);
+		inflate(context, R.layout.item_album_grid, this);
 		FilterImageView imageView=(FilterImageView) findViewById(R.id.imgThumbnail);
 		CheckBox checkBox=(CheckBox) findViewById(R.id.checkbox);
 		mViewHolder=new ViewHolder(imageView,checkBox);
