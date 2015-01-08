@@ -20,12 +20,22 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 
+/** 
+* @ClassName: ImageLoader 
+* @Description:  图片加载器
+* @author LinJ
+* @date 2015-1-8 上午9:02:25 
+*  
+*/
 public class ImageLoader {
+	private static final String TAG = "ImageLoader";
 	/**
 	 * 单例对象
 	 */
@@ -58,10 +68,11 @@ public class ImageLoader {
 	 */
 	private Handler mUIHandler;
 
+	/**   信号控制*/ 
 	private Semaphore mSemaphoreThreadPool;
 
-	private static final String TAG = "ImageLoader";
-
+	private Context mContext;
+    
 	public enum Type
 	{
 		FIFO, LIFO;
@@ -111,6 +122,8 @@ public class ImageLoader {
 		// 获取我们应用的最大可用内存
 		int maxMemory = (int) Runtime.getRuntime().maxMemory();
 		int cacheMemory = maxMemory / 8;
+		//注意此处要获取全局Context，避免引用Activity造成资源无法释放
+		mContext=context.getApplicationContext();
 		mLruCache = new LruCache<String, Bitmap>(cacheMemory){
 			@Override
 			protected int sizeOf(String key, Bitmap value)
@@ -141,7 +154,7 @@ public class ImageLoader {
 			{
 				while(true){
 					try {
-						// 获取一个信号，若未可用信号，阻塞线程
+						// 获取一个信号，若无可用信号，阻塞线程
 						mSemaphoreThreadPool.acquire();
 						// 线程池去取出一个任务进行执行，当任务队列为空时，阻塞线程
 						Runnable runnable=getTask();
@@ -163,17 +176,19 @@ public class ImageLoader {
 	/**
 	 * 根据path为imageview设置图片
 	 * 
-	 * @param path
-	 * @param imageView
+	 * @param path 图片路径
+	 * @param imageView 加载图片的ImageView
+	 * @param options 图片加载参数
+	 * @param isFromNet 是否网络图片
 	 * @throws InterruptedException 
 	 */
 	public void loadImage( String path,  ImageView imageView, DisplayImageOptions options,
-			 boolean isFromNet, Context context) 
+			 boolean isFromNet) 
 	{
-		options.displayer.display(BitmapFactory.decodeResource(context.getResources(),options.imageResOnLoading), imageView);
+		options.displayer.display(options.imageResOnLoading, imageView);
 		if (mUIHandler == null)
 		{
-			mUIHandler = new Handler(context.getMainLooper())
+			mUIHandler = new Handler(mContext.getMainLooper())
 			{
 				public void handleMessage(Message msg)
 				{
@@ -182,13 +197,11 @@ public class ImageLoader {
 					Bitmap bm = holder.bitmap;
 					ImageView view = holder.imageView;
 					DisplayImageOptions options=holder.options;
-					Context context=holder.context;
-					if(bm!=null){
-						Log.i(TAG, options.displayer.getClass().toString());
+					if(bm!=null){			
 						options.displayer.display(bm, view);
 					}
 					else {
-						options.displayer.display(BitmapFactory.decodeResource(context.getResources(),options.imageResOnFail), view);
+						options.displayer.display(options.imageResOnFail, view);
 					}
 				};
 			};
@@ -199,9 +212,9 @@ public class ImageLoader {
 
 		if (bm != null)
 		{
-			refreashBitmap(path, imageView, bm,options,context);
+			refreashBitmap(path, imageView, bm,options);
 		} else{
-			addTask(buildTask(path, imageView,options, isFromNet,context));
+			addTask(buildTask(path, imageView,options, isFromNet));
 		}
 
 	}
@@ -215,7 +228,7 @@ public class ImageLoader {
 	 * @return
 	 */
 	private Runnable buildTask(final String path, final ImageView imageView,final DisplayImageOptions options,
-			final boolean isFromNet,final Context context)
+			final boolean isFromNet)
 	{
 		return new Runnable()
 		{
@@ -254,7 +267,7 @@ public class ImageLoader {
 					addBitmapToLruCache(path, bm);
 				}
 				//发送消息至UI线程
-				refreashBitmap(path, imageView, bm,options,context);
+				refreashBitmap(path, imageView, bm,options);
 				//释放信号
 				mSemaphoreThreadPool.release();
 			}
@@ -326,14 +339,13 @@ public class ImageLoader {
 	}
 
 	private void refreashBitmap(String path, ImageView imageView,
-			Bitmap bm,DisplayImageOptions options,Context context){
+			Bitmap bm,DisplayImageOptions options){
 		Message message = Message.obtain();
 		ImgBeanHolder holder = new ImgBeanHolder();
 		holder.bitmap = bm;
 		holder.path = path;
 		holder.imageView = imageView;
 		holder.options=options;
-		holder.context=context;
 		message.obj = holder;
 		mUIHandler.sendMessage(message);
 	}
@@ -448,6 +460,5 @@ public class ImageLoader {
 		ImageView imageView;
 		String path;
 		DisplayImageOptions options;
-		Context context;
 	}
 }

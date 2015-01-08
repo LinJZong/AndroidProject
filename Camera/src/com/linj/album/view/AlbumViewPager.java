@@ -9,7 +9,7 @@ import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
-import com.linj.imageloader.displayer.FadeInBitmapDisplayer;
+import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
 
 import android.content.Context;
@@ -36,7 +36,11 @@ public class AlbumViewPager extends ViewPager  {
 	private ImageLoader mImageLoader;
 	/**  º”‘ÿÕº∆¨≈‰÷√≤Œ ˝ */ 
 	private DisplayImageOptions mOptions;	
-
+@Override
+public boolean onInterceptTouchEvent(MotionEvent arg0) {
+	// TODO Auto-generated method stub
+	return super.onInterceptTouchEvent(arg0);
+}
 
 	public AlbumViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -48,7 +52,7 @@ public class AlbumViewPager extends ViewPager  {
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true)
 				.cacheOnDisk(false)
-				.displayer(new FadeInBitmapDisplayer());
+				.displayer(new MatrixBitmapDisplayer());
 		mOptions=builder.build();
 	}
 
@@ -93,8 +97,7 @@ public class AlbumViewPager extends ViewPager  {
 			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
 			String path=paths.get(position);
 			//			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-			mImageLoader.loadImage(path, imageView, mOptions, false, getContext());
-//			imageView.setImageBitmap(BitmapFactory.decodeFile(path));
+			mImageLoader.loadImage(path, imageView, mOptions, false);
 			return imageLayout;
 		}
 

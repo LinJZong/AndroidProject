@@ -23,7 +23,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
+/** 
+* @ClassName: RoundedBitmapDisplayer 
+* @Description:  Ô²ÐÎÍ¼Æ¬
+* @author LinJ
+* @date 2015-1-8 ÉÏÎç9:47:31 
+*  
+*/
 public class RoundedBitmapDisplayer implements BitmapDisplayer {
 
 	protected final int cornerRadius;
@@ -42,7 +50,10 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 	public void display(Bitmap bitmap, ImageView imageView) {
 		imageView.setImageDrawable(new RoundedDrawable(bitmap, cornerRadius, margin));
 	}
-
+	@Override
+	public void display(int resouceID, ImageView imageView) {
+		imageView.setImageResource(resouceID);
+	}
 
 	public static class RoundedDrawable extends Drawable{
 
@@ -122,4 +133,7 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 			invalidateSelf();
 		}
 	}
+
+
+	
 }

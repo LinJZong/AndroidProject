@@ -18,25 +18,37 @@ package com.linj.imageloader.displayer;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 
-/**
- * Displays image with "fade in" animation
- *
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com), Daniel Martí
- * @since 1.6.4
- */
-public class FadeInBitmapDisplayer implements BitmapDisplayer {
+/** 
+* @ClassName: MatrixBitmapDisplayer 
+* @Description:  Matrix效果的BitmapDisplayer
+* @author LinJ
+* @date 2015-1-8 上午9:54:22 
+*  
+*/
+public class MatrixBitmapDisplayer implements BitmapDisplayer {
 	/**
 	 * @param durationMillis Duration of "fade-in" animation (in milliseconds)
 	 */
-	public FadeInBitmapDisplayer() {
+	public MatrixBitmapDisplayer() {
 		
 	}
 
 	@Override
 	public void display(Bitmap bitmap, ImageView imageView) {
+		//正常的图片设置为FIT_CENTER
+		imageView.setScaleType(ScaleType.FIT_CENTER);
 		imageView.setImageBitmap(bitmap);
 	}
+
+	@Override
+	public void display(int resouceID, ImageView imageView) {
+		// 加载前和出错的的图片不自动拉伸
+		imageView.setScaleType(ScaleType.CENTER);
+		imageView.setImageResource(resouceID);
+	}
+	
 
 }

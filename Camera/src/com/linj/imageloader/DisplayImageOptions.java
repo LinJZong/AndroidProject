@@ -2,13 +2,13 @@ package com.linj.imageloader;
 
 import com.linj.imageloader.displayer.BitmapDisplayer;
 
-
-
-
-
-
-
-
+/** 
+* @ClassName: DisplayImageOptions 
+* @Description:  图片加载参数
+* @author LinJ
+* @date 2015-1-8 上午9:47:04 
+*  
+*/
 public class DisplayImageOptions {
 	
 	public int imageResOnLoading;

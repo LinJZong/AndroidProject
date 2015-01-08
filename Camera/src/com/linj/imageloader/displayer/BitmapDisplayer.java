@@ -15,6 +15,7 @@
  *******************************************************************************/
 package com.linj.imageloader.displayer;
 
+import android.R.integer;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,4 +42,5 @@ public interface BitmapDisplayer {
 	 * ImageAware}
 	 */
 	void display(Bitmap bitmap, ImageView imageView);
+	void display(int resouceID,ImageView imageView);
 }

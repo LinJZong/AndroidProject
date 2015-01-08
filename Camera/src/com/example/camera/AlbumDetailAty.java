@@ -13,7 +13,7 @@ import com.linj.album.view.AlbumViewPager;
 import com.linj.album.view.AlbumViewPager.MyPageChangeListener;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
-import com.linj.imageloader.displayer.FadeInBitmapDisplayer;
+import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 
 
 
@@ -58,8 +58,6 @@ public class AlbumDetailAty extends Activity {
 	private AlbumViewPager pagerPhoto;//显示大图
 	private TextView txtTitle;
 	private int oldPosition=0;//当前选择的文件序号
-	DisplayImageOptions options;//异步加载网络配置参数
-	protected ImageLoader imageLoader;
 	private boolean isWeb;//是否网络图片
 	List<String> urls=new ArrayList<String>();//存放viewpager所有图片链接的数组 
 	Bitmap lastEditBitmap;//表示最后一张编辑的图片 在viewpager切换时置为null
@@ -71,21 +69,11 @@ public class AlbumDetailAty extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.bigphoto);
-		imageLoader=ImageLoader.getInstance(this);
 		pagerPhoto=(AlbumViewPager)findViewById(R.id.pagerPhoto);
 		mSaveRoot="test";
 //		pagerPhoto.setOnPageChangeListener2(new PhotoPageChangeListener());//view改变事件
 
 		//设置网络图片加载参数
-		DisplayImageOptions.Builder builder=new DisplayImageOptions.Builder();
-		builder = builder
-				.showImageOnLoading(R.drawable.ic_stub)
-				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(true)
-				.cacheOnDisk(false)
-				.displayer(new FadeInBitmapDisplayer());
-
-		options = builder.build();
 		pagerPhoto.loadAlbum(mSaveRoot);
 
 	}

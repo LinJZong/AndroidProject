@@ -47,7 +47,6 @@ public class AlbumItemView extends FrameLayout  {
 		mViewHolder=new ViewHolder(imageView,checkBox);
 		this.mImageLoader=imageLoader;
 		this.mOptions=options;
-	
 	}
 
 	/**  
@@ -66,7 +65,7 @@ public class AlbumItemView extends FrameLayout  {
 		}
 		//原路径和当前路径不同，更新图片
 		if (mPath==null||!mPath.equals(path)) {
-			mImageLoader.loadImage(path, mViewHolder.imageView, mOptions, false,getContext());
+			mImageLoader.loadImage(path, mViewHolder.imageView, mOptions, false);
 			mPath=path;
 			//给checkbox设置tag,用以记录当前选中项
 			mViewHolder.checkBox.setTag(path);
@@ -91,7 +90,6 @@ public class AlbumItemView extends FrameLayout  {
 		mViewHolder.imageView.setOnClickListener(l);
 	}
 	
-
 	public class ViewHolder {
 		public ViewHolder(ImageView imageView,CheckBox checkBox){
 			this.imageView=imageView;
