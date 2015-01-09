@@ -7,40 +7,36 @@ import java.util.List;
 
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
+import com.linj.album.view.MatrixImageView.OnChildMovingListener;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
-import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
-
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-/***
- * 自定义viewpager  在page改变时传递旧的position和新的position
- * @author Administrator
- *
- */
-public class AlbumViewPager extends ViewPager  {
-	int cPosition=0;//表示当前的position
-	boolean lock=false;//是否锁定viewpager 当lock=true时 无法滑动viewpager
+
+/** 
+* @ClassName: AlbumViewPager 
+* @Description:  自定义viewpager  优化了事件拦截
+* @author LinJ
+* @date 2015-1-9 下午5:33:33 
+*  
+*/
+public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
+	private final static String TAG="AlbumViewPager";
 
 	/**  图片加载器 优化了了缓存  */ 
 	private ImageLoader mImageLoader;
 	/**  加载图片配置参数 */ 
 	private DisplayImageOptions mOptions;	
-@Override
-public boolean onInterceptTouchEvent(MotionEvent arg0) {
-	// TODO Auto-generated method stub
-	return super.onInterceptTouchEvent(arg0);
-}
+
+	/**  当前子控件是否处理拖动状态  */ 
+	private boolean mChildIsBeingDragged=false;
 
 	public AlbumViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -55,8 +51,6 @@ public boolean onInterceptTouchEvent(MotionEvent arg0) {
 				.displayer(new MatrixBitmapDisplayer());
 		mOptions=builder.build();
 	}
-
-
 
 
 	/**  
@@ -76,6 +70,15 @@ public boolean onInterceptTouchEvent(MotionEvent arg0) {
 		}
 	}
 
+	
+	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent arg0) {
+		if(mChildIsBeingDragged)
+			return false;
+		return super.onInterceptTouchEvent(arg0);
+	}
+	
 	public class ViewPagerAdapter extends PagerAdapter {
 		private List<String> paths;//大图地址 如果为网络图片 则为大图url
 		private View mCurrentView;
@@ -94,7 +97,8 @@ public boolean onInterceptTouchEvent(MotionEvent arg0) {
 			View imageLayout = inflate(getContext(),R.layout.item_album_pager, null);
 			viewGroup.addView(imageLayout);
 			assert imageLayout != null;
-			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
+			MatrixImageView imageView = (MatrixImageView) imageLayout.findViewById(R.id.image);
+			imageView.setOnMovingListener(AlbumViewPager.this);
 			String path=paths.get(position);
 			//			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 			mImageLoader.loadImage(path, imageView, mOptions, false);
@@ -127,41 +131,7 @@ public boolean onInterceptTouchEvent(MotionEvent arg0) {
 		}
 	}
 
-	/**
-	 * 自定义page改变时的监听事件
-	 * @param myPageChangeListener
-	 */
-	public void setOnPageChangeListener(final MyPageChangeListener myPageChangeListener){
 
-		//实现原有的OnPageChangeListener
-		setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				// 实现原有的onPageSelected事件
-				myPageChangeListener.onPageSelected(position);
-				//实现自定义的onPageChanged事件
-				myPageChangeListener.onPageChanged(cPosition,position);
-				//更新当前position为oldPosition
-				cPosition=position;
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-				myPageChangeListener.onPageScrolled(arg0,arg1,arg2);
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
-				myPageChangeListener.onPageScrollStateChanged(arg0);
-			}
-		});
-	}
-
-	public void setLock(boolean islock) {
-		this.lock=islock;
-	}
 
 	@Override  
 	public boolean onTouchEvent(MotionEvent arg0) {  
@@ -176,6 +146,19 @@ public boolean onInterceptTouchEvent(MotionEvent arg0) {
 		 * @param newPosition 移动后的position
 		 */
 		public void onPageChanged(int oldPosition,int newPosition);   
+	}
+
+	@Override
+	public void startDrag() {
+		// TODO Auto-generated method stub
+		mChildIsBeingDragged=true;
+	}
+
+
+	@Override
+	public void stopDrag() {
+		// TODO Auto-generated method stub
+		mChildIsBeingDragged=false;
 	}
 
 }
