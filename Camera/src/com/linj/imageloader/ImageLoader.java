@@ -179,11 +179,9 @@ public class ImageLoader {
 	 * @param path 图片路径
 	 * @param imageView 加载图片的ImageView
 	 * @param options 图片加载参数
-	 * @param isFromNet 是否网络图片
 	 * @throws InterruptedException 
 	 */
-	public void loadImage( String path,  ImageView imageView, DisplayImageOptions options,
-			 boolean isFromNet) 
+	public void loadImage( String path,  ImageView imageView, DisplayImageOptions options) 
 	{
 		options.displayer.display(options.imageResOnLoading, imageView);
 		if (mUIHandler == null)
@@ -214,7 +212,7 @@ public class ImageLoader {
 		{
 			refreashBitmap(path, imageView, bm,options);
 		} else{
-			addTask(buildTask(path, imageView,options, isFromNet));
+			addTask(buildTask(path, imageView,options));
 		}
 
 	}
@@ -224,11 +222,10 @@ public class ImageLoader {
 	 * 
 	 * @param path
 	 * @param imageView
-	 * @param isFromNet
 	 * @return
 	 */
-	private Runnable buildTask(final String path, final ImageView imageView,final DisplayImageOptions options,
-			final boolean isFromNet)
+	private Runnable buildTask(final String path, final ImageView imageView,
+			final DisplayImageOptions options)
 	{
 		return new Runnable()
 		{
@@ -236,7 +233,7 @@ public class ImageLoader {
 			public void run()
 			{
 				Bitmap bm = null;
-				if (isFromNet)
+				if (options.fromNet)
 				{
 					//先去缓存文件夹查找
 					File file = getDiskCacheDir(imageView.getContext(),

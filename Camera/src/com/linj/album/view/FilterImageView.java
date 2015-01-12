@@ -20,7 +20,7 @@ import android.widget.ImageView;
  *  
  */
 public class FilterImageView extends ImageView implements GestureDetector.OnGestureListener{
-	private static final String TAG="FilterImageView";
+	public static final String TAG="FilterImageView";
 	/**   º‡Ã˝ ÷ ∆*/ 
 	private GestureDetector mGestureDetector;
 	public FilterImageView(Context context, AttributeSet attrs) {

@@ -30,7 +30,7 @@ import android.widget.ImageView;
  *  
  */
 public class CameraAty extends Activity implements View.OnClickListener,TakePictureListener{
-	private final static String TAG="CameraAty";
+	public final static String TAG="CameraAty";
 	private String mSaveRoot;
 	private CameraContainer mContainer;
 	private FilterImageView mThumbView;
@@ -85,7 +85,6 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			mContainer.takePicture(this);
 			break;
 		case R.id.btn_thumbnail:
-			
             startActivity(new Intent(this,AlbumAty.class));
 			break;
 		case R.id.btn_flash_mode:

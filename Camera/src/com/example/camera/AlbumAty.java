@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import android.widget.Toast;
 *  
 */
 public class AlbumAty extends Activity implements View.OnClickListener,AlbumGridView.OnCheckedChangeListener{
-	private final static String TAG="AlbumAty";
+	public final static String TAG="AlbumAty";
 	/**
 	 * 显示相册的View
 	 */
@@ -41,6 +42,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 	private TextView mSelectedCounterView;
 	private TextView mSelectAllView;
 	private Button mDeleteButton;
+	private ImageView mBackView;
+	private Button mCutButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +58,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 		mSelectAllView=(TextView)findViewById(R.id.select_all);
 		mSelectedCounterView=(TextView)findViewById(R.id.header_bar_select_counter);
 		mDeleteButton=(Button)findViewById(R.id.delete);
+		mCutButton=(Button)findViewById(R.id.move);
+		mBackView=(ImageView)findViewById(R.id.header_bar_back);
 		
 		mSelectedCounterView.setText("0");
 
@@ -62,6 +67,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 		mLeaveView.setOnClickListener(this);
 		mSelectAllView.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
+        mCutButton.setOnClickListener(this);
+        mBackView.setOnClickListener(this);
         
 		mAlbumView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -69,7 +76,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (mAlbumView.getEditable()) return; 
-				Intent intent=new Intent(AlbumAty.this,AlbumDetailAty.class);
+				Intent intent=new Intent(AlbumAty.this,AlbumItemAty.class);
+				intent.putExtra("path", arg1.getTag().toString());
 				startActivity(intent);
 			}
 		});
@@ -93,15 +101,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 
 	@Override
 	protected void onResume() {
-		// 本地图片 在resume时刷新gridview 网络图片时不刷新 避免流量浪费
-
 		super.onResume();
 	}
-
-
-
-
-
 
 	@Override
 	public void onClick(View v) {
@@ -119,13 +120,44 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 		case R.id.delete:
 			showDeleteDialog();
 			break;
+		case R.id.header_bar_back:
+			Intent intent=new Intent(this,CameraAty.class);
+			startActivity(intent);
+			break;
 		default:
 			break;
 		}
 	}
 
+	private void enterEdit() {
+		mAlbumView.setEditable(true,this);
+		mSelectAllView.setText(getResources().getString(R.string.album_phoot_select_all));
+		mDeleteButton.setEnabled(false);
+		mCutButton.setEnabled(false);
+		findViewById(R.id.header_bar_navi).setVisibility(View.GONE);
+		findViewById(R.id.header_bar_select).setVisibility(View.VISIBLE);
+		findViewById(R.id.album_bottom_bar).setVisibility(View.VISIBLE);
+	}
 
-
+	private void leaveEdit() {
+		mAlbumView.setEditable(false);
+		mCutButton.setEnabled(false);
+		findViewById(R.id.header_bar_navi).setVisibility(View.VISIBLE);
+		findViewById(R.id.header_bar_select).setVisibility(View.GONE);
+		findViewById(R.id.album_bottom_bar).setVisibility(View.GONE);
+	}
+	
+	private void selectAllClick() {
+		if(mSelectAllView.getText().equals(getResources().getString(R.string.album_phoot_select_all))){
+			mAlbumView.selectAll(this);
+			mSelectAllView.setText(getResources().getString(R.string.album_phoot_unselect_all));
+		}else{
+			mAlbumView.unSelectAll(this);
+			mSelectAllView.setText(getResources().getString(R.string.album_phoot_select_all));
+		}
+			
+	}
+	
 	private void showDeleteDialog() {
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
 		builder.setMessage("确定要要删除?")
@@ -152,42 +184,11 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 	}
 
 
-	private void selectAllClick() {
-		if(mSelectAllView.getText().equals(getResources().getString(R.string.album_phoot_select_all))){
-			mAlbumView.selectAll(this);
-			mSelectAllView.setText(getResources().getString(R.string.album_phoot_unselect_all));
-		}else{
-			mAlbumView.unSelectAll(this);
-			mSelectAllView.setText(getResources().getString(R.string.album_phoot_select_all));
-		}
-			
-	}
+	
+	
 
 
-
-
-
-
-	private void leaveEdit() {
-		mAlbumView.setEditable(false);
-		findViewById(R.id.header_bar_navi).setVisibility(View.VISIBLE);
-		findViewById(R.id.header_bar_select).setVisibility(View.GONE);
-		findViewById(R.id.album_bottom_bar).setVisibility(View.GONE);
-	}
-
-
-
-
-
-
-	private void enterEdit() {
-		mAlbumView.setEditable(true,this);
-		mSelectAllView.setText(getResources().getString(R.string.album_phoot_select_all));
-		mDeleteButton.setEnabled(false);
-		findViewById(R.id.header_bar_navi).setVisibility(View.GONE);
-		findViewById(R.id.header_bar_select).setVisibility(View.VISIBLE);
-		findViewById(R.id.album_bottom_bar).setVisibility(View.VISIBLE);
-	}
+	
 
 
 	@Override
@@ -196,8 +197,10 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 		mSelectedCounterView.setText(String.valueOf(set.size()));
 		if(set.size()>0){
 			mDeleteButton.setEnabled(true);
+			mCutButton.setEnabled(true);
 		}else {
 			mDeleteButton.setEnabled(false);
+			mCutButton.setEnabled(false);
 		}
 	}
 	@Override

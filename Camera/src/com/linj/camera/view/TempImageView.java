@@ -25,7 +25,7 @@ import android.widget.ImageView;
  */
 public class TempImageView extends ImageView implements AnimationListener{
 
-	private final static String TAG="TempImageView";
+	public final static String TAG="TempImageView";
 
 	/**
 	 * 不存在的动画ID

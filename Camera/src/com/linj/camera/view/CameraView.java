@@ -39,7 +39,7 @@ import android.widget.Toast;
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 
-	private final static String TAG="CameraView";
+	public final static String TAG="CameraView";
 
 	/** 和该View绑定的Camera对象 */
 	private Camera mCamera;
@@ -245,18 +245,17 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	 *   根据当前朝向修改保存图片的旋转角度
 	 */
 	private void updateCameraOrientation(){
-
 		if(mCamera!=null){
 			Camera.Parameters parameters = mCamera.getParameters();
-			//相机默认是横屏模式，当前为竖屏时，需要旋转90°
+			//相机默认是横屏模式，当前为竖屏时，生成的图片需要旋转90°
 			if (mCurrentOrientation) {
-				mCamera.setDisplayOrientation(90);//预览转90°
 				parameters.set("rotation", 90);//生成的图片转90°
 			}
 			else  {
-				parameters.set("orientation", "landscape");
 				parameters.set("rotation", 0);
 			}
+			//预览图片旋转90°
+			mCamera.setDisplayOrientation(90);//预览转90°
 			mCamera.setParameters(parameters);
 		}
 	}

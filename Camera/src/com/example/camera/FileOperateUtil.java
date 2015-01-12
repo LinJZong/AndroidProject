@@ -27,7 +27,7 @@ import android.os.Environment;
 *  
 */
 public class FileOperateUtil {
-	private final static String TAG="FileOperateUtil";
+	public final static String TAG="FileOperateUtil";
 
 	public final static int ROOT=0;//��Ŀ¼
 	public final static int TYPE_IMAGE=1;//ͼƬ

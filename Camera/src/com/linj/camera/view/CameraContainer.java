@@ -41,7 +41,7 @@ import android.widget.Toast;
 public class CameraContainer extends RelativeLayout implements PictureCallback
 ,OnSeekBarChangeListener,AutoFocusCallback{
 
-	private final static String TAG="CameraContainer";
+	public final static String TAG="CameraContainer";
 
 	/** 相机绑定的SurfaceView  */ 
 	private CameraView mCameraView;

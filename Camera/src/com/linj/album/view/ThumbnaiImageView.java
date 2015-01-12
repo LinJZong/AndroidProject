@@ -31,15 +31,15 @@ import android.widget.ImageView;
  * @date 2015-1-5 下午5:39:35 
  *  
  */
-public class AlbumItemView extends FrameLayout  {
-	private static  final String TAG="AlbumItemView";
+public class ThumbnaiImageView extends FrameLayout  {
+	public static  final String TAG="AlbumItemView";
 	private final ViewHolder mViewHolder;
 	private final ImageLoader mImageLoader;
 	private final DisplayImageOptions mOptions;
 	private String mPath;
 	private int mPosition;
 
-	public AlbumItemView(Context context,ImageLoader imageLoader,DisplayImageOptions options) {
+	public ThumbnaiImageView(Context context,ImageLoader imageLoader,DisplayImageOptions options) {
 		super(context);
 		inflate(context, R.layout.item_album_grid, this);
 		FilterImageView imageView=(FilterImageView) findViewById(R.id.imgThumbnail);
@@ -65,10 +65,11 @@ public class AlbumItemView extends FrameLayout  {
 		}
 		//原路径和当前路径不同，更新图片
 		if (mPath==null||!mPath.equals(path)) {
-			mImageLoader.loadImage(path, mViewHolder.imageView, mOptions, false);
+			mImageLoader.loadImage(path, mViewHolder.imageView, mOptions);
 			mPath=path;
 			//给checkbox设置tag,用以记录当前选中项
 			mViewHolder.checkBox.setTag(path);
+			setTag(path);
 			mPosition=position;
 		}
 	}

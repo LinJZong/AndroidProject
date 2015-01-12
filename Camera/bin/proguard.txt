@@ -1,0 +1,25 @@
+# view AndroidManifest.xml #generated:27
+-keep class com.example.camera.AlbumAty { <init>(...); }
+
+# view AndroidManifest.xml #generated:37
+-keep class com.example.camera.AlbumItemAty { <init>(...); }
+
+# view AndroidManifest.xml #generated:21
+-keep class com.example.camera.CameraAty { <init>(...); }
+
+# view res/layout/album.xml #generated:17
+-keep class com.linj.album.view.AlbumGridView { <init>(...); }
+
+# view res/layout/albumitem.xml #generated:8
+-keep class com.linj.album.view.AlbumViewPager { <init>(...); }
+
+# view res/layout/camera_bottom_bar.xml #generated:20
+# view res/layout/item_album_grid.xml #generated:7
+-keep class com.linj.album.view.FilterImageView { <init>(...); }
+
+# view res/layout/item_album_pager.xml #generated:6
+-keep class com.linj.album.view.MatrixImageView { <init>(...); }
+
+# view res/layout/camera.xml #generated:10
+-keep class com.linj.camera.view.CameraContainer { <init>(...); }
+

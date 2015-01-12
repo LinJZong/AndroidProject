@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:visibility="visible" >
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/header_bar_navi"
@@ -39,7 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
-            android:background="@color/common_title_bg"
             android:gravity="center"
             android:paddingLeft="8.0dip"
             android:paddingRight="8.0dip"
@@ -111,53 +109,5 @@
             android:textSize="17.0sp" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/header_bar_photo_browse"
-        android:layout_width="fill_parent"
-        android:visibility="gone"
-        android:layout_height="@dimen/album_header_bar_height"
-        android:background="@color/common_title_bg" >
-
-        <ImageView
-            android:id="@+id/header_bar_photo_back"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/title_view_left_back_padding_left"
-            android:paddingRight="5.0dip"
-            android:scaleType="fitCenter"
-            android:src="@drawable/btn_photopage_top_bar_selector" />
-
-        <TextView
-            android:id="@+id/album_title"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_toRightOf="@id/header_bar_photo_back"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/album_title"
-            android:textColor="#ffe8e8e8"
-            android:textSize="17.0sp" />
-
-        <TextView
-            android:id="@+id/header_bar_photo_count"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textColor="@color/primary_title_text_color"
-            android:textSize="19.0sp" />
-
-        <ImageView
-            android:id="@+id/header_bar_photo_to_camera"
-            android:layout_width="@dimen/album_header_btn_width"
-            android:layout_height="fill_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="-2.0dip"
-            android:padding="12.0dip"
-            android:scaleType="fitCenter"
-            android:src="@drawable/btn_back_to_camera_selector" />
-    </RelativeLayout>
 
 </LinearLayout>

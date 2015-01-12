@@ -3,7 +3,7 @@
     android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#000000"
     android:orientation="vertical" >
 
     <!-- 显示预览图形 -->

@@ -23,6 +23,7 @@ containing a value of this type.
         public static final int animat_id=0x7f010000;
     }
     public static final class color {
+        public static final int album_item_bg=0x7f050005;
         public static final int common_text_yellow=0x7f050004;
         public static final int common_title_bg=0x7f050001;
         public static final int common_title_text=0x7f050003;
@@ -99,51 +100,54 @@ containing a value of this type.
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
-        public static final int action_settings=0x7f0a0022;
+        public static final int action_settings=0x7f0a0023;
         public static final int album_bottom_bar=0x7f0a0002;
-        public static final int album_title=0x7f0a0010;
+        public static final int album_item_bottom_bar=0x7f0a0014;
+        public static final int album_item_header_bar=0x7f0a0013;
         public static final int albumview=0x7f0a0001;
-        public static final int btn_cloud_home=0x7f0a0019;
-        public static final int btn_flash_mode=0x7f0a001c;
-        public static final int btn_other=0x7f0a0018;
-        public static final int btn_other_setting=0x7f0a001d;
-        public static final int btn_shutter=0x7f0a0017;
-        public static final int btn_switch_camera=0x7f0a001b;
-        public static final int btn_thumbnail=0x7f0a0016;
-        public static final int checkbox=0x7f0a001f;
-        public static final int container=0x7f0a0014;
-        public static final int delete=0x7f0a0005;
-        public static final int download=0x7f0a0004;
-        public static final int header_bar_album_title=0x7f0a0008;
-        public static final int header_bar_back=0x7f0a0007;
-        public static final int header_bar_enter_selection=0x7f0a0009;
-        public static final int header_bar_leave_selection=0x7f0a000b;
-        public static final int header_bar_navi=0x7f0a0006;
+        public static final int albumviewpager=0x7f0a0012;
+        public static final int btn_cloud_home=0x7f0a001a;
+        public static final int btn_flash_mode=0x7f0a001d;
+        public static final int btn_other=0x7f0a0019;
+        public static final int btn_other_setting=0x7f0a001e;
+        public static final int btn_shutter=0x7f0a0018;
+        public static final int btn_switch_camera=0x7f0a001c;
+        public static final int btn_thumbnail=0x7f0a0017;
+        public static final int checkbox=0x7f0a0020;
+        public static final int container=0x7f0a0015;
+        public static final int delete=0x7f0a0004;
+        public static final int edit=0x7f0a000d;
+        public static final int header_bar_album_title=0x7f0a0007;
+        public static final int header_bar_back=0x7f0a0006;
+        public static final int header_bar_enter_selection=0x7f0a0008;
+        public static final int header_bar_leave_selection=0x7f0a000a;
+        public static final int header_bar_navi=0x7f0a0005;
         public static final int header_bar_photo_back=0x7f0a000f;
         public static final int header_bar_photo_browse=0x7f0a000e;
-        public static final int header_bar_photo_count=0x7f0a0011;
-        public static final int header_bar_photo_to_camera=0x7f0a0012;
-        public static final int header_bar_select=0x7f0a000a;
-        public static final int header_bar_select_counter=0x7f0a000c;
-        public static final int image=0x7f0a0020;
-        public static final int imgThumbnail=0x7f0a001e;
-        public static final int img_mode_function_new_red_point=0x7f0a001a;
-        public static final int loading=0x7f0a0021;
-        public static final int pagerPhoto=0x7f0a0013;
-        public static final int select_all=0x7f0a000d;
-        public static final int share=0x7f0a0003;
-        public static final int testl=0x7f0a0015;
+        public static final int header_bar_photo_count=0x7f0a0010;
+        public static final int header_bar_photo_to_camera=0x7f0a0011;
+        public static final int header_bar_select=0x7f0a0009;
+        public static final int header_bar_select_counter=0x7f0a000b;
+        public static final int image=0x7f0a0021;
+        public static final int imgThumbnail=0x7f0a001f;
+        public static final int img_mode_function_new_red_point=0x7f0a001b;
+        public static final int loading=0x7f0a0022;
+        public static final int move=0x7f0a0003;
+        public static final int select_all=0x7f0a000c;
+        public static final int testl=0x7f0a0016;
     }
     public static final class layout {
         public static final int album=0x7f030000;
         public static final int album_bottom_bar=0x7f030001;
         public static final int album_header_bar=0x7f030002;
-        public static final int bigphoto=0x7f030003;
-        public static final int camera=0x7f030004;
-        public static final int camera_bottom_bar=0x7f030005;
-        public static final int camera_top_bar=0x7f030006;
-        public static final int item_album_grid=0x7f030007;
-        public static final int item_album_pager=0x7f030008;
+        public static final int album_item_bottom_bar=0x7f030003;
+        public static final int album_item_header_bar=0x7f030004;
+        public static final int albumitem=0x7f030005;
+        public static final int camera=0x7f030006;
+        public static final int camera_bottom_bar=0x7f030007;
+        public static final int camera_top_bar=0x7f030008;
+        public static final int item_album_grid=0x7f030009;
+        public static final int item_album_pager=0x7f03000a;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -169,9 +173,10 @@ containing a value of this type.
         public static final int album_title=0x7f07000c;
         public static final int api_cancel=0x7f070008;
         public static final int app_name=0x7f070000;
+        public static final int common_cut=0x7f07000e;
         public static final int common_delete=0x7f07000f;
+        public static final int common_edit=0x7f070010;
         public static final int hello_world=0x7f070002;
-        public static final int pgcommon_download=0x7f07000e;
         public static final int pgcommon_share=0x7f07000d;
     }
     public static final class style {

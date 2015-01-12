@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
  *  
  */
 public class FocusImageView extends ImageView implements AnimationListener{
+	public final static String TAG="FocusImageView";
 	private static final int NO_ID=-1;
 	private int mFocusImg=NO_ID;
 	private int mFocusSucceedImg=NO_ID;

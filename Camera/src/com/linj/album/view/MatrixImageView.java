@@ -1,12 +1,14 @@
 package com.linj.album.view;
 
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -21,7 +23,7 @@ import android.widget.ImageView;
  *  
  */
 public class MatrixImageView extends ImageView{
-	private final static String TAG="MatrixImageView";
+	public final static String TAG="MatrixImageView";
 	private GestureDetector mGestureDetector;
 	/**  模板Matrix，用以初始化 */ 
 	private  Matrix mMatrix=new Matrix();
@@ -30,9 +32,10 @@ public class MatrixImageView extends ImageView{
 	/**  图片高度 */ 
 	private float mImageHeight;
 	/**  原始缩放级别 */ 
-	private float mScale;
-	private OnChildMovingListener moveListener;
-
+	private float mScale
+	;
+	private OnMovingListener moveListener;
+    private OnSingleTapListener singleTapListener;
 	public MatrixImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		MatrixTouchListener mListener=new MatrixTouchListener();
@@ -44,10 +47,12 @@ public class MatrixImageView extends ImageView{
 		setScaleType(ScaleType.FIT_CENTER);
 	}
 
-	public void setOnMovingListener(OnChildMovingListener listener){
+	public void setOnMovingListener(OnMovingListener listener){
 		moveListener=listener;
 	}
-
+	public void setOnSingleTapListener(OnSingleTapListener onSingleTapListener) {
+		this.singleTapListener = onSingleTapListener;
+	}
 	@Override
 	public void setImageBitmap(Bitmap bm) {
 		// TODO Auto-generated method stub
@@ -428,10 +433,6 @@ public class MatrixImageView extends ImageView{
 			super.onShowPress(e);
 		}
 
-
-
-
-
 		@Override
 		public boolean onDoubleTapEvent(MotionEvent e) {
 			// TODO Auto-generated method stub
@@ -440,14 +441,31 @@ public class MatrixImageView extends ImageView{
 
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
-			// TODO Auto-generated method stub
+			if(singleTapListener!=null) singleTapListener.onSingleTap();
 			return super.onSingleTapConfirmed(e);
 		}
 
 	}
-	public interface OnChildMovingListener{
+	/** 
+	* @ClassName: OnChildMovingListener 
+	* @Description:  MatrixImageView移动监听接口,用以组织ViewPager对Move操作的拦截
+	* @author LinJ
+	* @date 2015-1-12 下午4:39:32 
+	*  
+	*/
+	public interface OnMovingListener{
 		public void  startDrag();
 		public void  stopDrag();
 	}
 
+	/** 
+	* @ClassName: OnSingleTapListener 
+	* @Description:  监听ViewPager屏幕单击事件，本质是监听子控件MatrixImageView的单击事件
+	* @author LinJ
+	* @date 2015-1-12 下午4:48:52 
+	*  
+	*/
+	public interface OnSingleTapListener{
+		public void onSingleTap();
+	}
 }

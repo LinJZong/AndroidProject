@@ -16,13 +16,14 @@ public class DisplayImageOptions {
 	public boolean cacheInMemory;
 	public boolean cacheOnDisk;
 	public BitmapDisplayer displayer;
-	
+	public boolean fromNet;
 	private DisplayImageOptions(Builder builder) {
 		this.imageResOnLoading=builder.imageResOnLoading;
 		this.imageResOnFail=builder.imageResOnFail;
 		this.cacheInMemory=builder.cacheInMemory;
 		this.cacheOnDisk=builder.cacheOnDisk;
 		this.displayer=builder.displayer;
+		this.fromNet=builder.fromNet;
 	}
 
 	public static class Builder{
@@ -32,6 +33,7 @@ public class DisplayImageOptions {
 		private boolean cacheInMemory;
 		private boolean cacheOnDisk;
 		private BitmapDisplayer displayer;
+		private boolean fromNet;
 		/**
 		 * 设置 加载图片中显示的图片
 		 * @param imageRes 图片ID
@@ -78,6 +80,15 @@ public class DisplayImageOptions {
 			this.displayer = displayer;
 			return this;
 		}
+		/**  
+		*  设置是否加载网络图片
+		*  @param fromNet
+		*  @return   
+		*/
+		public Builder setFromNet(boolean fromNet) {
+			this.fromNet = fromNet;
+			return this;
+		}
 		/**
 		 * 创建DisplayImageOptions对象
 		 * @return
@@ -86,5 +97,7 @@ public class DisplayImageOptions {
 			//在这里做builder所有字段的非空判断
 			return new DisplayImageOptions(this);
 		}
+
+		
 	}
 }

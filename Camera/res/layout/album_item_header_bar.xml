@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header_bar_photo_browse"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/album_header_bar_height"
+        android:background="@color/common_title_bg" >
+
+        <ImageView
+            android:id="@+id/header_bar_photo_back"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/title_view_left_back_padding_left"
+            android:paddingRight="5.0dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_photopage_top_bar_selector" />
+
+        <TextView
+            android:id="@+id/header_bar_photo_count"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/header_bar_photo_back"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_marginLeft="20dip"
+            android:textColor="@color/primary_title_text_color"
+            android:textSize="22.0sp" />
+
+        <ImageView
+            android:id="@+id/header_bar_photo_to_camera"
+            android:layout_width="@dimen/album_header_btn_width"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="-2.0dip"
+            android:padding="12.0dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_back_to_camera_selector" />
+    </RelativeLayout>
+
+</LinearLayout>

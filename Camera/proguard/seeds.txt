@@ -1,0 +1,240 @@
+android.support.v4.app.BackStackState
+android.support.v4.app.BackStackState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.Fragment$SavedState
+android.support.v4.app.Fragment$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentManagerState
+android.support.v4.app.FragmentManagerState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentState
+android.support.v4.app.FragmentState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentTabHost: void setOnTabChangedListener(android.widget.TabHost$OnTabChangeListener)
+android.support.v4.app.FragmentTabHost$SavedState
+android.support.v4.app.FragmentTabHost$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status[] values()
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status valueOf(java.lang.String)
+android.support.v4.view.PagerTabStrip: void setTabIndicatorColor(int)
+android.support.v4.view.PagerTabStrip: void setTabIndicatorColorResource(int)
+android.support.v4.view.PagerTabStrip: int getTabIndicatorColor()
+android.support.v4.view.PagerTabStrip: void setTextSpacing(int)
+android.support.v4.view.PagerTabStrip: void setBackgroundDrawable(android.graphics.drawable.Drawable)
+android.support.v4.view.PagerTabStrip: void setBackgroundColor(int)
+android.support.v4.view.PagerTabStrip: void setBackgroundResource(int)
+android.support.v4.view.PagerTabStrip: void setDrawFullUnderline(boolean)
+android.support.v4.view.PagerTabStrip: boolean getDrawFullUnderline()
+android.support.v4.view.PagerTabStrip: int getMinHeight()
+android.support.v4.view.PagerTitleStrip: void setSingleLineAllCaps(android.widget.TextView)
+android.support.v4.view.PagerTitleStrip: void setTextSpacing(int)
+android.support.v4.view.PagerTitleStrip: int getTextSpacing()
+android.support.v4.view.PagerTitleStrip: void setNonPrimaryAlpha(float)
+android.support.v4.view.PagerTitleStrip: void setTextColor(int)
+android.support.v4.view.PagerTitleStrip: void setGravity(int)
+android.support.v4.view.PagerTitleStrip: int getMinHeight()
+android.support.v4.view.ViewPager: ViewPager(android.content.Context)
+android.support.v4.view.ViewPager: ViewPager(android.content.Context,android.util.AttributeSet)
+android.support.v4.view.ViewPager: void setScrollState(int)
+android.support.v4.view.ViewPager: void setAdapter(android.support.v4.view.PagerAdapter)
+android.support.v4.view.ViewPager: android.support.v4.view.PagerAdapter getAdapter()
+android.support.v4.view.ViewPager: void setOnAdapterChangeListener(android.support.v4.view.ViewPager$OnAdapterChangeListener)
+android.support.v4.view.ViewPager: int getClientWidth()
+android.support.v4.view.ViewPager: void setCurrentItem(int)
+android.support.v4.view.ViewPager: int getCurrentItem()
+android.support.v4.view.ViewPager: void setOnPageChangeListener(android.support.v4.view.ViewPager$OnPageChangeListener)
+android.support.v4.view.ViewPager: void setChildrenDrawingOrderEnabledCompat(boolean)
+android.support.v4.view.ViewPager: int getOffscreenPageLimit()
+android.support.v4.view.ViewPager: void setOffscreenPageLimit(int)
+android.support.v4.view.ViewPager: void setPageMargin(int)
+android.support.v4.view.ViewPager: int getPageMargin()
+android.support.v4.view.ViewPager: void setPageMarginDrawable(android.graphics.drawable.Drawable)
+android.support.v4.view.ViewPager: void setPageMarginDrawable(int)
+android.support.v4.view.ViewPager: void setScrollingCacheEnabled(boolean)
+android.support.v4.view.ViewPager$SavedState
+android.support.v4.view.ViewPager$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.DrawerLayout: void setScrimColor(int)
+android.support.v4.widget.DrawerLayout: void setDrawerListener(android.support.v4.widget.DrawerLayout$DrawerListener)
+android.support.v4.widget.DrawerLayout: void setDrawerLockMode(int)
+android.support.v4.widget.DrawerLayout$SavedState
+android.support.v4.widget.DrawerLayout$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.SlidingPaneLayout: void setParallaxDistance(int)
+android.support.v4.widget.SlidingPaneLayout: int getParallaxDistance()
+android.support.v4.widget.SlidingPaneLayout: void setSliderFadeColor(int)
+android.support.v4.widget.SlidingPaneLayout: int getSliderFadeColor()
+android.support.v4.widget.SlidingPaneLayout: void setCoveredFadeColor(int)
+android.support.v4.widget.SlidingPaneLayout: int getCoveredFadeColor()
+android.support.v4.widget.SlidingPaneLayout: void setPanelSlideListener(android.support.v4.widget.SlidingPaneLayout$PanelSlideListener)
+android.support.v4.widget.SlidingPaneLayout: void setShadowDrawable(android.graphics.drawable.Drawable)
+android.support.v4.widget.SlidingPaneLayout: void setShadowResource(int)
+android.support.v4.widget.SlidingPaneLayout$SavedState
+android.support.v4.widget.SlidingPaneLayout$SavedState: android.os.Parcelable$Creator CREATOR
+com.example.camera.AlbumAty
+com.example.camera.AlbumAty: AlbumAty()
+com.example.camera.AlbumAty: void onClick(android.view.View)
+com.example.camera.AlbumDetailAty
+com.example.camera.AlbumDetailAty: AlbumDetailAty()
+com.example.camera.CameraAty
+com.example.camera.CameraAty: CameraAty()
+com.example.camera.CameraAty: void onClick(android.view.View)
+com.example.camera.R$anim: int focusview_show
+com.example.camera.R$anim: int tempview_show
+com.example.camera.R$attr: int animat_id
+com.example.camera.R$color: int common_text_yellow
+com.example.camera.R$color: int common_title_bg
+com.example.camera.R$color: int common_title_text
+com.example.camera.R$color: int main_menu_bg
+com.example.camera.R$color: int primary_title_text_color
+com.example.camera.R$dimen: int activity_horizontal_margin
+com.example.camera.R$dimen: int activity_vertical_margin
+com.example.camera.R$dimen: int album_header_bar_height
+com.example.camera.R$dimen: int album_header_btn_width
+com.example.camera.R$dimen: int album_rooter_bar_height
+com.example.camera.R$dimen: int album_rooter_bar_text_size
+com.example.camera.R$dimen: int bottom_bar_height
+com.example.camera.R$dimen: int shutter_bottom_size
+com.example.camera.R$dimen: int thumbnail_imageview_size
+com.example.camera.R$dimen: int title_view_left_back_padding_left
+com.example.camera.R$dimen: int title_view_left_back_padding_right
+com.example.camera.R$dimen: int top_menu_bar_height
+com.example.camera.R$drawable: int albumset_preselected
+com.example.camera.R$drawable: int albumset_selected
+com.example.camera.R$drawable: int btn_back_02_selector
+com.example.camera.R$drawable: int btn_back_to_camera_normal
+com.example.camera.R$drawable: int btn_back_to_camera_pressed
+com.example.camera.R$drawable: int btn_back_to_camera_selector
+com.example.camera.R$drawable: int btn_camera_all
+com.example.camera.R$drawable: int btn_camera_all_click
+com.example.camera.R$drawable: int btn_flash_auto
+com.example.camera.R$drawable: int btn_flash_off
+com.example.camera.R$drawable: int btn_flash_on
+com.example.camera.R$drawable: int btn_flash_torch
+com.example.camera.R$drawable: int btn_photopage_top_bar_selector
+com.example.camera.R$drawable: int btn_shutter
+com.example.camera.R$drawable: int color_white_yellow
+com.example.camera.R$drawable: int focus
+com.example.camera.R$drawable: int focus_succeed
+com.example.camera.R$drawable: int have_new_effect_flag
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_auto_click
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_auto_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_off_click
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_off_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_on_click
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_on_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_torch_click
+com.example.camera.R$drawable: int ic_camera_top_bar_flash_torch_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_my_center
+com.example.camera.R$drawable: int ic_camera_top_bar_my_center_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_my_center_pressed
+com.example.camera.R$drawable: int ic_camera_top_bar_setting
+com.example.camera.R$drawable: int ic_camera_top_bar_setting_click
+com.example.camera.R$drawable: int ic_camera_top_bar_setting_normal
+com.example.camera.R$drawable: int ic_camera_top_bar_sw_camera
+com.example.camera.R$drawable: int ic_camera_top_bar_sw_camera_click
+com.example.camera.R$drawable: int ic_camera_top_bar_sw_camera_normal
+com.example.camera.R$drawable: int ic_error
+com.example.camera.R$drawable: int ic_launcher
+com.example.camera.R$drawable: int ic_stub
+com.example.camera.R$drawable: int icon_back02
+com.example.camera.R$drawable: int icon_back02_click
+com.example.camera.R$drawable: int icon_back2
+com.example.camera.R$drawable: int icon_back2_click
+com.example.camera.R$drawable: int icon_modebtn
+com.example.camera.R$drawable: int picture_setting_album_checkbox
+com.example.camera.R$drawable: int thumbnail_bg
+com.example.camera.R$drawable: int title_text_selector
+com.example.camera.R$id: int FrameLayout1
+com.example.camera.R$id: int action_settings
+com.example.camera.R$id: int album_bottom_bar
+com.example.camera.R$id: int album_title
+com.example.camera.R$id: int albumview
+com.example.camera.R$id: int btn_cloud_home
+com.example.camera.R$id: int btn_flash_mode
+com.example.camera.R$id: int btn_other
+com.example.camera.R$id: int btn_other_setting
+com.example.camera.R$id: int btn_shutter
+com.example.camera.R$id: int btn_switch_camera
+com.example.camera.R$id: int btn_thumbnail
+com.example.camera.R$id: int checkbox
+com.example.camera.R$id: int container
+com.example.camera.R$id: int delete
+com.example.camera.R$id: int download
+com.example.camera.R$id: int header_bar_album_title
+com.example.camera.R$id: int header_bar_back
+com.example.camera.R$id: int header_bar_enter_selection
+com.example.camera.R$id: int header_bar_leave_selection
+com.example.camera.R$id: int header_bar_navi
+com.example.camera.R$id: int header_bar_photo_back
+com.example.camera.R$id: int header_bar_photo_browse
+com.example.camera.R$id: int header_bar_photo_count
+com.example.camera.R$id: int header_bar_photo_to_camera
+com.example.camera.R$id: int header_bar_select
+com.example.camera.R$id: int header_bar_select_counter
+com.example.camera.R$id: int image
+com.example.camera.R$id: int imgThumbnail
+com.example.camera.R$id: int img_mode_function_new_red_point
+com.example.camera.R$id: int loading
+com.example.camera.R$id: int pagerPhoto
+com.example.camera.R$id: int select_all
+com.example.camera.R$id: int share
+com.example.camera.R$id: int testl
+com.example.camera.R$layout: int album
+com.example.camera.R$layout: int album_bottom_bar
+com.example.camera.R$layout: int album_header_bar
+com.example.camera.R$layout: int albumdetail
+com.example.camera.R$layout: int camera
+com.example.camera.R$layout: int camera_bottom_bar
+com.example.camera.R$layout: int camera_top_bar
+com.example.camera.R$layout: int item_album_grid
+com.example.camera.R$layout: int item_album_pager
+com.example.camera.R$menu: int main
+com.example.camera.R$string: int Files
+com.example.camera.R$string: int Image
+com.example.camera.R$string: int Thumbnail
+com.example.camera.R$string: int Vedio
+com.example.camera.R$string: int action_settings
+com.example.camera.R$string: int album_enter_select
+com.example.camera.R$string: int album_phoot_select_all
+com.example.camera.R$string: int album_phoot_unselect_all
+com.example.camera.R$string: int album_photo_select_tip
+com.example.camera.R$string: int album_title
+com.example.camera.R$string: int api_cancel
+com.example.camera.R$string: int app_name
+com.example.camera.R$string: int common_delete
+com.example.camera.R$string: int hello_world
+com.example.camera.R$string: int pgcommon_download
+com.example.camera.R$string: int pgcommon_share
+com.example.camera.R$style: int AppBaseTheme
+com.example.camera.R$style: int AppTheme
+com.example.camera.R$style: int CheckBoxStyle
+com.example.camera.R$styleable: int[] TempImageView
+com.example.camera.R$styleable: int TempImageView_animat_id
+com.linj.album.view.AlbumGridView
+com.linj.album.view.AlbumGridView: AlbumGridView(android.content.Context,android.util.AttributeSet)
+com.linj.album.view.AlbumGridView: void setEditable(boolean)
+com.linj.album.view.AlbumGridView: boolean getEditable()
+com.linj.album.view.AlbumGridView: java.util.Set getSelectedItems()
+com.linj.album.view.AlbumItemView: int getPosition()
+com.linj.album.view.AlbumItemView: void setOnCheckedChangeListener(android.widget.CompoundButton$OnCheckedChangeListener)
+com.linj.album.view.AlbumItemView: void setOnClickListener(android.view.View$OnClickListener)
+com.linj.album.view.AlbumViewPager
+com.linj.album.view.AlbumViewPager: AlbumViewPager(android.content.Context,android.util.AttributeSet)
+com.linj.album.view.FilterImageView
+com.linj.album.view.FilterImageView: FilterImageView(android.content.Context,android.util.AttributeSet)
+com.linj.album.view.MatrixImageView
+com.linj.album.view.MatrixImageView: MatrixImageView(android.content.Context,android.util.AttributeSet)
+com.linj.album.view.MatrixImageView: void setOnMovingListener(com.linj.album.view.MatrixImageView$OnChildMovingListener)
+com.linj.album.view.MatrixImageView: void setImageBitmap(android.graphics.Bitmap)
+com.linj.camera.view.CameraContainer
+com.linj.camera.view.CameraContainer: CameraContainer(android.content.Context,android.util.AttributeSet)
+com.linj.camera.view.CameraContainer: com.linj.camera.view.CameraView$FlashMode getFlashMode()
+com.linj.camera.view.CameraContainer: void setFlashMode(com.linj.camera.view.CameraView$FlashMode)
+com.linj.camera.view.CameraContainer: void setRootPath(java.lang.String)
+com.linj.camera.view.CameraView: com.linj.camera.view.CameraView$FlashMode getFlashMode()
+com.linj.camera.view.CameraView: void setFlashMode(com.linj.camera.view.CameraView$FlashMode)
+com.linj.camera.view.CameraView: int getMaxZoom()
+com.linj.camera.view.CameraView: void setZoom(int)
+com.linj.camera.view.CameraView: int getZoom()
+com.linj.camera.view.CameraView$FlashMode: com.linj.camera.view.CameraView$FlashMode[] values()
+com.linj.camera.view.CameraView$FlashMode: com.linj.camera.view.CameraView$FlashMode valueOf(java.lang.String)
+com.linj.camera.view.FocusImageView: void setFocusImg(int)
+com.linj.camera.view.FocusImageView: void setFocusSucceedImg(int)
+com.linj.camera.view.TempImageView: void setImageBitmap(android.graphics.Bitmap)
+com.linj.camera.view.TempImageView: void setListener(com.linj.camera.view.CameraContainer$TakePictureListener)
+com.linj.imageloader.ImageLoader$Type: com.linj.imageloader.ImageLoader$Type[] values()
+com.linj.imageloader.ImageLoader$Type: com.linj.imageloader.ImageLoader$Type valueOf(java.lang.String)

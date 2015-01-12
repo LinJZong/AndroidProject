@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
-import com.linj.album.view.MatrixImageView.OnChildMovingListener;
+import com.linj.album.view.MatrixImageView.OnMovingListener;
+import com.linj.album.view.MatrixImageView.OnSingleTapListener;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
@@ -18,6 +19,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /** 
@@ -27,8 +29,8 @@ import android.view.ViewGroup;
 * @date 2015-1-9 下午5:33:33 
 *  
 */
-public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
-	private final static String TAG="AlbumViewPager";
+public class AlbumViewPager extends ViewPager implements OnMovingListener {
+	public final static String TAG="AlbumViewPager";
 
 	/**  图片加载器 优化了了缓存  */ 
 	private ImageLoader mImageLoader;
@@ -38,6 +40,7 @@ public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
 	/**  当前子控件是否处理拖动状态  */ 
 	private boolean mChildIsBeingDragged=false;
 
+	private OnSingleTapListener onSingleTapListener;
 	public AlbumViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mImageLoader= ImageLoader.getInstance(context);
@@ -57,16 +60,24 @@ public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
 	 *  加载图片
 	 *  @param rootPath   图片根路径
 	 */
-	public void loadAlbum(String rootPath){
+	public void loadAlbum(String rootPath,String fileName,TextView view){
 		//获取根目录下缩略图文件夹
 		String folder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, rootPath);
 		List<File> files=FileOperateUtil.listFiles(folder, ".jpg");
 		if(files!=null&&files.size()>0){
 			List<String> paths=new ArrayList<String>();
+			int currentItem=0;
 			for (File file : files) {
+				if(fileName!=null&&file.getName().equals(fileName))
+					currentItem=files.indexOf(file);
 				paths.add(file.getAbsolutePath());
 			}
 			setAdapter(new ViewPagerAdapter(paths));
+			setCurrentItem(currentItem);
+			view.setText((currentItem+1)+"/"+paths.size());
+		}
+		else {
+			view.setText("0/0");
 		}
 	}
 
@@ -78,6 +89,25 @@ public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
 			return false;
 		return super.onInterceptTouchEvent(arg0);
 	}
+	
+	@Override
+	public void startDrag() {
+		// TODO Auto-generated method stub
+		mChildIsBeingDragged=true;
+	}
+
+
+	@Override
+	public void stopDrag() {
+		// TODO Auto-generated method stub
+		mChildIsBeingDragged=false;
+	}
+
+	public void setOnSingleTapListener(OnSingleTapListener onSingleTapListener) {
+		this.onSingleTapListener = onSingleTapListener;
+	}
+
+
 	
 	public class ViewPagerAdapter extends PagerAdapter {
 		private List<String> paths;//大图地址 如果为网络图片 则为大图url
@@ -99,9 +129,10 @@ public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
 			assert imageLayout != null;
 			MatrixImageView imageView = (MatrixImageView) imageLayout.findViewById(R.id.image);
 			imageView.setOnMovingListener(AlbumViewPager.this);
+			imageView.setOnSingleTapListener(onSingleTapListener);
 			String path=paths.get(position);
 			//			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-			mImageLoader.loadImage(path, imageView, mOptions, false);
+			mImageLoader.loadImage(path, imageView, mOptions);
 			return imageLayout;
 		}
 
@@ -130,35 +161,6 @@ public class AlbumViewPager extends ViewPager implements OnChildMovingListener {
 			return mCurrentView;
 		}
 	}
-
-
-
-	@Override  
-	public boolean onTouchEvent(MotionEvent arg0) {  
-		// 锁定时 范围false 不捕捉touch事件 使viewpager无法滑动
-		return super.onTouchEvent(arg0);
-	}  
-
-	public interface MyPageChangeListener extends OnPageChangeListener{
-		/**
-		 * 
-		 * @param oldPosition 移动前的position 当该值为-1时 表示第一次载入 还未移动过
-		 * @param newPosition 移动后的position
-		 */
-		public void onPageChanged(int oldPosition,int newPosition);   
-	}
-
-	@Override
-	public void startDrag() {
-		// TODO Auto-generated method stub
-		mChildIsBeingDragged=true;
-	}
-
-
-	@Override
-	public void stopDrag() {
-		// TODO Auto-generated method stub
-		mChildIsBeingDragged=false;
-	}
-
+	
+	
 }

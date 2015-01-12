@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
-import com.linj.album.view.AlbumItemView.ViewHolder;
+import com.linj.album.view.ThumbnaiImageView.ViewHolder;
 import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
@@ -17,6 +17,7 @@ import com.linj.imageloader.displayer.RoundedBitmapDisplayer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -38,7 +39,7 @@ import android.widget.Toast;
  *  
  */
 public class AlbumGridView extends GridView{
-	private final static String TAG="AlbumView";
+	public final static String TAG="AlbumView";
 	/**  图片加载器 优化了了缓存  */ 
 	private ImageLoader mImageLoader;
 	/**  加载图片配置参数 */ 
@@ -58,6 +59,7 @@ public class AlbumGridView extends GridView{
 				.cacheOnDisk(false)
 				.displayer(new RoundedBitmapDisplayer(20));
 		mOptions=builder.build();
+		setBackgroundColor(Color.WHITE);
 		//隐藏垂直滚动条
 		setVerticalScrollBarEnabled(false);
 	}
@@ -233,8 +235,8 @@ public class AlbumGridView extends GridView{
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			AlbumItemView albumItemView = (AlbumItemView)convertView;
-			if (albumItemView == null) albumItemView = new AlbumItemView(getContext(),mImageLoader,mOptions);
+			ThumbnaiImageView albumItemView = (ThumbnaiImageView)convertView;
+			if (albumItemView == null) albumItemView = new ThumbnaiImageView(getContext(),mImageLoader,mOptions);
 			albumItemView.setOnCheckedChangeListener(this);
 			//设置点击事件，将ItemClick事件转化为AlbumItemView的Click事件
 			albumItemView.setOnClickListener(this);
@@ -247,7 +249,7 @@ public class AlbumGridView extends GridView{
 		public void onClick(View v) {
 			if(getOnItemClickListener()!=null){
 				//这里取了上两层父类，因为真正触onClick的是FilterImageView
-				AlbumItemView view=(AlbumItemView)v.getParent().getParent();
+				ThumbnaiImageView view=(ThumbnaiImageView)v.getParent().getParent();
 				getOnItemClickListener().onItemClick(AlbumGridView.this, view, view.getPosition(), 0L);
 			}
 		}
