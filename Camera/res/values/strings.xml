@@ -9,7 +9,7 @@
     <!-- 图像文件夹 -->
     <string name="Image">Image</string>
     <!-- 缩略图文件夹 -->
-    <string name="Thumbnail">Thumbnail/</string>
+    <string name="Thumbnail">Thumbnail</string>
     <!-- 视频文件夹 -->
     <string name="Vedio">Vedio</string>
     <string name="album_enter_select">选择</string>

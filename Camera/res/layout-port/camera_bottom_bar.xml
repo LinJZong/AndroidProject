@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
     android:id="@+id/testl"
+    android:layout_width="fill_parent"
     android:layout_height="@dimen/bottom_bar_height"
     android:layout_alignParentBottom="true"
     android:background="@color/main_menu_bg"
@@ -23,7 +23,7 @@
             android:layout_height="@dimen/thumbnail_imageview_size"
             android:background="@drawable/thumbnail_bg"
             android:contentDescription="@string/app_name"
-            android:padding="1dip"
+            android:padding="0.5dip"
             android:scaleType="centerCrop" />
     </RelativeLayout>
 
@@ -41,10 +41,18 @@
         android:gravity="center" >
 
         <ImageButton
-            android:id="@+id/btn_shutter"
+            android:id="@+id/btn_shutter_record"
             android:layout_width="@dimen/shutter_bottom_size"
             android:layout_height="@dimen/shutter_bottom_size"
-            android:background="@drawable/btn_shutter"
+            android:background="@drawable/btn_shutter_record"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY" />
+
+        <ImageButton
+            android:id="@+id/btn_shutter_camera"
+            android:layout_width="@dimen/shutter_bottom_size"
+            android:layout_height="@dimen/shutter_bottom_size"
+            android:background="@drawable/btn_shutter_camera"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY" />
     </RelativeLayout>
@@ -63,12 +71,13 @@
         android:gravity="center" >
 
         <ImageButton
-            android:id="@+id/btn_other"
+            android:id="@+id/btn_switch_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_modebtn"
+            android:background="@drawable/ic_switcher_menu_indicator"
             android:contentDescription="@string/app_name"
-            android:scaleType="fitXY" />
+            android:scaleType="center"
+            android:src="@drawable/ic_switch_camera" />
     </RelativeLayout>
 
 </LinearLayout>

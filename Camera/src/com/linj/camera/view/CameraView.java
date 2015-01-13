@@ -50,22 +50,69 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	/** 当前缩放级别  默认为0*/ 
 	private int mZoom=0;
 
-	/** 当前屏幕朝向  竖屏:true  横屏：false 此处的朝向不是Acitivty的朝向 而是重力感应获得的屏幕朝向*/ 
-	private boolean mCurrentOrientation=true;
-
+	/** 当前屏幕旋转角度*/ 
+	private int mOrientation=0;
+	/** 是否打开前置相机,true为前置,false为后置  */ 
+	private boolean mIsFrontCamera;
 	public CameraView(Context context){
 		super(context);
 		//初始化容器
 		getHolder().addCallback(this);
-		mCamera = Camera.open();
+		openCamera();
+		mIsFrontCamera=false;
 	}
 
 	public CameraView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		//初始化容器
 		getHolder().addCallback(this);
+		openCamera();
+		mIsFrontCamera=false;
 	}
 
+
+
+	/**  
+	 *   转换前置和后置照相机
+	 */
+	public void switchCamera(){
+		mIsFrontCamera=!mIsFrontCamera;
+		openCamera();
+		if(mCamera!=null){
+			setCameraParameters();
+			updateCameraOrientation();
+			try {
+				mCamera.setPreviewDisplay(getHolder());
+				mCamera.startPreview();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**  
+	 *   根据当前照相机状态(前置或后置)，打开对应相机
+	 */
+	private void openCamera() {
+		if (mCamera != null) {
+			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
+		}
+		
+		if(mIsFrontCamera){
+			Camera.CameraInfo cameraInfo=new CameraInfo();
+			for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+				Camera.getCameraInfo(i, cameraInfo);
+				if(cameraInfo.facing==Camera.CameraInfo.CAMERA_FACING_FRONT){
+					mCamera=Camera.open(i);
+				}
+			}
+		}else {
+			mCamera=Camera.open();
+		}
+	}
 
 	/**  
 	 *  获取当前闪光灯类型
@@ -162,11 +209,12 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		try {
-			if(mCamera==null)
-				mCamera=Camera.open();
+			if(mCamera==null){
+				openCamera();
+			}
 			setCameraParameters();
 			mCamera.setPreviewDisplay(getHolder());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
 			Log.e(TAG,e.getMessage());
 		}
@@ -221,21 +269,25 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	private  void startOrientationChangeListener() {  
 		OrientationEventListener mOrEventListener = new OrientationEventListener(getContext()) {  
 			@Override  
-			public void onOrientationChanged(int rotation) {  
-				if (((rotation >= 0) && (rotation <= 45)) || (rotation >= 315)  
-						|| ((rotation >= 135) && (rotation <= 225))) {// portrait  
-					//朝向相同，不做处理
-					if(mCurrentOrientation)
-						return;
-					mCurrentOrientation = true;
-					updateCameraOrientation();
-				} else if (((rotation > 45) && (rotation < 135))  
-						|| ((rotation > 225) && (rotation < 315))) {// landscape  
-					if(!mCurrentOrientation)
-						return;
-					mCurrentOrientation=false;
-					updateCameraOrientation();
-				}  
+			public void onOrientationChanged(int rotation) { 
+
+				if (((rotation >= 0) && (rotation <= 45)) || (rotation > 315)){
+					rotation=0;
+				}else if ((rotation > 45) && (rotation <= 135))  {
+					rotation=90;
+				}
+				else if ((rotation > 135) && (rotation <= 225)) {
+					rotation=180;
+				} 
+				else if((rotation > 225) && (rotation <= 315)) { 
+					rotation=270;
+				}else {
+					rotation=0;
+				}
+				if(rotation==mOrientation)
+					return;
+				mOrientation=rotation;
+				updateCameraOrientation();
 			}  
 		};  
 		mOrEventListener.enable();  
@@ -247,13 +299,14 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	private void updateCameraOrientation(){
 		if(mCamera!=null){
 			Camera.Parameters parameters = mCamera.getParameters();
-			//相机默认是横屏模式，当前为竖屏时，生成的图片需要旋转90°
-			if (mCurrentOrientation) {
-				parameters.set("rotation", 90);//生成的图片转90°
+			//rotation参数为 0、90、180、270。水平方向为0。
+			int rotation=90+mOrientation==360?0:90+mOrientation;
+			//前置摄像头需要对垂直方向做变换，否则照片是颠倒的
+			if(mIsFrontCamera){
+				if(rotation==90) rotation=270;
+				else if (rotation==270) rotation=90;
 			}
-			else  {
-				parameters.set("rotation", 0);
-			}
+			parameters.setRotation(rotation);//生成的图片转90°
 			//预览图片旋转90°
 			mCamera.setDisplayOrientation(90);//预览转90°
 			mCamera.setParameters(parameters);
@@ -268,12 +321,12 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-
 		if (mCamera != null) {
 			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
 		}
-		mCamera.release();
-		mCamera = null;
+		
 	}
 
 	/** 

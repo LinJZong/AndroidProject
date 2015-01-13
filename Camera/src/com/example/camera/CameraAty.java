@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /** 
  * @ClassName: CameraAty 
@@ -31,11 +32,15 @@ import android.widget.ImageView;
  */
 public class CameraAty extends Activity implements View.OnClickListener,TakePictureListener{
 	public final static String TAG="CameraAty";
+	private boolean mIsRecordMode=false;
 	private String mSaveRoot;
 	private CameraContainer mContainer;
 	private FilterImageView mThumbView;
-	private ImageButton mShutterButton;
+	private ImageButton mCameraShutterButton;
+	private ImageButton mRecordShutterButton;
 	private ImageView mFlashView;
+	private ImageButton mSwitchModeButton;
+	private ImageView mSwitchCameraView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,13 +52,18 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
-		mShutterButton=(ImageButton)findViewById(R.id.btn_shutter);
+		mCameraShutterButton=(ImageButton)findViewById(R.id.btn_shutter_camera);
+		mRecordShutterButton=(ImageButton)findViewById(R.id.btn_shutter_record);
+		mSwitchCameraView=(ImageView)findViewById(R.id.btn_switch_camera);
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
+		mSwitchModeButton=(ImageButton)findViewById(R.id.btn_switch_mode);
 
 		mThumbView.setOnClickListener(this);
-		mShutterButton.setOnClickListener(this);
+		mCameraShutterButton.setOnClickListener(this);
+		mRecordShutterButton.setOnClickListener(this);
 		mFlashView.setOnClickListener(this);
-		
+		mSwitchModeButton.setOnClickListener(this);
+		mSwitchCameraView.setOnClickListener(this);
 
 		mSaveRoot="test";
 		mContainer.setRootPath(mSaveRoot);
@@ -80,12 +90,12 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	public void onClick(View view) {
 		// TODO Auto-generated method stub
 		switch (view.getId()) {
-		case R.id.btn_shutter:
-			mShutterButton.setClickable(false);
+		case R.id.btn_shutter_camera:
+			mCameraShutterButton.setClickable(false);
 			mContainer.takePicture(this);
 			break;
 		case R.id.btn_thumbnail:
-            startActivity(new Intent(this,AlbumAty.class));
+			startActivity(new Intent(this,AlbumAty.class));
 			break;
 		case R.id.btn_flash_mode:
 			if(mContainer.getFlashMode()==FlashMode.ON){
@@ -104,6 +114,27 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				mFlashView.setImageResource(R.drawable.btn_flash_on);
 			}
 			break;
+		case R.id.btn_switch_mode:
+			if(mIsRecordMode){
+				mSwitchModeButton.setImageResource(R.drawable.ic_switch_camera);
+				mCameraShutterButton.setVisibility(View.VISIBLE);
+				mRecordShutterButton.setVisibility(View.GONE);
+				mIsRecordMode=false;
+				Toast.makeText(this, "拍照模式", Toast.LENGTH_SHORT).show();
+			}
+			else {
+				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);
+				mCameraShutterButton.setVisibility(View.GONE);
+				mRecordShutterButton.setVisibility(View.VISIBLE);
+				mIsRecordMode=true;
+				Toast.makeText(this, "录像模式", Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.btn_shutter_record:
+			break;
+		case R.id.btn_switch_camera:
+			mContainer.switchCamera();
+		  break;
 		default:
 			break;
 		}
@@ -111,7 +142,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 
 	@Override
 	public void onTakePictureEnd(Bitmap thumBitmap) {
-		mShutterButton.setClickable(true);	
+		mCameraShutterButton.setClickable(true);	
 	}
 
 	@Override
@@ -122,7 +153,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			mThumbView.setImageBitmap(thumbnail);
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {		
 		super.onResume();

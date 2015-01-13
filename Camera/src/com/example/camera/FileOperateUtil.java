@@ -131,20 +131,51 @@ public class FileOperateUtil {
 	}
 	
 	/**  
-	*  删除文件
-	*  @param path 文件目录
+	*  删除缩略图 同时删除源图或源视频
+	*  @param thumbPath 缩略图路径
 	*  @return   
 	*/
-	public static boolean deleteFile(String path) {
+	public static boolean deleteThumbFile(String thumbPath,Context context) {
 		boolean flag = false;
 
-		File file = new File(path);
+		File file = new File(thumbPath);
 		if (!file.exists()) { // 文件不存在直接返回
 			return flag;
 		}
-
+        
 		flag = file.delete();
+		//源文件路径
+        String sourcePath=thumbPath.replace(context.getString(R.string.Thumbnail),
+        		context.getString(R.string.Image));
+        file = new File(sourcePath);
+		if (!file.exists()) { // 文件不存在直接返回
+			return flag;
+		}
+		flag = file.delete();
+		return flag;
+	}
+	/**  
+	*  删除源图或源视频 同时删除缩略图
+	*  @param sourcePath 缩略图路径
+	*  @return   
+	*/
+	public static boolean deleteSourceFile(String sourcePath,Context context) {
+		boolean flag = false;
 
+		File file = new File(sourcePath);
+		if (!file.exists()) { // 文件不存在直接返回
+			return flag;
+		}
+        
+		flag = file.delete();
+		//缩略图文件路径
+        String thumbPath=sourcePath.replace(context.getString(R.string.Image),
+        		context.getString(R.string.Thumbnail));
+        file = new File(thumbPath);
+		if (!file.exists()) { // 文件不存在直接返回
+			return flag;
+		}
+		flag = file.delete();
 		return flag;
 	}
 }

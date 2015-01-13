@@ -14,22 +14,6 @@
         android:layout_weight="1.0"
         android:gravity="center" >
 
-        <ImageView
-            android:id="@+id/btn_cloud_home"
-            android:layout_width="@dimen/top_menu_bar_height"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_camera_top_bar_my_center" />
-
-        <ImageView
-            android:id="@+id/img_mode_function_new_red_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/btn_cloud_home"
-            android:layout_marginRight="5.0dip"
-            android:layout_marginTop="9.0dip"
-            android:background="@drawable/have_new_effect_flag"
-            android:contentDescription="@string/app_name" />
     </RelativeLayout>
 
     <View

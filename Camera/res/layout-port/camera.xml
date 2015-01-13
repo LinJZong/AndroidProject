@@ -14,6 +14,6 @@
 
     <include layout="@layout/camera_bottom_bar" />
 
-    <include layout="@layout/camera_top_bar" />
+    <include layout="@layout/camera_header_bar" />
 
 </RelativeLayout>

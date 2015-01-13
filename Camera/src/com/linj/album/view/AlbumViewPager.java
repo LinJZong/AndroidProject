@@ -16,6 +16,7 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,12 @@ import android.widget.TextView;
 
 
 /** 
-* @ClassName: AlbumViewPager 
-* @Description:  自定义viewpager  优化了事件拦截
-* @author LinJ
-* @date 2015-1-9 下午5:33:33 
-*  
-*/
+ * @ClassName: AlbumViewPager 
+ * @Description:  自定义viewpager  优化了事件拦截
+ * @author LinJ
+ * @date 2015-1-9 下午5:33:33 
+ *  
+ */
 public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	public final static String TAG="AlbumViewPager";
 
@@ -81,15 +82,23 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 		}
 	}
 
-	
-	
+	/**  
+	 *  删除当前项
+	 *  @return  “当前位置/总数量”
+	 */
+	public String deleteCurrentPath(){
+		return ((ViewPagerAdapter)getAdapter()).deleteCurrentItem(getCurrentItem());
+
+	}
+
+
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent arg0) {
 		if(mChildIsBeingDragged)
 			return false;
 		return super.onInterceptTouchEvent(arg0);
 	}
-	
+
 	@Override
 	public void startDrag() {
 		// TODO Auto-generated method stub
@@ -108,10 +117,9 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	}
 
 
-	
+
 	public class ViewPagerAdapter extends PagerAdapter {
 		private List<String> paths;//大图地址 如果为网络图片 则为大图url
-		private View mCurrentView;
 		public ViewPagerAdapter(List<String> paths){
 			this.paths=paths;
 		}
@@ -133,15 +141,20 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 			String path=paths.get(position);
 			//			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 			mImageLoader.loadImage(path, imageView, mOptions);
+			imageLayout.setTag(path);
 			return imageLayout;
 		}
 
 
-
+		@Override
+		public int getItemPosition(Object object) {
+			//在notifyDataSetChanged时返回None，重新绘制
+			return POSITION_NONE;
+		}
 
 		@Override
-		public void destroyItem(View arg0, int arg1, Object arg2) {
-			((ViewPager) arg0).removeView((View) arg2);
+		public void destroyItem(ViewGroup container, int arg1, Object object) {
+			((ViewPager) container).removeView((View) object);  
 		}
 
 		@Override
@@ -149,18 +162,22 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 			return arg0 == arg1;			
 		}
 
-
-
-		//设置当前的view
-		@Override
-		public void setPrimaryItem(ViewGroup container, int position, Object object) {
-			mCurrentView = (View)object;
-		}
 		//自定义获取当前view方法                              
-		public View getPrimaryItem() {
-			return mCurrentView;
+		public String deleteCurrentItem(int position) {
+			String path=paths.get(position);
+			if(path!=null) {
+				FileOperateUtil.deleteSourceFile(path, getContext());
+				paths.remove(path);
+				notifyDataSetChanged();
+				if(paths.size()>0)
+					return (getCurrentItem()+1)+"/"+paths.size();
+				else {
+                    return "0/0";
+				}
+			}
+			return null;
 		}
 	}
-	
-	
+
+
 }

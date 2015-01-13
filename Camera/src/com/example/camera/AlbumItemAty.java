@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 	private ImageView mCameraView;
 	private TextView mCountView;
 	private View mHeaderBar,mBottomBar;
+	private Button mDeleteButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,11 +48,13 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mCountView=(TextView)findViewById(R.id.header_bar_photo_count);
 		mHeaderBar=findViewById(R.id.album_item_header_bar);
 		mBottomBar=findViewById(R.id.album_item_bottom_bar);
+		mDeleteButton=(Button)findViewById(R.id.delete);
 		
 		mBackView.setOnClickListener(this);
 		mCameraView.setOnClickListener(this);
 		mCountView.setOnClickListener(this);
-
+		mDeleteButton.setOnClickListener(this);
+		
 		mSaveRoot="test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
@@ -74,7 +78,6 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			}else {
 				mCountView.setText("0/0");
 			}
-
 		}
 
 		@Override
@@ -118,6 +121,11 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			break;
 		case R.id.header_bar_photo_to_camera:
 			startActivity(new Intent(this,CameraAty.class));
+			break;
+		case R.id.delete:
+			String result=mViewPager.deleteCurrentPath();
+			if(result!=null)
+				mCountView.setText(result);
 			break;
 		default:
 			break;

@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -93,7 +94,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 			}
 		});
 		mSaveRoot="test";
-		mAlbumView.loadAlbum(mSaveRoot);
+		
 
 	}
 
@@ -101,6 +102,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 
 	@Override
 	protected void onResume() {
+		mAlbumView.loadAlbum(mSaveRoot);
 		super.onResume();
 	}
 
@@ -167,7 +169,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 				// TODO Auto-generated method stub
 				Set<String> items=mAlbumView.getSelectedItems();
 				for (String path : items) {
-					FileOperateUtil.deleteFile(path);
+					boolean flag=FileOperateUtil.deleteThumbFile(path,AlbumAty.this);
+					if(!flag) Log.i(TAG, path);
 				}
 				mAlbumView.loadAlbum(mSaveRoot);
 				leaveEdit();

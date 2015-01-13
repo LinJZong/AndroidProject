@@ -85,8 +85,8 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		mFocusImageView=new FocusImageView(context);
 		layoutParams=new LayoutParams(150,150);
 		mFocusImageView.setLayoutParams(layoutParams);
-		mFocusImageView.setFocusImg(R.drawable.focus);
-		mFocusImageView.setFocusSucceedImg(R.drawable.focus_succeed);
+		mFocusImageView.setFocusImg(R.drawable.focus_focusing);
+		mFocusImageView.setFocusSucceedImg(R.drawable.focus_focused);
 		addView(mFocusImageView);
 
 		//获取当前照相机支持的最大缩放级别，值小于0表示不支持缩放。当支持缩放时，加入拖动条。
@@ -112,6 +112,9 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 
 
 
+	public void switchCamera(){
+		mCameraView.switchCamera();
+	}
 	/**  
 	 *  获取当前闪光灯类型
 	 *  @return   
@@ -209,10 +212,10 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	public void onAutoFocus(boolean success, Camera camera) {
 		//聚焦之后根据结果修改图片
 		if (success) {
-			mFocusImageView.setImageResource(R.drawable.focus_succeed);
+			mFocusImageView.setImageResource(R.drawable.focus_focused);
 		}else {
 			//聚焦失败显示的图片，由于未找到合适的资源，这里仍显示同一张图片
-			mFocusImageView.setImageResource(R.drawable.focus_succeed);
+			mFocusImageView.setImageResource(R.drawable.focus_focus_failed);
 
 		}
 		//1秒后隐藏View 设置token为mFocusImageView防止被误删除
