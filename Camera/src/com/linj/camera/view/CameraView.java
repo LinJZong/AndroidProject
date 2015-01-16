@@ -1,10 +1,12 @@
 package com.linj.camera.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 
@@ -18,15 +20,22 @@ import android.hardware.Camera;
 import android.hardware.Camera.Area;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
+import android.media.MediaRecorder.OnInfoListener;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -37,10 +46,9 @@ import android.widget.Toast;
  * @date 2014-12-31 上午9:44:56 
  *  
  */
-public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
+public class CameraView extends SurfaceView {
 
 	public final static String TAG="CameraView";
-
 	/** 和该View绑定的Camera对象 */
 	private Camera mCamera;
 
@@ -54,10 +62,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	private int mOrientation=0;
 	/** 是否打开前置相机,true为前置,false为后置  */ 
 	private boolean mIsFrontCamera;
+	/**  录像类 */ 
+	private MediaRecorder mMediaRecorder;
+	/**  相机配置，在录像前记录，用以录像结束后恢复原配置 */ 
+	private Camera.Parameters mParameters;
+
 	public CameraView(Context context){
 		super(context);
 		//初始化容器
-		getHolder().addCallback(this);
+		getHolder().addCallback(callback);
 		openCamera();
 		mIsFrontCamera=false;
 	}
@@ -65,19 +78,125 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	public CameraView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		//初始化容器
-		getHolder().addCallback(this);
+		getHolder().addCallback(callback);
 		openCamera();
 		mIsFrontCamera=false;
 	}
 
+	private SurfaceHolder.Callback callback=new SurfaceHolder.Callback() {
 
+		@Override
+		public void surfaceCreated(SurfaceHolder holder) {
+			try {
+				if(mCamera==null){
+					openCamera();
+				}
+				setCameraParameters();
+				mCamera.setPreviewDisplay(getHolder());
+
+			} catch (Exception e) {
+				Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
+				Log.e(TAG,e.getMessage());
+			}
+			mCamera.startPreview();
+		}
+
+
+
+
+		@Override
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
+			updateCameraOrientation();
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder) {
+			//停止录像
+			stopRecord();
+			if (mCamera != null) {
+				mCamera.stopPreview();
+				mCamera.release();
+				mCamera = null;
+			}
+
+		}
+	};
+
+	/**  
+	*  开始录像
+	*  @return 开始录像是否成功   
+	*/
+	public boolean startRecord(){
+		if(mCamera==null)
+			openCamera();
+		if (mCamera==null) {
+			return false;
+		}
+		if(mMediaRecorder==null)
+			mMediaRecorder = new MediaRecorder();
+		else
+			mMediaRecorder.reset();
+		mParameters=mCamera.getParameters();
+		mCamera.unlock();
+		mMediaRecorder.setCamera(mCamera);
+		mMediaRecorder
+		.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+		mMediaRecorder
+		.setAudioSource(MediaRecorder.AudioSource.MIC);
+		//设置录像参数，由于应用需要此处取一个较小格式的视频
+		mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
+
+		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VEDIO, "test");
+		File directory=new File(path);
+		if(!directory.exists())
+			directory.mkdirs();
+		try {
+			String name=FileOperateUtil.createFileNmae(".3gp");
+			File mRecAudioFile = new File(path+File.separator+name);
+			mMediaRecorder.setOutputFile(mRecAudioFile
+					.getAbsolutePath());
+			mMediaRecorder.prepare();
+			mMediaRecorder.start();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	public void stopRecord(){
+		// TODO Auto-generated method stub
+
+		Toast.makeText(getContext(), "record stop", Toast.LENGTH_SHORT).show();
+		try {
+			if(mMediaRecorder!=null){
+				mMediaRecorder.stop();
+				mMediaRecorder.reset();
+				mMediaRecorder.release();
+				mMediaRecorder=null;
+			}
+			if(mParameters!=null&&mCamera!=null){
+				//重新连接相机
+				mCamera.reconnect();
+				//停止预览，注意这里必须先调用停止预览再设置参数才有效
+				mCamera.stopPreview();
+				//设置参数为录像前的参数，不然如果录像是低配，结束录制后预览效果还是低配画面
+				mCamera.setParameters(mParameters);
+				//重新打开
+				mCamera.startPreview();
+				mParameters=null;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**  
 	 *   转换前置和后置照相机
 	 */
 	public void switchCamera(){
 		mIsFrontCamera=!mIsFrontCamera;
-		openCamera();
 		if(mCamera!=null){
 			setCameraParameters();
 			updateCameraOrientation();
@@ -94,24 +213,37 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	/**  
 	 *   根据当前照相机状态(前置或后置)，打开对应相机
 	 */
-	private void openCamera() {
+	private boolean openCamera()  {
 		if (mCamera != null) {
 			mCamera.stopPreview();
 			mCamera.release();
 			mCamera = null;
 		}
-		
+
 		if(mIsFrontCamera){
 			Camera.CameraInfo cameraInfo=new CameraInfo();
 			for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
 				Camera.getCameraInfo(i, cameraInfo);
 				if(cameraInfo.facing==Camera.CameraInfo.CAMERA_FACING_FRONT){
-					mCamera=Camera.open(i);
+					try {
+						mCamera=Camera.open(i);
+					} catch (Exception e) {
+						mCamera =null;
+						return false;
+					}
+				
 				}
 			}
 		}else {
-			mCamera=Camera.open();
+			try {
+				mCamera=Camera.open();
+			} catch (Exception e) {
+				mCamera =null;
+				return false;
+			}
+			
 		}
+		return true;
 	}
 
 	/**  
@@ -195,7 +327,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	 */
 	public void setZoom(int zoom){
 		if(mCamera==null) return;
-		Camera.Parameters parameters=mCamera.getParameters();
+		Camera.Parameters parameters;
+		//注意此处为录像模式下的setZoom方式。在Camera.unlock之后，调用getParameters方法会引起android框架底层的异常
+		//stackoverflow上看到的解释是由于多线程同时访问Camera导致的冲突，所以在此使用录像前保存的mParameters。
+		if(mParameters!=null)
+			parameters=mParameters;
+		else {
+			parameters=mCamera.getParameters();
+		}
+
 		if(!parameters.isZoomSupported()) return;
 		parameters.setZoom(zoom);
 		mCamera.setParameters(parameters);
@@ -204,23 +344,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	public int getZoom(){
 		return mZoom;
 	}
-
-
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		try {
-			if(mCamera==null){
-				openCamera();
-			}
-			setCameraParameters();
-			mCamera.setPreviewDisplay(getHolder());
-		} catch (Exception e) {
-			Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
-			Log.e(TAG,e.getMessage());
-		}
-		mCamera.startPreview();
-	}
-
 
 	/**
 	 * 设置照相机参数
@@ -313,21 +436,8 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 		}
 	}
 
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		updateCameraOrientation();
-	}
 
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		if (mCamera != null) {
-			mCamera.stopPreview();
-			mCamera.release();
-			mCamera = null;
-		}
-		
-	}
+
 
 	/** 
 	 * @Description: 闪光灯类型枚举 默认为关闭

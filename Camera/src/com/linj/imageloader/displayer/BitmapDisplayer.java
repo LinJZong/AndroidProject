@@ -15,9 +15,7 @@
  *******************************************************************************/
 package com.linj.imageloader.displayer;
 
-import android.R.integer;
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -31,16 +29,7 @@ import android.widget.ImageView;
  * @since 1.5.6
  */
 public interface BitmapDisplayer {
-	/**
-	 * Displays bitmap in {@link com.nostra13.universalimageloader.core.imageaware.ImageAware}.
-	 * <b>NOTE:</b> This method is called on UI thread so it's strongly recommended not to do any heavy work in it.
-	 *
-	 * @param bitmap     Source bitmap
-	 * @param imageAware {@linkplain com.nostra13.universalimageloader.core.imageaware.ImageAware Image aware view} to
-	 *                   display Bitmap
-	 * @param loadedFrom Source of loaded image
-	 * ImageAware}
-	 */
+	
 	void display(Bitmap bitmap, ImageView imageView);
 	void display(int resouceID,ImageView imageView);
 }

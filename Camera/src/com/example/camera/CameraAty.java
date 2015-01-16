@@ -41,7 +41,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private ImageView mFlashView;
 	private ImageButton mSwitchModeButton;
 	private ImageView mSwitchCameraView;
-
+	private View mHeaderBar,mBottomBar;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +50,8 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.camera);
 
+		mHeaderBar=findViewById(R.id.camera_header_bar);
+		mBottomBar=findViewById(R.id.camera_bottom_bar);
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
 		mCameraShutterButton=(ImageButton)findViewById(R.id.btn_shutter_camera);
@@ -119,27 +121,41 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_camera);
 				mCameraShutterButton.setVisibility(View.VISIBLE);
 				mRecordShutterButton.setVisibility(View.GONE);
+				//拍照模式下显示顶部菜单
+				mHeaderBar.setVisibility(View.VISIBLE);
 				mIsRecordMode=false;
-				Toast.makeText(this, "拍照模式", Toast.LENGTH_SHORT).show();
+				mContainer.setZoom(0);
 			}
 			else {
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);
 				mCameraShutterButton.setVisibility(View.GONE);
 				mRecordShutterButton.setVisibility(View.VISIBLE);
+				//录像模式下隐藏顶部菜单 
+				mHeaderBar.setVisibility(View.GONE);
 				mIsRecordMode=true;
-				Toast.makeText(this, "录像模式", Toast.LENGTH_SHORT).show();
+				mContainer.setZoom(5);
 			}
 			break;
 		case R.id.btn_shutter_record:
+			if(!isRecording){
+				isRecording=mContainer.startRecord();
+				if (isRecording) {
+					view.setBackgroundResource(R.drawable.btn_shutter_recording);
+				}
+			}else {
+				mContainer.stopRecord();
+				isRecording=false;
+				view.setBackgroundResource(R.drawable.btn_shutter_record);
+			}
 			break;
 		case R.id.btn_switch_camera:
 			mContainer.switchCamera();
-		  break;
+			break;
 		default:
 			break;
 		}
 	}
-
+	private boolean isRecording=false;
 	@Override
 	public void onTakePictureEnd(Bitmap thumBitmap) {
 		mCameraShutterButton.setClickable(true);	

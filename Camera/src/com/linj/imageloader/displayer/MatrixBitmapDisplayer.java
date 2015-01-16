@@ -16,7 +16,6 @@
 package com.linj.imageloader.displayer;
 
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -29,9 +28,7 @@ import android.widget.ImageView.ScaleType;
 *  
 */
 public class MatrixBitmapDisplayer implements BitmapDisplayer {
-	/**
-	 * @param durationMillis Duration of "fade-in" animation (in milliseconds)
-	 */
+	
 	public MatrixBitmapDisplayer() {
 		
 	}
@@ -49,6 +46,4 @@ public class MatrixBitmapDisplayer implements BitmapDisplayer {
 		imageView.setScaleType(ScaleType.CENTER);
 		imageView.setImageResource(resouceID);
 	}
-	
-
 }

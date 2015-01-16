@@ -12,8 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <include layout="@layout/camera_bottom_bar" />
+    <include
+        android:id="@+id/camera_bottom_bar"
+         layout="@layout/camera_bottom_bar" />
 
-    <include layout="@layout/camera_header_bar" />
+    <include
+            android:id="@+id/camera_header_bar"
+         layout="@layout/camera_header_bar" />
 
 </RelativeLayout>

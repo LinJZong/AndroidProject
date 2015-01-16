@@ -110,8 +110,20 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		setOnTouchListener(new TouchListener());
 	}
 
-
-
+    public boolean startRecord(){
+    	return mCameraView.startRecord();
+    }
+    public void stopRecord(){
+    	mCameraView.stopRecord();
+    }
+    public void setZoom(int zoom){
+    	mZoomSeekBar.setProgress(zoom);
+    	mCameraView.setZoom(zoom);
+    	mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), this);
+    }
+	/**  
+	*   前置、后置摄像头转换
+	*/
 	public void switchCamera(){
 		mCameraView.switchCamera();
 	}
