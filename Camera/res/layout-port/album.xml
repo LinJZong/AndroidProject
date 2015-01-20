@@ -12,7 +12,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
+        
         layout="@layout/album_header_bar" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:background="#ffffff"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingLeft="10dip"
+        android:paddingTop="15dip"
+        android:paddingBottom="15dip"
+        android:text="@string/album_message"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
 
     <com.linj.album.view.AlbumGridView
         android:id="@+id/albumview"

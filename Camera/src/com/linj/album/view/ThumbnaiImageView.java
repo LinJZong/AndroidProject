@@ -44,7 +44,8 @@ public class ThumbnaiImageView extends FrameLayout  {
 		inflate(context, R.layout.item_album_grid, this);
 		FilterImageView imageView=(FilterImageView) findViewById(R.id.imgThumbnail);
 		CheckBox checkBox=(CheckBox) findViewById(R.id.checkbox);
-		mViewHolder=new ViewHolder(imageView,checkBox);
+		ImageView icon=(ImageView)findViewById(R.id.vedioicon);
+		mViewHolder=new ViewHolder(imageView,checkBox,icon);
 		this.mImageLoader=imageLoader;
 		this.mOptions=options;
 	}
@@ -70,10 +71,15 @@ public class ThumbnaiImageView extends FrameLayout  {
 			//给checkbox设置tag,用以记录当前选中项
 			mViewHolder.checkBox.setTag(path);
 			setTag(path);
+			if(mPath.contains("vedio")){
+				mViewHolder.vedioIconView.setVisibility(View.VISIBLE);
+			}else {
+				mViewHolder.vedioIconView.setVisibility(View.GONE);
+			}
 			mPosition=position;
 		}
 	}
-   
+
 	public int getPosition(){
 		return mPosition;
 	}
@@ -84,19 +90,22 @@ public class ThumbnaiImageView extends FrameLayout  {
 	public void setOnCheckedChangeListener(OnCheckedChangeListener listener){
 		mViewHolder.checkBox.setOnCheckedChangeListener(listener);
 	}
-	
+
 	@Override
 	public void setOnClickListener(OnClickListener l) {
 		//重写click事件，将该View的click转到imageview触发
 		mViewHolder.imageView.setOnClickListener(l);
 	}
-	
+
 	public class ViewHolder {
-		public ViewHolder(ImageView imageView,CheckBox checkBox){
+		public ViewHolder(ImageView imageView,CheckBox checkBox,ImageView icon){
 			this.imageView=imageView;
 			this.checkBox=checkBox;
+			this.vedioIconView=icon;
 		}
 		ImageView imageView;//缩略图
+		ImageView vedioIconView;//播放视频图标
 		CheckBox checkBox;//勾选框
+
 	}
 }

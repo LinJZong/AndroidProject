@@ -41,7 +41,8 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private ImageView mFlashView;
 	private ImageButton mSwitchModeButton;
 	private ImageView mSwitchCameraView;
-	private View mHeaderBar,mBottomBar;
+	private ImageView mSettingView;
+	private View mHeaderBar;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +52,6 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		setContentView(R.layout.camera);
 
 		mHeaderBar=findViewById(R.id.camera_header_bar);
-		mBottomBar=findViewById(R.id.camera_bottom_bar);
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
 		mCameraShutterButton=(ImageButton)findViewById(R.id.btn_shutter_camera);
@@ -59,14 +59,16 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		mSwitchCameraView=(ImageView)findViewById(R.id.btn_switch_camera);
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
 		mSwitchModeButton=(ImageButton)findViewById(R.id.btn_switch_mode);
-
+		mSettingView=(ImageView)findViewById(R.id.btn_other_setting);
+				
 		mThumbView.setOnClickListener(this);
 		mCameraShutterButton.setOnClickListener(this);
 		mRecordShutterButton.setOnClickListener(this);
 		mFlashView.setOnClickListener(this);
 		mSwitchModeButton.setOnClickListener(this);
 		mSwitchCameraView.setOnClickListener(this);
-
+		mSettingView.setOnClickListener(this);
+		
 		mSaveRoot="test";
 		mContainer.setRootPath(mSaveRoot);
 		initThumbnail();
@@ -124,7 +126,10 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				//拍照模式下显示顶部菜单
 				mHeaderBar.setVisibility(View.VISIBLE);
 				mIsRecordMode=false;
-				mContainer.setZoom(0);
+				mContainer.switchMode(0);
+				mContainer.stopRecord();
+				isRecording=false;
+				mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
 			}
 			else {
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);
@@ -133,23 +138,26 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				//录像模式下隐藏顶部菜单 
 				mHeaderBar.setVisibility(View.GONE);
 				mIsRecordMode=true;
-				mContainer.setZoom(5);
+				mContainer.switchMode(5);
 			}
 			break;
 		case R.id.btn_shutter_record:
 			if(!isRecording){
 				isRecording=mContainer.startRecord();
 				if (isRecording) {
-					view.setBackgroundResource(R.drawable.btn_shutter_recording);
+					mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_recording);
 				}
 			}else {
 				mContainer.stopRecord();
 				isRecording=false;
-				view.setBackgroundResource(R.drawable.btn_shutter_record);
+				mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
 			}
 			break;
 		case R.id.btn_switch_camera:
 			mContainer.switchCamera();
+			break;
+		case R.id.btn_other_setting:
+			mContainer.setWaterMark();
 			break;
 		default:
 			break;

@@ -22,5 +22,7 @@
     <string name="common_cut">移动</string>
     <string name="common_delete">删除</string>
     <string name="common_edit">编辑</string>
+    <string name="album_message">图片&amp;视频</string>
+ 
 
 </resources>

@@ -46,7 +46,7 @@ public class AlbumGridView extends GridView{
 	private DisplayImageOptions mOptions;	
 	/**  当前是否处于编辑状态 true为编辑 */ 
 	private boolean mEditable;
-	
+
 	public AlbumGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mImageLoader= ImageLoader.getInstance(context);
@@ -68,11 +68,12 @@ public class AlbumGridView extends GridView{
 	/**  
 	 *  加载图片
 	 *  @param rootPath 根目录文件夹名 
+	 *  @param format 需要加载的文件格式 
 	 */
-	public void loadAlbum(String rootPath){
+	public void loadAlbum(String rootPath,String format){
 		//获取根目录下缩略图文件夹
 		String thumbFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_THUMBNAIL, rootPath);
-		List<File> files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
+		List<File> files=FileOperateUtil.listFiles(thumbFolder, format);
 		if(files!=null&&files.size()>0){
 			List<String> paths=new ArrayList<String>();
 			for (File file : files) {

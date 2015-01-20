@@ -4,6 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
@@ -12,9 +15,14 @@ import com.linj.camera.view.CameraView.FlashMode;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
@@ -25,8 +33,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
@@ -52,6 +62,12 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	/** 触摸屏幕时显示的聚焦图案  */ 
 	private FocusImageView mFocusImageView;
 
+	/** 显示录像用时的TextView  */ 
+	private TextView mRecordingInfoTextView;
+
+	/** 显示水印图案  */ 
+	private ImageView mWaterMarkImageView; 
+
 	/** 存放照片的根目录 */ 
 	private String mSavePath;
 
@@ -66,12 +82,21 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 
 	/** 用以执行定时任务的Handler对象*/
 	private Handler mHandler;
-
+	private long mRecordStartTime;
 	public CameraContainer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		mHandler=new Handler();
 
+		initView(context);
+		setOnTouchListener(new TouchListener());
+	}
+
+	/**  
+	 *  初始化子控件
+	 *  @param context   
+	 */
+	private void initView(Context context) {
 		mCameraView=new CameraView(context);
 		RelativeLayout.LayoutParams layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mCameraView.setLayoutParams(layoutParams);
@@ -88,6 +113,32 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		mFocusImageView.setFocusImg(R.drawable.focus_focusing);
 		mFocusImageView.setFocusSucceedImg(R.drawable.focus_focused);
 		addView(mFocusImageView);
+
+		mRecordingInfoTextView=new TextView(context);
+		layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.topMargin=50;
+		layoutParams.rightMargin=50;
+		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		Drawable drawable=getResources().getDrawable(R.drawable.icon_rec);
+		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());
+		mRecordingInfoTextView.setCompoundDrawables(drawable, null, null, null);
+		mRecordingInfoTextView.setCompoundDrawablePadding(15);
+		mRecordingInfoTextView.setText("00:10");
+		mRecordingInfoTextView.setTextSize(20);
+		mRecordingInfoTextView.setTextColor(Color.WHITE);
+		mRecordingInfoTextView.setLayoutParams(layoutParams);
+		mRecordingInfoTextView.setVisibility(View.GONE);
+		addView(mRecordingInfoTextView);
+
+
+		mWaterMarkImageView=new ImageView(context);
+		mWaterMarkImageView.setImageResource(R.drawable.thumb_guide_tips_new);
+		layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		mWaterMarkImageView.setLayoutParams(layoutParams);
+		mWaterMarkImageView.setVisibility(View.GONE);
+		addView(mWaterMarkImageView);
 
 		//获取当前照相机支持的最大缩放级别，值小于0表示不支持缩放。当支持缩放时，加入拖动条。
 		int maxZoom=mCameraView.getMaxZoom();
@@ -107,23 +158,63 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			//隐藏seekbar 在触屏放大缩小手势时显示
 			mZoomSeekBar.setVisibility(View.GONE);
 		}
-		setOnTouchListener(new TouchListener());
 	}
 
-    public boolean startRecord(){
-    	return mCameraView.startRecord();
-    }
-    public void stopRecord(){
-    	mCameraView.stopRecord();
-    }
-    public void setZoom(int zoom){
-    	mZoomSeekBar.setProgress(zoom);
-    	mCameraView.setZoom(zoom);
-    	mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), this);
-    }
+
+	public boolean startRecord(){
+		mRecordStartTime=SystemClock.uptimeMillis();
+		mRecordingInfoTextView.setVisibility(View.VISIBLE);
+		mRecordingInfoTextView.setText("00:00");
+		if(mCameraView.startRecord()){
+			mHandler.postAtTime(recordRunnable, mRecordingInfoTextView, SystemClock.uptimeMillis()+1000);
+			return true;
+		}else {
+			return false;
+		}
+
+	}
+	Runnable recordRunnable=new Runnable() {	
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			if(mCameraView.isRecording()){
+				long recordTime=SystemClock.uptimeMillis()-mRecordStartTime;
+				SimpleDateFormat s=new SimpleDateFormat("mm:ss",Locale.getDefault());
+				mRecordingInfoTextView.setText(s.format(new Date(recordTime)));
+				mHandler.postAtTime(this,mRecordingInfoTextView, SystemClock.uptimeMillis());
+			}else {
+				mRecordingInfoTextView.setVisibility(View.GONE);
+			}
+		}
+	};
+	public void stopRecord(){
+		mRecordingInfoTextView.setVisibility(View.GONE);
+		mCameraView.stopRecord();
+	}
 	/**  
-	*   前置、后置摄像头转换
+	*  改变相机模式 在拍照模式和录像模式间切换 两个模式的初始缩放级别不同
+	*  @param zoom   缩放级别
 	*/
+	public void switchMode(int zoom){
+		mZoomSeekBar.setProgress(zoom);
+		mCameraView.setZoom(zoom);
+		//自动对焦
+		mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), this);   
+		//隐藏水印
+		mWaterMarkImageView.setVisibility(View.GONE);
+	}
+	
+	public void setWaterMark(){
+		if (mWaterMarkImageView.getVisibility()==View.VISIBLE) {
+			mWaterMarkImageView.setVisibility(View.GONE);
+		}else {
+			mWaterMarkImageView.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	/**  
+	 *   前置、后置摄像头转换
+	 */
 	public void switchCamera(){
 		mCameraView.switchCamera();
 	}
@@ -322,12 +413,6 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			return (float) Math.sqrt(dx * dx + dy * dy);
 		}
 
-		/** 计算两个手指间的中间点 */
-		private PointF mid(MotionEvent event) {
-			float midX = (event.getX(1) + event.getX(0)) / 2;
-			float midY = (event.getY(1) + event.getY(0)) / 2;
-			return new PointF(midX, midY);
-		}
 	}
 
 	/**
@@ -365,6 +450,8 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			if(data!=null){
 				//解析生成相机返回的图片
 				Bitmap bm=BitmapFactory.decodeByteArray(data, 0, data.length);
+				//获取加水印的图片
+				bm=getBitmapWithWaterMark(bm);
 				//生成缩略图
 				Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
 				//产生新的文件名
@@ -398,6 +485,51 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			return null;
 		}
 
+		private Bitmap getBitmapWithWaterMark(Bitmap bm) {
+			// TODO Auto-generated method stub
+			if(!(mWaterMarkImageView.getVisibility()==View.VISIBLE)){
+				return bm;
+			}
+			Drawable mark=mWaterMarkImageView.getDrawable();
+			Bitmap wBitmap=drawableToBitmap(mark);
+			int w = bm.getWidth();
+
+			int h = bm.getHeight();
+
+			int ww = wBitmap.getWidth();
+
+			int wh = wBitmap.getHeight();
+			Bitmap newb = Bitmap.createBitmap( w, h, Config.ARGB_8888 );
+			Canvas canvas=new Canvas(newb);
+			  //draw src into
+
+			canvas.drawBitmap( bm, 0, 0, null );//在 0，0坐标开始画入src
+			canvas.drawBitmap( wBitmap, w - ww + 5, h - wh + 5, null );//在src的右下角画入水印
+			 //save all clip
+
+			canvas.save( Canvas.ALL_SAVE_FLAG );//保存
+
+		    //store
+
+			canvas.restore();//存储
+			bm.recycle();
+			bm=null;
+			wBitmap.recycle();
+			wBitmap=null;
+		    return newb;
+
+		}
+		public  Bitmap drawableToBitmap(Drawable drawable) {       
+			Bitmap bitmap = Bitmap.createBitmap(
+					drawable.getIntrinsicWidth(),
+					drawable.getIntrinsicHeight(),
+					drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+							: Bitmap.Config.RGB_565);
+			Canvas canvas = new Canvas(bitmap);
+			drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+			drawable.draw(canvas);
+			return bitmap;
+		}
 		/**
 		 * 图片压缩方法
 		 * @param bitmap 图片文件
@@ -456,22 +588,4 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		final float scale = getResources().getDisplayMetrics().density; 
 		return (int)(dipValue * scale + 0.5f); 
 	} 
-
-	/**  
-	 *  px转dip
-	 *  @param pxValue
-	 *  @return   
-	 */
-	private  int px2dip(float pxValue){ 
-		final float scale = getResources().getDisplayMetrics().density; 
-		return (int)(pxValue / scale + 0.5f); 
-	}
-
-
-
-
-
-
-
-
 }

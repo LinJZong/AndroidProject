@@ -11,7 +11,13 @@
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="centerCrop" />
-
+    <ImageView 
+        android:id="@+id/vedioicon"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:layout_gravity="center"
+        android:src="@drawable/btn_play_vedio"
+        android:scaleType="fitXY"/>
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="fill_parent"

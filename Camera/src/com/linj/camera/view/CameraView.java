@@ -1,6 +1,9 @@
 package com.linj.camera.view;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +15,7 @@ import com.linj.camera.view.CameraContainer.TakePictureListener;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -25,8 +29,11 @@ import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.media.ThumbnailUtils;
 import android.media.MediaRecorder.OnInfoListener;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -66,7 +73,8 @@ public class CameraView extends SurfaceView {
 	private MediaRecorder mMediaRecorder;
 	/**  相机配置，在录像前记录，用以录像结束后恢复原配置 */ 
 	private Camera.Parameters mParameters;
-
+	/**  录像存放路径 ，用以生成缩略图*/ 
+	private String mRecordPath=null;
 	public CameraView(Context context){
 		super(context);
 		//初始化容器
@@ -93,16 +101,12 @@ public class CameraView extends SurfaceView {
 				}
 				setCameraParameters();
 				mCamera.setPreviewDisplay(getHolder());
-
 			} catch (Exception e) {
 				Toast.makeText(getContext(), "打开相机失败", Toast.LENGTH_SHORT).show();
 				Log.e(TAG,e.getMessage());
 			}
 			mCamera.startPreview();
 		}
-
-
-
 
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -123,10 +127,13 @@ public class CameraView extends SurfaceView {
 		}
 	};
 
+	public boolean isRecording(){
+		return mMediaRecorder!=null;
+	}
 	/**  
-	*  开始录像
-	*  @return 开始录像是否成功   
-	*/
+	 *  开始录像
+	 *  @return 开始录像是否成功   
+	 */
 	public boolean startRecord(){
 		if(mCamera==null)
 			openCamera();
@@ -146,14 +153,16 @@ public class CameraView extends SurfaceView {
 		.setAudioSource(MediaRecorder.AudioSource.MIC);
 		//设置录像参数，由于应用需要此处取一个较小格式的视频
 		mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
-
+		//设置输出视频朝向，便于播放器识别。由于是竖屏录制，需要正转90°
+		mMediaRecorder.setOrientationHint(90);
 		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VEDIO, "test");
 		File directory=new File(path);
 		if(!directory.exists())
 			directory.mkdirs();
 		try {
-			String name=FileOperateUtil.createFileNmae(".3gp");
-			File mRecAudioFile = new File(path+File.separator+name);
+			String name="vedio"+FileOperateUtil.createFileNmae(".3gp");
+			mRecordPath=path+File.separator+name;
+			File mRecAudioFile = new File(mRecordPath);
 			mMediaRecorder.setOutputFile(mRecAudioFile
 					.getAbsolutePath());
 			mMediaRecorder.prepare();
@@ -165,15 +174,14 @@ public class CameraView extends SurfaceView {
 	}
 
 	public void stopRecord(){
-		// TODO Auto-generated method stub
-
-		Toast.makeText(getContext(), "record stop", Toast.LENGTH_SHORT).show();
 		try {
 			if(mMediaRecorder!=null){
 				mMediaRecorder.stop();
 				mMediaRecorder.reset();
 				mMediaRecorder.release();
 				mMediaRecorder=null;
+				//保存视频的缩略图
+				saveThumbnail();
 			}
 			if(mParameters!=null&&mCamera!=null){
 				//重新连接相机
@@ -192,11 +200,34 @@ public class CameraView extends SurfaceView {
 		}
 	}
 
+	private void saveThumbnail() throws FileNotFoundException, IOException {
+		if(mRecordPath!=null){
+			//创建缩略图
+			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MICRO_KIND);
+			if(bitmap!=null){
+				String mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, "test");
+				File folder=new File(mThumbnailFolder);
+				if(!folder.exists()){
+					folder.mkdirs();
+				}
+				File file=new File(mRecordPath);
+				file=new File(folder+File.separator+file.getName().replace("3gp", "jpg"));
+				//存图片小图
+				BufferedOutputStream bufferos=new BufferedOutputStream(new FileOutputStream(file));
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bufferos);
+				bufferos.flush();
+				bufferos.close();
+			}
+			mRecordPath=null;
+		}
+	}
+
 	/**  
 	 *   转换前置和后置照相机
 	 */
 	public void switchCamera(){
 		mIsFrontCamera=!mIsFrontCamera;
+		openCamera();
 		if(mCamera!=null){
 			setCameraParameters();
 			updateCameraOrientation();
@@ -231,7 +262,7 @@ public class CameraView extends SurfaceView {
 						mCamera =null;
 						return false;
 					}
-				
+
 				}
 			}
 		}else {
@@ -241,7 +272,7 @@ public class CameraView extends SurfaceView {
 				mCamera =null;
 				return false;
 			}
-			
+
 		}
 		return true;
 	}
@@ -299,6 +330,10 @@ public class CameraView extends SurfaceView {
 		int top=point.y-300;
 		int right=point.x+300;
 		int bottom=point.y+300;
+		left=left<-1000?-1000:left;
+		top=top<-1000?-1000:top;
+		right=right>1000?1000:right;
+		bottom=bottom>1000?1000:bottom;
 		areas.add(new Area(new Rect(left,top,right,bottom), 100));
 		parameters.setFocusAreas(areas);
 		try {
@@ -307,6 +342,7 @@ public class CameraView extends SurfaceView {
 			mCamera.setParameters(parameters);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 		mCamera.autoFocus(callback);
 	}

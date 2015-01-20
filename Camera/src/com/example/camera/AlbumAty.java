@@ -102,7 +102,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 
 	@Override
 	protected void onResume() {
-		mAlbumView.loadAlbum(mSaveRoot);
+		mAlbumView.loadAlbum(mSaveRoot,".jpg");
 		super.onResume();
 	}
 
@@ -172,7 +172,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 					boolean flag=FileOperateUtil.deleteThumbFile(path,AlbumAty.this);
 					if(!flag) Log.i(TAG, path);
 				}
-				mAlbumView.loadAlbum(mSaveRoot);
+				mAlbumView.loadAlbum(mSaveRoot,".jpg");
 				leaveEdit();
 			}
 		})

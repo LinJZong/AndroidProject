@@ -1,14 +1,14 @@
-# view AndroidManifest.xml #generated:28
+# view AndroidManifest.xml #generated:33
 -keep class com.example.camera.AlbumAty { <init>(...); }
 
-# view AndroidManifest.xml #generated:38
+# view AndroidManifest.xml #generated:39
 -keep class com.example.camera.AlbumItemAty { <init>(...); }
 
 # view AndroidManifest.xml #generated:22
 -keep class com.example.camera.CameraAty { <init>(...); }
 
 # view land\res/layout-land/album.xml #generated:17
-# view port\res/layout-port/album.xml #generated:17
+# view port\res/layout-port/album.xml #generated:30
 -keep class com.linj.album.view.AlbumGridView { <init>(...); }
 
 # view port\res/layout-port/albumitem.xml #generated:8
