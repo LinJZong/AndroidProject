@@ -7,6 +7,7 @@ import com.linj.album.view.FilterImageView;
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
+import com.linj.video.view.VideoView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,7 +43,9 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private ImageButton mSwitchModeButton;
 	private ImageView mSwitchCameraView;
 	private ImageView mSettingView;
+	private ImageView mVideoIconView;
 	private View mHeaderBar;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,17 +53,19 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.camera);
-
+       
 		mHeaderBar=findViewById(R.id.camera_header_bar);
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
+		mVideoIconView=(ImageView)findViewById(R.id.videoicon);
 		mCameraShutterButton=(ImageButton)findViewById(R.id.btn_shutter_camera);
 		mRecordShutterButton=(ImageButton)findViewById(R.id.btn_shutter_record);
 		mSwitchCameraView=(ImageView)findViewById(R.id.btn_switch_camera);
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
 		mSwitchModeButton=(ImageButton)findViewById(R.id.btn_switch_mode);
 		mSettingView=(ImageView)findViewById(R.id.btn_other_setting);
-				
+		
+
 		mThumbView.setOnClickListener(this);
 		mCameraShutterButton.setOnClickListener(this);
 		mRecordShutterButton.setOnClickListener(this);
@@ -74,6 +79,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		initThumbnail();
 	}
 
+	
 	/**
 	 * º”‘ÿÀı¬‘Õº
 	 */
@@ -82,10 +88,18 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		List<File> files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
 		if(files!=null&&files.size()>0){
 			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(0).getAbsolutePath());
-			if(thumbBitmap!=null)
+			if(thumbBitmap!=null){
 				mThumbView.setImageBitmap(thumbBitmap);
+				// ”∆µÀı¬‘Õºœ‘ æ≤•∑≈Õº∞∏
+				if(files.get(0).getAbsolutePath().contains("video")){
+					mVideoIconView.setVisibility(View.VISIBLE);
+				}else {
+					mVideoIconView.setVisibility(View.GONE);
+				}
+			}
 		}else {
 			mThumbView.setImageBitmap(null);
+			mVideoIconView.setVisibility(View.VISIBLE);
 		}
 
 	}

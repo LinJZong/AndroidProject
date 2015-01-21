@@ -11,7 +11,7 @@
     <!-- 缩略图文件夹 -->
     <string name="Thumbnail">Thumbnail</string>
     <!-- 视频文件夹 -->
-    <string name="Vedio">Vedio</string>
+    <string name="Video">Video</string>
     <string name="album_enter_select">选择</string>
     <string name="api_cancel">取消</string>
     <string name="album_photo_select_tip">项</string>

@@ -9,6 +9,13 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center" />
 
+    <ImageButton
+        android:id="@+id/videoicon"
+        android:layout_width="80dip"
+        android:layout_height="80dip"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_play_vedio_b" />
+
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"

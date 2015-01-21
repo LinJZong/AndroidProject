@@ -1,28 +1,40 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <!-- 显示预览图形 -->
 
-    <com.linj.album.view.AlbumViewPager
-        android:id="@+id/albumviewpager"
+    <FrameLayout
+        android:id="@+id/pagerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.linj.album.view.AlbumViewPager
+            android:id="@+id/albumviewpager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/album_item_bg" />
+
+        <include
+            android:id="@+id/album_item_header_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            layout="@layout/album_item_header_bar" />
+
+        <include
+            android:id="@+id/album_item_bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            layout="@layout/album_item_bottom_bar" />
+    </FrameLayout>
+
+    <com.linj.video.view.VideoContainer
+        android:id="@+id/videoview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/album_item_bg" />
-
-    <include
-        android:id="@+id/album_item_header_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        layout="@layout/album_item_header_bar" />
-
-    <include
-        android:id="@+id/album_item_bottom_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        layout="@layout/album_item_bottom_bar" />
+        android:visibility="gone" />
 
 </FrameLayout>

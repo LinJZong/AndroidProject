@@ -155,12 +155,12 @@ public class CameraView extends SurfaceView {
 		mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
 		//设置输出视频朝向，便于播放器识别。由于是竖屏录制，需要正转90°
 		mMediaRecorder.setOrientationHint(90);
-		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VEDIO, "test");
+		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VIDEO, "test");
 		File directory=new File(path);
 		if(!directory.exists())
 			directory.mkdirs();
 		try {
-			String name="vedio"+FileOperateUtil.createFileNmae(".3gp");
+			String name="video"+FileOperateUtil.createFileNmae(".3gp");
 			mRecordPath=path+File.separator+name;
 			File mRecAudioFile = new File(mRecordPath);
 			mMediaRecorder.setOutputFile(mRecAudioFile
@@ -203,7 +203,7 @@ public class CameraView extends SurfaceView {
 	private void saveThumbnail() throws FileNotFoundException, IOException {
 		if(mRecordPath!=null){
 			//创建缩略图
-			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MICRO_KIND);
+			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MINI_KIND);
 			if(bitmap!=null){
 				String mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, "test");
 				File folder=new File(mThumbnailFolder);
@@ -214,7 +214,7 @@ public class CameraView extends SurfaceView {
 				file=new File(folder+File.separator+file.getName().replace("3gp", "jpg"));
 				//存图片小图
 				BufferedOutputStream bufferos=new BufferedOutputStream(new FileOutputStream(file));
-				bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bufferos);
+				bitmap.compress(Bitmap.CompressFormat.JPEG,100, bufferos);
 				bufferos.flush();
 				bufferos.close();
 			}

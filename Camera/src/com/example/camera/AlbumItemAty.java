@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.linj.album.view.AlbumViewPager;
 import com.linj.album.view.MatrixImageView.OnSingleTapListener;
+import com.linj.video.view.VideoContainer;
+import com.linj.video.view.VideoView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,18 +19,20 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /** 
-* @ClassName: AlbumItemAty 
-* @Description:相册图片大图Activity 包含图片编辑功能
-* @author LinJ
-* @date 2015-1-12 下午5:18:25 
-*  
-*/
+ * @ClassName: AlbumItemAty 
+ * @Description:相册图片大图Activity 包含图片编辑功能
+ * @author LinJ
+ * @date 2015-1-12 下午5:18:25 
+ *  
+ */
 public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTapListener{
 	public final static String TAG="AlbumDetailAty";
 	private String mSaveRoot;
 	private AlbumViewPager mViewPager;//显示大图
+	private VideoContainer mContainer;
 	private ImageView mBackView;
 	private ImageView mCameraView;
 	private TextView mCountView;
@@ -43,18 +47,19 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		setContentView(R.layout.albumitem);
 
 		mViewPager=(AlbumViewPager)findViewById(R.id.albumviewpager);
+		mContainer=(VideoContainer)findViewById(R.id.videoview);
 		mBackView=(ImageView)findViewById(R.id.header_bar_photo_back);
 		mCameraView=(ImageView)findViewById(R.id.header_bar_photo_to_camera);
 		mCountView=(TextView)findViewById(R.id.header_bar_photo_count);
 		mHeaderBar=findViewById(R.id.album_item_header_bar);
 		mBottomBar=findViewById(R.id.album_item_bottom_bar);
 		mDeleteButton=(Button)findViewById(R.id.delete);
-		
+
 		mBackView.setOnClickListener(this);
 		mCameraView.setOnClickListener(this);
 		mCountView.setOnClickListener(this);
 		mDeleteButton.setOnClickListener(this);
-		
+
 		mSaveRoot="test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
@@ -63,9 +68,18 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			File file=new File(currentFileName);
 			currentFileName=file.getName();
 		}
-			
+
 		//设置网络图片加载参数
 		mViewPager.loadAlbum(mSaveRoot,currentFileName,mCountView);
+	}
+
+	public void play(String path){
+		try{
+			mContainer.playVideo(path);
+		}
+		catch(Exception e){
+			Toast.makeText(this, "播放视频出错", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private OnPageChangeListener pageChangeListener=new OnPageChangeListener() {
@@ -111,7 +125,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			mBottomBar.setVisibility(View.VISIBLE);
 		}	
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -132,5 +146,5 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		}
 	}
 
-	
+
 }

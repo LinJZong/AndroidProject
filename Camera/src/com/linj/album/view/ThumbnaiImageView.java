@@ -44,7 +44,7 @@ public class ThumbnaiImageView extends FrameLayout  {
 		inflate(context, R.layout.item_album_grid, this);
 		FilterImageView imageView=(FilterImageView) findViewById(R.id.imgThumbnail);
 		CheckBox checkBox=(CheckBox) findViewById(R.id.checkbox);
-		ImageView icon=(ImageView)findViewById(R.id.vedioicon);
+		ImageView icon=(ImageView)findViewById(R.id.videoicon);
 		mViewHolder=new ViewHolder(imageView,checkBox,icon);
 		this.mImageLoader=imageLoader;
 		this.mOptions=options;
@@ -71,10 +71,10 @@ public class ThumbnaiImageView extends FrameLayout  {
 			//给checkbox设置tag,用以记录当前选中项
 			mViewHolder.checkBox.setTag(path);
 			setTag(path);
-			if(mPath.contains("vedio")){
-				mViewHolder.vedioIconView.setVisibility(View.VISIBLE);
+			if(mPath.contains("video")){
+				mViewHolder.videoIconView.setVisibility(View.VISIBLE);
 			}else {
-				mViewHolder.vedioIconView.setVisibility(View.GONE);
+				mViewHolder.videoIconView.setVisibility(View.GONE);
 			}
 			mPosition=position;
 		}
@@ -101,10 +101,10 @@ public class ThumbnaiImageView extends FrameLayout  {
 		public ViewHolder(ImageView imageView,CheckBox checkBox,ImageView icon){
 			this.imageView=imageView;
 			this.checkBox=checkBox;
-			this.vedioIconView=icon;
+			this.videoIconView=icon;
 		}
 		ImageView imageView;//缩略图
-		ImageView vedioIconView;//播放视频图标
+		ImageView videoIconView;//播放视频图标
 		CheckBox checkBox;//勾选框
 
 	}

@@ -11,7 +11,7 @@
 # view port\res/layout-port/album.xml #generated:30
 -keep class com.linj.album.view.AlbumGridView { <init>(...); }
 
-# view port\res/layout-port/albumitem.xml #generated:8
+# view port\res/layout-port/albumitem.xml #generated:13
 -keep class com.linj.album.view.AlbumViewPager { <init>(...); }
 
 # view port\res/layout-port/camera_bottom_bar.xml #generated:19
@@ -23,4 +23,7 @@
 
 # view port\res/layout-port/camera.xml #generated:10
 -keep class com.linj.camera.view.CameraContainer { <init>(...); }
+
+# view port\res/layout-port/albumitem.xml #generated:34
+-keep class com.linj.video.view.VideoContainer { <init>(...); }
 

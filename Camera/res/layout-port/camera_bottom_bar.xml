@@ -10,7 +10,7 @@
     android:orientation="horizontal"
     android:weightSum="5.0" >
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="0.0dip"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
@@ -23,8 +23,18 @@
             android:background="@drawable/thumbnail_bg"
             android:contentDescription="@string/app_name"
             android:padding="0.5dip"
+             android:layout_gravity="center"
             android:scaleType="centerCrop" />
-    </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/videoicon"
+            android:layout_width="25dip"
+            android:layout_height="25dip"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:focusable="false"
+            android:src="@drawable/btn_play_vedio" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="0.0dip"

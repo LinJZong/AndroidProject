@@ -2,9 +2,11 @@ package com.linj.album.view;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.camera.AlbumItemAty;
 import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
 import com.linj.album.view.MatrixImageView.OnMovingListener;
@@ -13,6 +15,7 @@ import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -20,6 +23,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -64,13 +69,23 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	public void loadAlbum(String rootPath,String fileName,TextView view){
 		//获取根目录下缩略图文件夹
 		String folder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, rootPath);
-		List<File> files=FileOperateUtil.listFiles(folder, ".jpg");
-		if(files!=null&&files.size()>0){
+		String thumbnailFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_THUMBNAIL, rootPath);
+		//获取图片文件大图
+		List<File> imageList=FileOperateUtil.listFiles(folder, ".jpg");
+		//获取视频文件缩略图
+		List<File> videoList=FileOperateUtil.listFiles(thumbnailFolder, ".jpg","video");
+		//将视频文件缩略图加入图片大图列表中
+		if(videoList!=null&&videoList.size()>0){
+			imageList.addAll(videoList);
+			//时间升序排序
+			FileOperateUtil.sortList(imageList, false);
+		}
+		if(imageList!=null&&imageList.size()>0){
 			List<String> paths=new ArrayList<String>();
 			int currentItem=0;
-			for (File file : files) {
+			for (File file : imageList) {
 				if(fileName!=null&&file.getName().equals(fileName))
-					currentItem=files.indexOf(file);
+					currentItem=imageList.indexOf(file);
 				paths.add(file.getAbsolutePath());
 			}
 			setAdapter(new ViewPagerAdapter(paths));
@@ -139,12 +154,34 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 			imageView.setOnMovingListener(AlbumViewPager.this);
 			imageView.setOnSingleTapListener(onSingleTapListener);
 			String path=paths.get(position);
-			//			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-			mImageLoader.loadImage(path, imageView, mOptions);
+			//final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+			
+			ImageButton videoIcon=(ImageButton)imageLayout.findViewById(R.id.videoicon);
+			if(path.contains("video")){
+				videoIcon.setVisibility(View.VISIBLE);
+			}else {			
+				videoIcon.setVisibility(View.GONE);
+			}
+			videoIcon.setOnClickListener(playVideoListener);
+			videoIcon.setTag(path);
 			imageLayout.setTag(path);
+			mImageLoader.loadImage(path, imageView, mOptions);
 			return imageLayout;
 		}
 
+		OnClickListener playVideoListener=new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				String path=v.getTag().toString();
+				path=path.replace(getContext().getResources().getString(R.string.Thumbnail),
+						getContext().getResources().getString(R.string.Video));
+				path=path.replace(".jpg", ".3gp");
+				((AlbumItemAty)getContext()).play(path);
+			}
+		};
 
 		@Override
 		public int getItemPosition(Object object) {
@@ -172,7 +209,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 				if(paths.size()>0)
 					return (getCurrentItem()+1)+"/"+paths.size();
 				else {
-                    return "0/0";
+					return "0/0";
 				}
 			}
 			return null;
