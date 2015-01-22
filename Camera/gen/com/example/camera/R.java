@@ -49,6 +49,7 @@ containing a value of this type.
         public static final int title_view_left_back_padding_left=0x7f060007;
         public static final int title_view_left_back_padding_right=0x7f060008;
         public static final int top_menu_bar_height=0x7f060004;
+        public static final int videodetails_textsize_time=0x7f06000c;
     }
     public static final class drawable {
         public static final int albumset_preselected=0x7f020000;
@@ -109,20 +110,28 @@ containing a value of this type.
         public static final int icon_back2_click=0x7f020037;
         public static final int icon_rec=0x7f020038;
         public static final int picture_setting_album_checkbox=0x7f020039;
-        public static final int thumb_guide_tips_new=0x7f02003a;
-        public static final int thumbnail_bg=0x7f02003b;
-        public static final int title_text_selector=0x7f02003c;
-        public static final int video_pause_bg=0x7f02003d;
-        public static final int video_player_bg=0x7f02003e;
+        public static final int player_setting_bright_progressbar=0x7f02003a;
+        public static final int setting_bright_seekbar_background=0x7f02003b;
+        public static final int setting_bright_seekbar_progress=0x7f02003c;
+        public static final int thumb_guide_tips_new=0x7f02003d;
+        public static final int thumbnail_bg=0x7f02003e;
+        public static final int title_text_selector=0x7f02003f;
+        public static final int video_detail_player_bottom_bg=0x7f020040;
+        public static final int video_detail_player_pause=0x7f020041;
+        public static final int video_detail_player_progress_drag=0x7f020042;
+        public static final int video_detail_player_start=0x7f020043;
+        public static final int video_pause_bg=0x7f020044;
+        public static final int video_player_bg=0x7f020045;
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
-        public static final int action_settings=0x7f0a0026;
+        public static final int action_settings=0x7f0a002b;
         public static final int album_bottom_bar=0x7f0a0002;
         public static final int album_item_bottom_bar=0x7f0a0015;
         public static final int album_item_header_bar=0x7f0a0014;
         public static final int albumview=0x7f0a0001;
         public static final int albumviewpager=0x7f0a0013;
+        public static final int btnVideoPlayOrPause=0x7f0a0027;
         public static final int btn_flash_mode=0x7f0a0020;
         public static final int btn_other_setting=0x7f0a0021;
         public static final int btn_shutter_camera=0x7f0a001d;
@@ -149,10 +158,14 @@ containing a value of this type.
         public static final int header_bar_select_counter=0x7f0a000b;
         public static final int image=0x7f0a0024;
         public static final int imgThumbnail=0x7f0a0022;
+        public static final int llVideoDetailPlayerBottom=0x7f0a0026;
         public static final int loading=0x7f0a0025;
         public static final int move=0x7f0a0003;
         public static final int pagerview=0x7f0a0012;
+        public static final int sbVideoDetailPlayer=0x7f0a002a;
         public static final int select_all=0x7f0a000c;
+        public static final int tvVideoPlayRemainTime=0x7f0a0029;
+        public static final int tvVideoPlayTime=0x7f0a0028;
         public static final int videoicon=0x7f0a001b;
         public static final int videoview=0x7f0a0016;
     }
@@ -168,6 +181,7 @@ containing a value of this type.
         public static final int camera_header_bar=0x7f030008;
         public static final int item_album_grid=0x7f030009;
         public static final int item_album_pager=0x7f03000a;
+        public static final int video_bottom_bar=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -206,11 +220,13 @@ containing a value of this type.
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
 
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
 
 
         
@@ -232,6 +248,8 @@ containing a value of this type.
          */
         public static final int AppTheme=0x7f080001;
         public static final int CheckBoxStyle=0x7f080002;
+        public static final int video_detail_player=0x7f080004;
+        public static final int video_detail_player_bottom_btn=0x7f080003;
     }
     public static final class styleable {
         /** Attributes that can be used with a TempImageView.

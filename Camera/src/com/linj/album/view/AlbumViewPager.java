@@ -147,6 +147,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 		@Override
 		public Object instantiateItem(ViewGroup viewGroup, int position) {
 			//注意，这里不可以加inflate的时候直接添加到viewGroup下，而需要用addView重新添加
+			//因为直接加到viewGroup下会导致返回的view为viewGroup
 			View imageLayout = inflate(getContext(),R.layout.item_album_pager, null);
 			viewGroup.addView(imageLayout);
 			assert imageLayout != null;

@@ -1,7 +1,7 @@
-# view AndroidManifest.xml #generated:33
+# view AndroidManifest.xml #generated:29
 -keep class com.example.camera.AlbumAty { <init>(...); }
 
-# view AndroidManifest.xml #generated:39
+# view AndroidManifest.xml #generated:35
 -keep class com.example.camera.AlbumItemAty { <init>(...); }
 
 # view AndroidManifest.xml #generated:22
@@ -26,4 +26,7 @@
 
 # view port\res/layout-port/albumitem.xml #generated:34
 -keep class com.linj.video.view.VideoContainer { <init>(...); }
+
+# onClick port\res/layout-port/video_bottom_bar.xml #generated:9
+-keepclassmembers class * { *** clickView(...); }
 

@@ -11,6 +11,8 @@
     <dimen name="title_view_left_back_padding_left">12.0dip</dimen>
     <dimen name="title_view_left_back_padding_right">12.0dip</dimen>
     <dimen name="album_header_btn_width">48.0dip</dimen>
- <dimen name="album_rooter_bar_height">48.0dip</dimen>
-   <dimen name="album_rooter_bar_text_size">16.0sp</dimen>
+    <dimen name="album_rooter_bar_height">48.0dip</dimen>
+    <dimen name="album_rooter_bar_text_size">16.0sp</dimen>
+    <dimen name="videodetails_textsize_time">13.0dip</dimen>
+
 </resources>

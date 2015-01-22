@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 /** 
@@ -60,7 +61,7 @@ public class VideoView extends SurfaceView implements OnCompletionListener{
 	};
 
 	public void play(String path) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
-		setVisibility(View.VISIBLE);
+		((View) getParent()).setVisibility(View.VISIBLE);
 		if(mMediaPlayer!=null&&mMediaPlayer.isPlaying()){
 			mMediaPlayer.stop();
 			mMediaPlayer.reset();
@@ -73,7 +74,7 @@ public class VideoView extends SurfaceView implements OnCompletionListener{
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		// TODO Auto-generated method stub
-		setVisibility(View.GONE);
+		((View) getParent()).setVisibility(View.GONE);
 	}
 
 }

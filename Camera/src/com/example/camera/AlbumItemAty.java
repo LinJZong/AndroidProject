@@ -63,7 +63,9 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mSaveRoot="test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
-		String currentFileName=getIntent().getExtras().getString("path");
+		String currentFileName=null;
+		if(getIntent().getExtras()!=null)
+			currentFileName=getIntent().getExtras().getString("path");
 		if(currentFileName!=null){
 			File file=new File(currentFileName);
 			currentFileName=file.getName();
@@ -75,6 +77,9 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 
 	public void play(String path){
 		try{
+			mViewPager.setVisibility(View.GONE);
+			mHeaderBar.setVisibility(View.GONE);
+			mBottomBar.setVisibility(View.GONE);
 			mContainer.playVideo(path);
 		}
 		catch(Exception e){

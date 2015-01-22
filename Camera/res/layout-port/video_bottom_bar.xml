@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llVideoDetailPlayerBottom"
+    style="@style/video_detail_player"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/video_detail_player_bottom_bg"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/btnVideoPlayOrPause"
+        style="@style/video_detail_player_bottom_btn"
+        android:gravity="center_vertical"
+        android:onClick="clickView"
+        android:src="@drawable/video_detail_player_start" />
+
+    <RelativeLayout
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0" >
+
+        <TextView
+            android:id="@+id/tvVideoPlayTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/videodetails_textsize_time" />
+
+        <TextView
+            android:id="@+id/tvVideoPlayRemainTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="-00:00"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/videodetails_textsize_time" />
+
+        <SeekBar
+            android:id="@+id/sbVideoDetailPlayer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tvVideoPlayRemainTime"
+            android:layout_toRightOf="@id/tvVideoPlayTime"
+            android:maxHeight="66dip"
+            android:minHeight="66dip"
+            android:progressDrawable="@drawable/player_setting_bright_progressbar"
+            android:thumb="@drawable/video_detail_player_progress_drag"
+             />
+    </RelativeLayout>
+
+</LinearLayout>
