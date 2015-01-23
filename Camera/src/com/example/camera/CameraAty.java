@@ -7,7 +7,7 @@ import com.linj.album.view.FilterImageView;
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
-import com.linj.video.view.VideoView;
+import com.linj.video.view.VideoPlayerView;
 
 import android.app.Activity;
 import android.content.Intent;

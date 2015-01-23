@@ -25,8 +25,5 @@
 -keep class com.linj.camera.view.CameraContainer { <init>(...); }
 
 # view port\res/layout-port/albumitem.xml #generated:34
--keep class com.linj.video.view.VideoContainer { <init>(...); }
-
-# onClick port\res/layout-port/video_bottom_bar.xml #generated:9
--keepclassmembers class * { *** clickView(...); }
+-keep class com.linj.video.view.VideoPlayerContainer { <init>(...); }
 

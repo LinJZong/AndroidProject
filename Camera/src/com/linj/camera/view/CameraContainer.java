@@ -83,6 +83,7 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	/** 用以执行定时任务的Handler对象*/
 	private Handler mHandler;
 	private long mRecordStartTime;
+	private SimpleDateFormat mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
 	public CameraContainer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -179,9 +180,8 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			// TODO Auto-generated method stub
 			if(mCameraView.isRecording()){
 				long recordTime=SystemClock.uptimeMillis()-mRecordStartTime;
-				SimpleDateFormat s=new SimpleDateFormat("mm:ss",Locale.getDefault());
-				mRecordingInfoTextView.setText(s.format(new Date(recordTime)));
-				mHandler.postAtTime(this,mRecordingInfoTextView, SystemClock.uptimeMillis());
+				mRecordingInfoTextView.setText(mTimeFormat.format(new Date(recordTime)));
+				mHandler.postAtTime(this,mRecordingInfoTextView, SystemClock.uptimeMillis()+500);
 			}else {
 				mRecordingInfoTextView.setVisibility(View.GONE);
 			}

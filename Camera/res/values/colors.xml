@@ -7,4 +7,5 @@
     <color name="common_title_text">#ff565555</color>
     <color name="common_text_yellow">#ffffe049</color>
     <color name="album_item_bg">#fffcfcfd</color>
+    <color name="video_playter_bg">#333333</color>
 </resources>

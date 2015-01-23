@@ -4,8 +4,8 @@ import java.io.File;
 
 import com.linj.album.view.AlbumViewPager;
 import com.linj.album.view.MatrixImageView.OnSingleTapListener;
-import com.linj.video.view.VideoContainer;
-import com.linj.video.view.VideoView;
+import com.linj.video.view.VideoPlayerContainer;
+import com.linj.video.view.VideoPlayerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
@@ -32,7 +33,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 	public final static String TAG="AlbumDetailAty";
 	private String mSaveRoot;
 	private AlbumViewPager mViewPager;//显示大图
-	private VideoContainer mContainer;
+	private VideoPlayerContainer mContainer;
 	private ImageView mBackView;
 	private ImageView mCameraView;
 	private TextView mCountView;
@@ -47,7 +48,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		setContentView(R.layout.albumitem);
 
 		mViewPager=(AlbumViewPager)findViewById(R.id.albumviewpager);
-		mContainer=(VideoContainer)findViewById(R.id.videoview);
+		mContainer=(VideoPlayerContainer)findViewById(R.id.videoview);
 		mBackView=(ImageView)findViewById(R.id.header_bar_photo_back);
 		mCameraView=(ImageView)findViewById(R.id.header_bar_photo_to_camera);
 		mCountView=(TextView)findViewById(R.id.header_bar_photo_count);
@@ -75,17 +76,16 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mViewPager.loadAlbum(mSaveRoot,currentFileName,mCountView);
 	}
 
-	public void play(String path){
+	public void playVideo(String path){
 		try{
-			mViewPager.setVisibility(View.GONE);
-			mHeaderBar.setVisibility(View.GONE);
-			mBottomBar.setVisibility(View.GONE);
 			mContainer.playVideo(path);
 		}
 		catch(Exception e){
-			Toast.makeText(this, "播放视频出错", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
+
 
 	private OnPageChangeListener pageChangeListener=new OnPageChangeListener() {
 
@@ -150,6 +150,14 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			break;
 		}
 	}
-
+	@Override
+	public void onBackPressed() {
+		if(mContainer.getVisibility()==View.VISIBLE)
+			mContainer.stopPlay();
+		else {
+			super.onBackPressed();
+		}
+		
+	}
 
 }

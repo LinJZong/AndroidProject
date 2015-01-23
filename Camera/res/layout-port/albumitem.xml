@@ -31,7 +31,7 @@
             layout="@layout/album_item_bottom_bar" />
     </FrameLayout>
 
-    <com.linj.video.view.VideoContainer
+    <com.linj.video.view.VideoPlayerContainer
         android:id="@+id/videoview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

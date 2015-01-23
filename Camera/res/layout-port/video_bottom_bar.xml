@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/llVideoDetailPlayerBottom"
     style="@style/video_detail_player"
-    android:layout_alignParentBottom="true"
-    android:background="@drawable/video_detail_player_bottom_bg"
+    android:background="@color/video_playter_bg"
+    android:minHeight="40dip"
     android:orientation="horizontal" >
 
-    <ImageView
+    <ImageButton
         android:id="@+id/btnVideoPlayOrPause"
-        style="@style/video_detail_player_bottom_btn"
+        android:layout_height="fill_parent"
+        android:background="@null"
+        android:layout_width="40dip"
         android:gravity="center_vertical"
-        android:onClick="clickView"
         android:src="@drawable/video_detail_player_start" />
 
     <RelativeLayout
@@ -46,11 +47,12 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/tvVideoPlayRemainTime"
             android:layout_toRightOf="@id/tvVideoPlayTime"
-            android:maxHeight="66dip"
-            android:minHeight="66dip"
-            android:progressDrawable="@drawable/player_setting_bright_progressbar"
-            android:thumb="@drawable/video_detail_player_progress_drag"
-             />
+            android:maxHeight="3dip"
+            android:minHeight="3dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="3dip"
+            android:progressDrawable="@drawable/progressbar_bg"
+            android:thumb="@drawable/progressbar_thumb_record_mix" />
     </RelativeLayout>
 
 </LinearLayout>

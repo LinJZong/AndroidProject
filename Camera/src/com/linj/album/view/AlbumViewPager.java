@@ -180,7 +180,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 				path=path.replace(getContext().getResources().getString(R.string.Thumbnail),
 						getContext().getResources().getString(R.string.Video));
 				path=path.replace(".jpg", ".3gp");
-				((AlbumItemAty)getContext()).play(path);
+				((AlbumItemAty)getContext()).playVideo(path);
 			}
 		};
 

@@ -29,6 +29,7 @@ containing a value of this type.
         public static final int common_title_text=0x7f050003;
         public static final int main_menu_bg=0x7f050000;
         public static final int primary_title_text_color=0x7f050002;
+        public static final int video_playter_bg=0x7f050006;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -49,6 +50,7 @@ containing a value of this type.
         public static final int title_view_left_back_padding_left=0x7f060007;
         public static final int title_view_left_back_padding_right=0x7f060008;
         public static final int top_menu_bar_height=0x7f060004;
+        public static final int video_bottom_bar_height=0x7f06000d;
         public static final int videodetails_textsize_time=0x7f06000c;
     }
     public static final class drawable {
@@ -110,18 +112,16 @@ containing a value of this type.
         public static final int icon_back2_click=0x7f020037;
         public static final int icon_rec=0x7f020038;
         public static final int picture_setting_album_checkbox=0x7f020039;
-        public static final int player_setting_bright_progressbar=0x7f02003a;
-        public static final int setting_bright_seekbar_background=0x7f02003b;
-        public static final int setting_bright_seekbar_progress=0x7f02003c;
-        public static final int thumb_guide_tips_new=0x7f02003d;
-        public static final int thumbnail_bg=0x7f02003e;
-        public static final int title_text_selector=0x7f02003f;
-        public static final int video_detail_player_bottom_bg=0x7f020040;
-        public static final int video_detail_player_pause=0x7f020041;
-        public static final int video_detail_player_progress_drag=0x7f020042;
-        public static final int video_detail_player_start=0x7f020043;
-        public static final int video_pause_bg=0x7f020044;
-        public static final int video_player_bg=0x7f020045;
+        public static final int progressbar_bg=0x7f02003a;
+        public static final int progressbar_thumb_record_mix=0x7f02003b;
+        public static final int thumb_guide_tips_new=0x7f02003c;
+        public static final int thumbnail_bg=0x7f02003d;
+        public static final int title_text_selector=0x7f02003e;
+        public static final int video_detail_player_pause=0x7f02003f;
+        public static final int video_detail_player_start=0x7f020040;
+        public static final int video_detail_player_top_bg=0x7f020041;
+        public static final int video_pause_bg=0x7f020042;
+        public static final int video_player_bg=0x7f020043;
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
