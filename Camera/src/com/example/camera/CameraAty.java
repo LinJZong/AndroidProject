@@ -53,7 +53,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.camera);
-       
+
 		mHeaderBar=findViewById(R.id.camera_header_bar);
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
@@ -64,7 +64,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
 		mSwitchModeButton=(ImageButton)findViewById(R.id.btn_switch_mode);
 		mSettingView=(ImageView)findViewById(R.id.btn_other_setting);
-		
+
 
 		mThumbView.setOnClickListener(this);
 		mCameraShutterButton.setOnClickListener(this);
@@ -73,13 +73,13 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		mSwitchModeButton.setOnClickListener(this);
 		mSwitchCameraView.setOnClickListener(this);
 		mSettingView.setOnClickListener(this);
-		
+
 		mSaveRoot="test";
 		mContainer.setRootPath(mSaveRoot);
 		initThumbnail();
 	}
 
-	
+
 	/**
 	 * º”‘ÿÀı¬‘Õº
 	 */
@@ -141,9 +141,12 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				mHeaderBar.setVisibility(View.VISIBLE);
 				mIsRecordMode=false;
 				mContainer.switchMode(0);
-				mContainer.stopRecord();
+				Bitmap thumbnailBitmap=mContainer.stopRecord();
 				isRecording=false;
 				mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
+				if(thumbnailBitmap!=null){
+					mThumbView.setImageBitmap(thumbnailBitmap);
+				}
 			}
 			else {
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);

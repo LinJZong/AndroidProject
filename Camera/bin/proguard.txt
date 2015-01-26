@@ -24,6 +24,15 @@
 # view port\res/layout-port/camera.xml #generated:10
 -keep class com.linj.camera.view.CameraContainer { <init>(...); }
 
+# view port\res/layout-port/cameracontainer.xml #generated:7
+-keep class com.linj.camera.view.CameraView { <init>(...); }
+
+# view port\res/layout-port/cameracontainer.xml #generated:17
+-keep class com.linj.camera.view.FocusImageView { <init>(...); }
+
+# view port\res/layout-port/cameracontainer.xml #generated:12
+-keep class com.linj.camera.view.TempImageView { <init>(...); }
+
 # view port\res/layout-port/albumitem.xml #generated:34
 -keep class com.linj.video.view.VideoPlayerContainer { <init>(...); }
 

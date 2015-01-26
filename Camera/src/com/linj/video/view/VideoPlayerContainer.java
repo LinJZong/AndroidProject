@@ -43,11 +43,12 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 	private ImageView mPauseButton;
 	private SeekBar mProgressBar;
 	private Handler mHandler;
-	private SimpleDateFormat mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
+	private SimpleDateFormat mTimeFormat;
 	public VideoPlayerContainer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initView(context);
 		mHandler=new Handler();
+		mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
 	}
 	private void initView(Context context){
 		setOrientation(VERTICAL);

@@ -21,6 +21,30 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int animat_id=0x7f010000;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int focus_fail_id=0x7f010003;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int focus_focusing_id=0x7f010001;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int focus_success_id=0x7f010002;
     }
     public static final class color {
         public static final int album_item_bg=0x7f050005;
@@ -125,13 +149,13 @@ containing a value of this type.
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
-        public static final int action_settings=0x7f0a002b;
+        public static final int action_settings=0x7f0a0031;
         public static final int album_bottom_bar=0x7f0a0002;
         public static final int album_item_bottom_bar=0x7f0a0015;
         public static final int album_item_header_bar=0x7f0a0014;
         public static final int albumview=0x7f0a0001;
         public static final int albumviewpager=0x7f0a0013;
-        public static final int btnVideoPlayOrPause=0x7f0a0027;
+        public static final int btnVideoPlayOrPause=0x7f0a002d;
         public static final int btn_flash_mode=0x7f0a0020;
         public static final int btn_other_setting=0x7f0a0021;
         public static final int btn_shutter_camera=0x7f0a001d;
@@ -139,12 +163,14 @@ containing a value of this type.
         public static final int btn_switch_camera=0x7f0a001f;
         public static final int btn_switch_mode=0x7f0a001e;
         public static final int btn_thumbnail=0x7f0a001a;
+        public static final int cameraView=0x7f0a0022;
         public static final int camera_bottom_bar=0x7f0a0018;
         public static final int camera_header_bar=0x7f0a0019;
-        public static final int checkbox=0x7f0a0023;
+        public static final int checkbox=0x7f0a0029;
         public static final int container=0x7f0a0017;
         public static final int delete=0x7f0a0004;
         public static final int edit=0x7f0a000d;
+        public static final int focusImageView=0x7f0a0024;
         public static final int header_bar_album_title=0x7f0a0007;
         public static final int header_bar_back=0x7f0a0006;
         public static final int header_bar_enter_selection=0x7f0a0008;
@@ -156,18 +182,22 @@ containing a value of this type.
         public static final int header_bar_photo_to_camera=0x7f0a0011;
         public static final int header_bar_select=0x7f0a0009;
         public static final int header_bar_select_counter=0x7f0a000b;
-        public static final int image=0x7f0a0024;
-        public static final int imgThumbnail=0x7f0a0022;
-        public static final int llVideoDetailPlayerBottom=0x7f0a0026;
-        public static final int loading=0x7f0a0025;
+        public static final int image=0x7f0a002a;
+        public static final int imgThumbnail=0x7f0a0028;
+        public static final int llVideoDetailPlayerBottom=0x7f0a002c;
+        public static final int loading=0x7f0a002b;
         public static final int move=0x7f0a0003;
         public static final int pagerview=0x7f0a0012;
-        public static final int sbVideoDetailPlayer=0x7f0a002a;
+        public static final int recordInfo=0x7f0a0025;
+        public static final int sbVideoDetailPlayer=0x7f0a0030;
         public static final int select_all=0x7f0a000c;
-        public static final int tvVideoPlayRemainTime=0x7f0a0029;
-        public static final int tvVideoPlayTime=0x7f0a0028;
+        public static final int tempImageView=0x7f0a0023;
+        public static final int tvVideoPlayRemainTime=0x7f0a002f;
+        public static final int tvVideoPlayTime=0x7f0a002e;
         public static final int videoicon=0x7f0a001b;
         public static final int videoview=0x7f0a0016;
+        public static final int waterMark=0x7f0a0026;
+        public static final int zoomSeekBar=0x7f0a0027;
     }
     public static final class layout {
         public static final int album=0x7f030000;
@@ -179,9 +209,10 @@ containing a value of this type.
         public static final int camera=0x7f030006;
         public static final int camera_bottom_bar=0x7f030007;
         public static final int camera_header_bar=0x7f030008;
-        public static final int item_album_grid=0x7f030009;
-        public static final int item_album_pager=0x7f03000a;
-        public static final int video_bottom_bar=0x7f03000b;
+        public static final int cameracontainer=0x7f030009;
+        public static final int item_album_grid=0x7f03000a;
+        public static final int item_album_pager=0x7f03000b;
+        public static final int video_bottom_bar=0x7f03000c;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -252,6 +283,65 @@ containing a value of this type.
         public static final int video_detail_player_bottom_btn=0x7f080003;
     }
     public static final class styleable {
+        /** Attributes that can be used with a FocusImageView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #FocusImageView_focus_fail_id com.example.camera:focus_fail_id}</code></td><td></td></tr>
+           <tr><td><code>{@link #FocusImageView_focus_focusing_id com.example.camera:focus_focusing_id}</code></td><td></td></tr>
+           <tr><td><code>{@link #FocusImageView_focus_success_id com.example.camera:focus_success_id}</code></td><td></td></tr>
+           </table>
+           @see #FocusImageView_focus_fail_id
+           @see #FocusImageView_focus_focusing_id
+           @see #FocusImageView_focus_success_id
+         */
+        public static final int[] FocusImageView = {
+            0x7f010001, 0x7f010002, 0x7f010003
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.camera.R.attr#focus_fail_id}
+          attribute's value can be found in the {@link #FocusImageView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.camera:focus_fail_id
+        */
+        public static final int FocusImageView_focus_fail_id = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.example.camera.R.attr#focus_focusing_id}
+          attribute's value can be found in the {@link #FocusImageView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.camera:focus_focusing_id
+        */
+        public static final int FocusImageView_focus_focusing_id = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.example.camera.R.attr#focus_success_id}
+          attribute's value can be found in the {@link #FocusImageView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.example.camera:focus_success_id
+        */
+        public static final int FocusImageView_focus_success_id = 1;
         /** Attributes that can be used with a TempImageView.
            <p>Includes the following attributes:</p>
            <table>

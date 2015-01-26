@@ -74,16 +74,19 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 		List<File> imageList=FileOperateUtil.listFiles(folder, ".jpg");
 		//获取视频文件缩略图
 		List<File> videoList=FileOperateUtil.listFiles(thumbnailFolder, ".jpg","video");
+		List<File> files=new ArrayList<File>();
 		//将视频文件缩略图加入图片大图列表中
 		if(videoList!=null&&videoList.size()>0){
-			imageList.addAll(videoList);
-			//时间升序排序
-			FileOperateUtil.sortList(imageList, false);
+			files.addAll(videoList);
 		}
 		if(imageList!=null&&imageList.size()>0){
+			files.addAll(imageList);
+		}
+		FileOperateUtil.sortList(files, false);
+		if(files.size()>0){
 			List<String> paths=new ArrayList<String>();
 			int currentItem=0;
-			for (File file : imageList) {
+			for (File file : files) {
 				if(fileName!=null&&file.getName().equals(fileName))
 					currentItem=imageList.indexOf(file);
 				paths.add(file.getAbsolutePath());

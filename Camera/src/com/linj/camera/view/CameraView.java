@@ -53,7 +53,7 @@ import android.widget.Toast;
  * @date 2014-12-31 上午9:44:56 
  *  
  */
-public class CameraView extends SurfaceView {
+public class CameraView extends SurfaceView implements CameraOperation{
 
 	public final static String TAG="CameraView";
 	/** 和该View绑定的Camera对象 */
@@ -127,13 +127,15 @@ public class CameraView extends SurfaceView {
 		}
 	};
 
-	public boolean isRecording(){
+	protected boolean isRecording(){
 		return mMediaRecorder!=null;
 	}
+
 	/**  
 	 *  开始录像
 	 *  @return 开始录像是否成功   
 	 */
+	@Override
 	public boolean startRecord(){
 		if(mCamera==null)
 			openCamera();
@@ -173,7 +175,9 @@ public class CameraView extends SurfaceView {
 		return true;
 	}
 
-	public void stopRecord(){
+	@Override
+	public Bitmap stopRecord(){
+		Bitmap bitmap=null;
 		try {
 			if(mMediaRecorder!=null){
 				mMediaRecorder.stop();
@@ -181,7 +185,7 @@ public class CameraView extends SurfaceView {
 				mMediaRecorder.release();
 				mMediaRecorder=null;
 				//保存视频的缩略图
-				saveThumbnail();
+				bitmap=saveThumbnail();
 			}
 			if(mParameters!=null&&mCamera!=null){
 				//重新连接相机
@@ -198,9 +202,10 @@ public class CameraView extends SurfaceView {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return bitmap;
 	}
 
-	private void saveThumbnail() throws FileNotFoundException, IOException {
+	private Bitmap saveThumbnail() throws FileNotFoundException, IOException {
 		if(mRecordPath!=null){
 			//创建缩略图
 			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MINI_KIND);
@@ -217,14 +222,17 @@ public class CameraView extends SurfaceView {
 				bitmap.compress(Bitmap.CompressFormat.JPEG,100, bufferos);
 				bufferos.flush();
 				bufferos.close();
+				return bitmap;
 			}
 			mRecordPath=null;
 		}
+		return null;
 	}
 
 	/**  
 	 *   转换前置和后置照相机
 	 */
+	@Override
 	public void switchCamera(){
 		mIsFrontCamera=!mIsFrontCamera;
 		openCamera();
@@ -281,6 +289,7 @@ public class CameraView extends SurfaceView {
 	 *  获取当前闪光灯类型
 	 *  @return   
 	 */
+	@Override
 	public FlashMode getFlashMode() {
 		return mFlashMode;
 	}
@@ -289,6 +298,7 @@ public class CameraView extends SurfaceView {
 	 *  设置闪光灯类型
 	 *  @param flashMode   
 	 */
+	@Override
 	public void setFlashMode(FlashMode flashMode) {
 		if(mCamera==null) return;
 		mFlashMode = flashMode;
@@ -309,7 +319,7 @@ public class CameraView extends SurfaceView {
 		}
 		mCamera.setParameters(parameters);
 	}
-
+	@Override
 	public void takePicture(PictureCallback callback,TakePictureListener listener){
 		mCamera.takePicture(null, null, callback);
 	}
@@ -318,7 +328,7 @@ public class CameraView extends SurfaceView {
 	 * 手动聚焦 
 	 *  @param point 触屏坐标
 	 */
-	public void onFocus(Point point,AutoFocusCallback callback){
+	protected void onFocus(Point point,AutoFocusCallback callback){
 		Camera.Parameters parameters=mCamera.getParameters();
 		//不支持设置自定义聚焦，则使用自动聚焦，返回
 		if (parameters.getMaxNumFocusAreas()<=0) {
@@ -351,6 +361,7 @@ public class CameraView extends SurfaceView {
 	 *  获取最大缩放级别，最大为40
 	 *  @return   
 	 */
+	@Override
 	public int getMaxZoom(){
 		if(mCamera==null) return -1;		
 		Camera.Parameters parameters=mCamera.getParameters();
@@ -361,6 +372,7 @@ public class CameraView extends SurfaceView {
 	 *  设置相机缩放级别
 	 *  @param zoom   
 	 */
+	@Override
 	public void setZoom(int zoom){
 		if(mCamera==null) return;
 		Camera.Parameters parameters;
@@ -377,6 +389,7 @@ public class CameraView extends SurfaceView {
 		mCamera.setParameters(parameters);
 		mZoom=zoom;
 	}
+	@Override
 	public int getZoom(){
 		return mZoom;
 	}
@@ -471,9 +484,6 @@ public class CameraView extends SurfaceView {
 			mCamera.setParameters(parameters);
 		}
 	}
-
-
-
 
 	/** 
 	 * @Description: 闪光灯类型枚举 默认为关闭

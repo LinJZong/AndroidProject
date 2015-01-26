@@ -48,8 +48,7 @@ import android.widget.Toast;
  * @date 2014-12-31 上午9:38:52 
  *  
  */
-public class CameraContainer extends RelativeLayout implements PictureCallback
-,OnSeekBarChangeListener,AutoFocusCallback{
+public class CameraContainer extends RelativeLayout implements CameraOperation{
 
 	public final static String TAG="CameraContainer";
 
@@ -83,13 +82,12 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	/** 用以执行定时任务的Handler对象*/
 	private Handler mHandler;
 	private long mRecordStartTime;
-	private SimpleDateFormat mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
+	private SimpleDateFormat mTimeFormat;
 	public CameraContainer(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
-		mHandler=new Handler();
-
 		initView(context);
+		mHandler=new Handler();
+		mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
 		setOnTouchListener(new TouchListener());
 	}
 
@@ -98,70 +96,28 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	 *  @param context   
 	 */
 	private void initView(Context context) {
-		mCameraView=new CameraView(context);
-		RelativeLayout.LayoutParams layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		mCameraView.setLayoutParams(layoutParams);
-		addView(mCameraView);
+		inflate(context, R.layout.cameracontainer, this);
+		mCameraView=(CameraView) findViewById(R.id.cameraView);
 
-		mTempImageView=new TempImageView(context);
-		layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		mTempImageView.setLayoutParams(layoutParams);
-		addView(mTempImageView);
+		mTempImageView=(TempImageView) findViewById(R.id.tempImageView);
 
-		mFocusImageView=new FocusImageView(context);
-		layoutParams=new LayoutParams(150,150);
-		mFocusImageView.setLayoutParams(layoutParams);
-		mFocusImageView.setFocusImg(R.drawable.focus_focusing);
-		mFocusImageView.setFocusSucceedImg(R.drawable.focus_focused);
-		addView(mFocusImageView);
+		mFocusImageView=(FocusImageView) findViewById(R.id.focusImageView);
 
-		mRecordingInfoTextView=new TextView(context);
-		layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		layoutParams.topMargin=50;
-		layoutParams.rightMargin=50;
-		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		Drawable drawable=getResources().getDrawable(R.drawable.icon_rec);
-		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());
-		mRecordingInfoTextView.setCompoundDrawables(drawable, null, null, null);
-		mRecordingInfoTextView.setCompoundDrawablePadding(15);
-		mRecordingInfoTextView.setText("00:10");
-		mRecordingInfoTextView.setTextSize(20);
-		mRecordingInfoTextView.setTextColor(Color.WHITE);
-		mRecordingInfoTextView.setLayoutParams(layoutParams);
-		mRecordingInfoTextView.setVisibility(View.GONE);
-		addView(mRecordingInfoTextView);
+		mRecordingInfoTextView=(TextView) findViewById(R.id.recordInfo);
 
+		mWaterMarkImageView=(ImageView) findViewById(R.id.waterMark);
 
-		mWaterMarkImageView=new ImageView(context);
-		mWaterMarkImageView.setImageResource(R.drawable.thumb_guide_tips_new);
-		layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		mWaterMarkImageView.setLayoutParams(layoutParams);
-		mWaterMarkImageView.setVisibility(View.GONE);
-		addView(mWaterMarkImageView);
-
+		mZoomSeekBar=(SeekBar) findViewById(R.id.zoomSeekBar);
 		//获取当前照相机支持的最大缩放级别，值小于0表示不支持缩放。当支持缩放时，加入拖动条。
 		int maxZoom=mCameraView.getMaxZoom();
 		if(maxZoom>0){
-			mZoomSeekBar=new SeekBar(context);
 			mZoomSeekBar.setMax(maxZoom);
-			layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-			//设置位于容器底部
-			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			//设置底部Margin，此处的100是和activity布局中的75做对比，要转为px才是真正的高度
-			layoutParams.bottomMargin=dip2px(100);
-			layoutParams.rightMargin=100;
-			layoutParams.leftMargin=100;
-			mZoomSeekBar.setLayoutParams(layoutParams);
-			mZoomSeekBar.setOnSeekBarChangeListener(this);
-			addView(mZoomSeekBar);
-			//隐藏seekbar 在触屏放大缩小手势时显示
-			mZoomSeekBar.setVisibility(View.GONE);
+			mZoomSeekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		}
 	}
 
 
+	@Override
 	public boolean startRecord(){
 		mRecordStartTime=SystemClock.uptimeMillis();
 		mRecordingInfoTextView.setVisibility(View.VISIBLE);
@@ -172,8 +128,8 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		}else {
 			return false;
 		}
-
 	}
+
 	Runnable recordRunnable=new Runnable() {	
 		@Override
 		public void run() {
@@ -187,23 +143,28 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			}
 		}
 	};
-	public void stopRecord(){
+
+	@Override
+	public Bitmap stopRecord(){
 		mRecordingInfoTextView.setVisibility(View.GONE);
-		mCameraView.stopRecord();
+		return mCameraView.stopRecord();
 	}
+	
 	/**  
-	*  改变相机模式 在拍照模式和录像模式间切换 两个模式的初始缩放级别不同
-	*  @param zoom   缩放级别
-	*/
+	 *  改变相机模式 在拍照模式和录像模式间切换 两个模式的初始缩放级别不同
+	 *  @param zoom   缩放级别
+	 */
 	public void switchMode(int zoom){
 		mZoomSeekBar.setProgress(zoom);
 		mCameraView.setZoom(zoom);
 		//自动对焦
-		mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), this);   
+		mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), autoFocusCallback);   
 		//隐藏水印
 		mWaterMarkImageView.setVisibility(View.GONE);
 	}
-	
+
+
+
 	public void setWaterMark(){
 		if (mWaterMarkImageView.getVisibility()==View.VISIBLE) {
 			mWaterMarkImageView.setVisibility(View.GONE);
@@ -211,10 +172,11 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			mWaterMarkImageView.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	/**  
 	 *   前置、后置摄像头转换
 	 */
+	@Override
 	public void switchCamera(){
 		mCameraView.switchCamera();
 	}
@@ -222,6 +184,7 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	 *  获取当前闪光灯类型
 	 *  @return   
 	 */
+	@Override
 	public FlashMode getFlashMode() {
 		return mCameraView.getFlashMode();
 	}
@@ -230,6 +193,7 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	 *  设置闪光灯类型
 	 *  @param flashMode   
 	 */
+	@Override
 	public void setFlashMode(FlashMode flashMode) {
 		mCameraView.setFlashMode(flashMode);
 	}
@@ -243,12 +207,14 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 
 	}
 
+
+
 	/**
 	 * 拍照方法
 	 * @param callback
 	 */
 	public void takePicture(){
-		mCameraView.takePicture(this,mListener);
+		takePicture(pictureCallback,mListener);
 	}
 
 	/**  
@@ -259,77 +225,102 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	 */
 	public void takePicture(TakePictureListener listener){
 		this.mListener=listener;
-		mCameraView.takePicture(this,mListener);
+		takePicture(pictureCallback, mListener);
+	}
+
+
+	@Override
+	public void takePicture(PictureCallback callback,
+			TakePictureListener listener) {
+		mCameraView.takePicture(callback,listener);
 	}
 
 	@Override
-	public void onPictureTaken(byte[] data, Camera camera) {
-		if(mSavePath==null) throw new RuntimeException("mSavePath is null");
-		if(mDataHandler==null) mDataHandler=new DataHandler();	
-		mDataHandler.setMaxSize(200);
-		Bitmap bm=mDataHandler.save(data);
-
-		//重新打开预览图，进行下一次的拍照准备
-		mTempImageView.setListener(mListener);
-		mTempImageView.setImageBitmap(bm);
-		mTempImageView.startAnimation(R.anim.tempview_show);
-		camera.startPreview();
-		if(mListener!=null) mListener.onTakePictureEnd(bm);
-	}
-
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
+	public int getMaxZoom() {
 		// TODO Auto-generated method stub
-		mCameraView.setZoom(progress);
-		mHandler.removeCallbacksAndMessages(mZoomSeekBar);
-		//ZOOM模式下 在结束两秒后隐藏seekbar 设置token为mZoomSeekBar用以在连续点击时移除前一个定时任务
-		mHandler.postAtTime(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				mZoomSeekBar.setVisibility(View.GONE);
-			}
-		}, mZoomSeekBar,SystemClock.uptimeMillis()+2000);
+		return mCameraView.getMaxZoom();
 	}
 
-
-
 	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
+	public void setZoom(int zoom) {
 		// TODO Auto-generated method stub
-
+		mCameraView.setZoom(zoom);
 	}
 
-
-
 	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
+	public int getZoom() {
 		// TODO Auto-generated method stub
+		return mCameraView.getZoom();
+	} 
 
-	}
+	private final OnSeekBarChangeListener onSeekBarChangeListener=new OnSeekBarChangeListener() {
+
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress,
+				boolean fromUser) {
+			// TODO Auto-generated method stub
+			mCameraView.setZoom(progress);
+			mHandler.removeCallbacksAndMessages(mZoomSeekBar);
+			//ZOOM模式下 在结束两秒后隐藏seekbar 设置token为mZoomSeekBar用以在连续点击时移除前一个定时任务
+			mHandler.postAtTime(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					mZoomSeekBar.setVisibility(View.GONE);
+				}
+			}, mZoomSeekBar,SystemClock.uptimeMillis()+2000);
+		}
 
 
-	@Override
-	public void onAutoFocus(boolean success, Camera camera) {
-		//聚焦之后根据结果修改图片
-		if (success) {
-			mFocusImageView.setImageResource(R.drawable.focus_focused);
-		}else {
-			//聚焦失败显示的图片，由于未找到合适的资源，这里仍显示同一张图片
-			mFocusImageView.setImageResource(R.drawable.focus_focus_failed);
+
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			// TODO Auto-generated method stub
 
 		}
-		//1秒后隐藏View 设置token为mFocusImageView防止被误删除
-		mHandler.postAtTime(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				mFocusImageView.setVisibility(View.GONE);
+
+
+
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
+	private final AutoFocusCallback autoFocusCallback=new AutoFocusCallback() {
+
+		@Override
+		public void onAutoFocus(boolean success, Camera camera) {
+			//聚焦之后根据结果修改图片
+			if (success) {
+				mFocusImageView.onFocusSuccess();
+			}else {
+				//聚焦失败显示的图片，由于未找到合适的资源，这里仍显示同一张图片
+				mFocusImageView.onFocusFailed();
+
 			}
-		}, mFocusImageView,SystemClock.uptimeMillis()+1000);
-	}
+		}
+	};
+
+	private final PictureCallback pictureCallback=new PictureCallback() {
+
+		@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+			if(mSavePath==null) throw new RuntimeException("mSavePath is null");
+			if(mDataHandler==null) mDataHandler=new DataHandler();	
+			mDataHandler.setMaxSize(200);
+			Bitmap bm=mDataHandler.save(data);
+
+			//重新打开预览图，进行下一次的拍照准备
+			mTempImageView.setListener(mListener);
+			mTempImageView.setImageBitmap(bm);
+			mTempImageView.startAnimation(R.anim.tempview_show);
+			camera.startPreview();
+			if(mListener!=null) mListener.onTakePictureEnd(bm);
+		}
+	};
 
 	private final class TouchListener implements OnTouchListener {
 
@@ -388,8 +379,8 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 				if(mode!=MODE_ZOOM){
 					//设置聚焦
 					Point point=new Point((int)event.getX(), (int)event.getY());
-					mCameraView.onFocus(point,CameraContainer.this);
-					mFocusImageView.show(point);
+					mCameraView.onFocus(point,autoFocusCallback);
+					mFocusImageView.startFocus(point);
 				}else {
 					//ZOOM模式下 在结束两秒后隐藏seekbar 设置token为mZoomSeekBar用以在连续点击时移除前一个定时任务
 					mHandler.postAtTime(new Runnable() {
@@ -501,22 +492,22 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 			int wh = wBitmap.getHeight();
 			Bitmap newb = Bitmap.createBitmap( w, h, Config.ARGB_8888 );
 			Canvas canvas=new Canvas(newb);
-			  //draw src into
+			//draw src into
 
 			canvas.drawBitmap( bm, 0, 0, null );//在 0，0坐标开始画入src
 			canvas.drawBitmap( wBitmap, w - ww + 5, h - wh + 5, null );//在src的右下角画入水印
-			 //save all clip
+			//save all clip
 
 			canvas.save( Canvas.ALL_SAVE_FLAG );//保存
 
-		    //store
+			//store
 
 			canvas.restore();//存储
 			bm.recycle();
 			bm=null;
 			wBitmap.recycle();
 			wBitmap=null;
-		    return newb;
+			return newb;
 
 		}
 		public  Bitmap drawableToBitmap(Drawable drawable) {       
@@ -579,6 +570,7 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 		public void onAnimtionEnd(Bitmap bm);
 	}
 
+
 	/**  
 	 * dip转px
 	 *  @param dipValue
@@ -587,5 +579,5 @@ public class CameraContainer extends RelativeLayout implements PictureCallback
 	private  int dip2px(float dipValue){ 
 		final float scale = getResources().getDisplayMetrics().density; 
 		return (int)(dipValue * scale + 0.5f); 
-	} 
+	}
 }

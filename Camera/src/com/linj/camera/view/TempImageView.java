@@ -49,7 +49,6 @@ public class TempImageView extends ImageView implements AnimationListener{
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TempImageView);
 		mAnimationID = a.getResourceId(R.styleable.TempImageView_animat_id, NO_ID);
 		a.recycle();
-		setVisibility(View.GONE);
 	}
 
 	@Override
