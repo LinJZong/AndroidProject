@@ -61,6 +61,11 @@ containing a value of this type.
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
+ Default screen margins, per the Android Design guidelines. 
+
+         Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
+    
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
@@ -201,34 +206,39 @@ containing a value of this type.
         public static final int zoomSeekBar=0x7f0a0027;
     }
     public static final class layout {
-        public static final int album=0x7f030000;
-        public static final int album_bottom_bar=0x7f030001;
-        public static final int album_header_bar=0x7f030002;
-        public static final int album_item_bottom_bar=0x7f030003;
-        public static final int album_item_header_bar=0x7f030004;
-        public static final int albumitem=0x7f030005;
-        public static final int camera=0x7f030006;
-        public static final int camera_bottom_bar=0x7f030007;
-        public static final int camera_header_bar=0x7f030008;
-        public static final int cameracontainer=0x7f030009;
-        public static final int item_album_grid=0x7f03000a;
-        public static final int item_album_pager=0x7f03000b;
-        public static final int video_bottom_bar=0x7f03000c;
+        public static final int activity_main=0x7f030000;
+        public static final int album=0x7f030001;
+        public static final int album_bottom_bar=0x7f030002;
+        public static final int album_header_bar=0x7f030003;
+        public static final int album_item_bottom_bar=0x7f030004;
+        public static final int album_item_header_bar=0x7f030005;
+        public static final int albumitem=0x7f030006;
+        public static final int camera=0x7f030007;
+        public static final int camera_bottom_bar=0x7f030008;
+        public static final int camera_header_bar=0x7f030009;
+        public static final int cameracontainer=0x7f03000a;
+        public static final int item_album_grid=0x7f03000b;
+        public static final int item_album_pager=0x7f03000c;
+        public static final int video_bottom_bar=0x7f03000d;
     }
     public static final class menu {
         public static final int main=0x7f090000;
     }
     public static final class string {
         /**  存储文件文件夹 
+ 存储文件文件夹 
          */
         public static final int Files=0x7f070003;
         /**  图像文件夹 
+ 图像文件夹 
          */
         public static final int Image=0x7f070004;
         /**  缩略图文件夹 
+ 缩略图文件夹 
          */
         public static final int Thumbnail=0x7f070005;
         /**  视频文件夹 
+ 视频文件夹 
          */
         public static final int Video=0x7f070006;
         public static final int action_settings=0x7f070001;
@@ -273,9 +283,37 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
+
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+
+
+
+        
+
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
+
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;

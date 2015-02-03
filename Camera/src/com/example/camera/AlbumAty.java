@@ -2,7 +2,10 @@ package com.example.camera;
 
 import java.util.Set;
 
+import com.linj.FileOperateUtil;
 import com.linj.album.view.AlbumGridView;
+
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

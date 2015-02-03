@@ -3,6 +3,7 @@ package com.example.camera;
 import java.io.File;
 
 import com.linj.album.view.AlbumViewPager;
+import com.linj.album.view.AlbumViewPager.OnPlayVideoListener;
 import com.linj.album.view.MatrixImageView.OnSingleTapListener;
 import com.linj.video.view.VideoPlayerContainer;
 import com.linj.video.view.VideoPlayerView;
@@ -30,7 +31,8 @@ import android.widget.Toast;
  * @date 2015-1-12 œ¬ŒÁ5:18:25 
  *  
  */
-public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTapListener{
+public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTapListener
+,OnPlayVideoListener{
 	public final static String TAG="AlbumDetailAty";
 	private String mSaveRoot;
 	private AlbumViewPager mViewPager;//œ‘ æ¥ÛÕº
@@ -58,16 +60,17 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mBottomBar=findViewById(R.id.album_item_bottom_bar);
 		mDeleteButton=(Button)findViewById(R.id.delete);
 		mEditButton=(Button) findViewById(R.id.edit);
-		
+
 		mBackView.setOnClickListener(this);
 		mCameraView.setOnClickListener(this);
 		mCountView.setOnClickListener(this);
 		mDeleteButton.setOnClickListener(this);
 		mEditButton.setOnClickListener(this);
-		
+
 		mSaveRoot="test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
+		mViewPager.setOnPlayVideoListener(this);
 		String currentFileName=null;
 		if(getIntent().getExtras()!=null)
 			currentFileName=getIntent().getExtras().getString("path");
@@ -82,15 +85,8 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mViewPager.loadAlbum(mSaveRoot,currentFileName,mCountView);
 	}
 
-	public void playVideo(String path){
-		try{
-			mContainer.playVideo(path);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-		}
-	}
+
+
 
 
 	private OnPageChangeListener pageChangeListener=new OnPageChangeListener() {
@@ -154,7 +150,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			break;
 		case R.id.edit:
 			mContainer.setVisibility(View.VISIBLE);
-			
+
 			break;
 		default:
 			break;
@@ -173,5 +169,17 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		if(mContainer.getVisibility()==View.VISIBLE)
 			mContainer.stopPlay();
 		super.onStop();
+	}
+
+	@Override
+	public void onPlay(String path) {
+		// TODO Auto-generated method stub
+		try{
+			mContainer.playVideo(path);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+		}
 	}
 }
