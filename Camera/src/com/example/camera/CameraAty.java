@@ -45,7 +45,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private ImageView mSettingView;
 	private ImageView mVideoIconView;
 	private View mHeaderBar;
-
+	private boolean isRecording=false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -141,12 +141,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 				mHeaderBar.setVisibility(View.VISIBLE);
 				mIsRecordMode=false;
 				mContainer.switchMode(0);
-				Bitmap thumbnailBitmap=mContainer.stopRecord();
-				isRecording=false;
-				mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
-				if(thumbnailBitmap!=null){
-					mThumbView.setImageBitmap(thumbnailBitmap);
-				}
+				stopRecord();
 			}
 			else {
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);
@@ -165,9 +160,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 					mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_recording);
 				}
 			}else {
-				mContainer.stopRecord();
-				isRecording=false;
-				mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
+				stopRecord();	
 			}
 			break;
 		case R.id.btn_switch_camera:
@@ -180,18 +173,30 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			break;
 		}
 	}
-	private boolean isRecording=false;
+
+
+	private void stopRecord() {
+		mContainer.stopRecord(this);
+		isRecording=false;
+		mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
+	}
+	
 	@Override
 	public void onTakePictureEnd(Bitmap thumBitmap) {
 		mCameraShutterButton.setClickable(true);	
 	}
 
 	@Override
-	public void onAnimtionEnd(Bitmap bm) {
+	public void onAnimtionEnd(Bitmap bm,boolean isVideo) {
 		if(bm!=null){
 			//…˙≥…Àı¬‘Õº
 			Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
 			mThumbView.setImageBitmap(thumbnail);
+			if(isVideo)
+				mVideoIconView.setVisibility(View.VISIBLE);
+			else {
+				mVideoIconView.setVisibility(View.GONE);
+			}
 		}
 	}
 

@@ -149,13 +149,13 @@ containing a value of this type.
     }
     public static final class id {
         public static final int FrameLayout1=0x7f0a0000;
-        public static final int action_settings=0x7f0a0031;
+        public static final int action_settings=0x7f0a0032;
         public static final int album_bottom_bar=0x7f0a0002;
         public static final int album_item_bottom_bar=0x7f0a0015;
         public static final int album_item_header_bar=0x7f0a0014;
         public static final int albumview=0x7f0a0001;
         public static final int albumviewpager=0x7f0a0013;
-        public static final int btnVideoPlayOrPause=0x7f0a002d;
+        public static final int btnVideoPlayOrPause=0x7f0a002e;
         public static final int btn_flash_mode=0x7f0a0020;
         public static final int btn_other_setting=0x7f0a0021;
         public static final int btn_shutter_camera=0x7f0a001d;
@@ -184,16 +184,17 @@ containing a value of this type.
         public static final int header_bar_select_counter=0x7f0a000b;
         public static final int image=0x7f0a002a;
         public static final int imgThumbnail=0x7f0a0028;
-        public static final int llVideoDetailPlayerBottom=0x7f0a002c;
+        public static final int llVideoDetailPlayerBottom=0x7f0a002d;
         public static final int loading=0x7f0a002b;
         public static final int move=0x7f0a0003;
         public static final int pagerview=0x7f0a0012;
         public static final int recordInfo=0x7f0a0025;
-        public static final int sbVideoDetailPlayer=0x7f0a0030;
+        public static final int sbVideoDetailPlayer=0x7f0a0031;
         public static final int select_all=0x7f0a000c;
         public static final int tempImageView=0x7f0a0023;
-        public static final int tvVideoPlayRemainTime=0x7f0a002f;
-        public static final int tvVideoPlayTime=0x7f0a002e;
+        public static final int tvVideoPlayRemainTime=0x7f0a0030;
+        public static final int tvVideoPlayTime=0x7f0a002f;
+        public static final int videoPlayerView=0x7f0a002c;
         public static final int videoicon=0x7f0a001b;
         public static final int videoview=0x7f0a0016;
         public static final int waterMark=0x7f0a0026;

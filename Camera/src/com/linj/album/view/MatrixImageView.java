@@ -44,7 +44,7 @@ public class MatrixImageView extends ImageView{
 		//背景设置为balck
 	    setBackgroundColor(Color.BLACK);
 		//将缩放类型设置为FIT_CENTER，表示把图片按比例扩大/缩小到View的宽度，居中显示
-		setScaleType(ScaleType.FIT_CENTER);
+		setScaleType(ScaleType.FIT_XY);
 	}
 
 	public void setOnMovingListener(OnMovingListener listener){

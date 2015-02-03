@@ -9,6 +9,7 @@ import com.example.camera.R;
 import com.linj.video.view.VideoPlayerView.PlayerListener;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +36,8 @@ import android.view.View.OnClickListener;;
  * @date 2015-1-21 下午4:49:31 
  *  
  */
-public class VideoPlayerContainer extends LinearLayout implements OnClickListener,PlayerListener{
+public class VideoPlayerContainer extends LinearLayout implements OnClickListener
+,PlayerListener,VideoPlayerOperation{
 	private final static String TAG="VideoPlayerContainer";
 	private VideoPlayerView mVideoPlayerView;
 	private LinearLayout mBottomBar;
@@ -51,19 +54,12 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
 	}
 	private void initView(Context context){
-		setOrientation(VERTICAL);
-		mVideoPlayerView=new VideoPlayerView(context);
-		LinearLayout.LayoutParams layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		layoutParams.weight=1;
-		mVideoPlayerView.setLayoutParams(layoutParams);
-		mVideoPlayerView.setPalyerListener(this);
-		addView(mVideoPlayerView);
+		inflate(context, R.layout.video_bottom_bar, this);
 
-		mBottomBar=(LinearLayout) inflate(context, R.layout.video_bottom_bar, null);
-		layoutParams=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-		layoutParams.gravity=Gravity.BOTTOM;
-		mBottomBar.setLayoutParams(layoutParams);
-		addView(mBottomBar);
+		mVideoPlayerView=(VideoPlayerView) findViewById(R.id.videoPlayerView);
+		mVideoPlayerView.setPalyerListener(this);
+
+		mBottomBar=(LinearLayout) findViewById(R.id.llVideoDetailPlayerBottom);
 
 		mCurrentTimeView=(TextView) mBottomBar.findViewById(R.id.tvVideoPlayTime);
 		mDurationView=(TextView) mBottomBar.findViewById(R.id.tvVideoPlayRemainTime);
@@ -78,13 +74,13 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			// TODO Auto-generated method stub
-            seekPostion(seekBar.getProgress()*1000);
+			seekPosition(seekBar.getProgress()*1000);
 		}
 
 		@Override
 		public void onStartTrackingTouch(SeekBar seekBar) {
 			// TODO Auto-generated method stub
-              pausedPlay();
+			pausedPlay();
 		}
 
 		@Override
@@ -94,11 +90,9 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		}
 	};
 
-
+	@Override
 	public void playVideo(String path) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
-		// TODO Auto-generated method stub
-		mVideoPlayerView.play(path);
-
+		mVideoPlayerView.playVideo(path);
 	}
 
 	@Override
@@ -107,12 +101,13 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		setVisibility(View.GONE);
 		mProgressBar.setProgress(0);
 		mCurrentTimeView.setText("00:00");
+		mp.reset();
 	}
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
 		// 跳转至指定时间后，恢复播放
-           resumePlay();
+		resumePlay();
 	}
 
 	@Override
@@ -137,8 +132,7 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		public void run() {
 			// TODO Auto-generated method stub
 			if(mVideoPlayerView.isPlaying()){
-				int current=mVideoPlayerView.getCurrentPosition();
-				Log.i(TAG, current+" "+mProgressBar.getMax());
+				int current=getCurrentPosition();
 				current=(int) Math.floor(current/1000);
 				mProgressBar.setProgress(current);
 				mHandler.postAtTime(this,mCurrentTimeView, SystemClock.uptimeMillis()+500);
@@ -155,27 +149,40 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		}
 	}
 	/**  
-	*   恢复播放
-	*/
-	private void resumePlay() {
-		mVideoPlayerView.switchPlayOrPaused(false);
+	 *   恢复播放
+	 */
+	@Override
+	public void resumePlay() {
+		mVideoPlayerView.resumePlay();
 		mHandler.removeCallbacks(null, null);
 		mHandler.postDelayed(playerRunnable, 500);
 		mPauseButton.setImageResource(R.drawable.video_detail_player_pause);
 	}
-	
+
 	/**  
-	*   暂停播放
-	*/
-	private void pausedPlay() {
-		mVideoPlayerView.switchPlayOrPaused(true);
+	 *   暂停播放
+	 */
+	@Override
+	public void pausedPlay() {
+		mVideoPlayerView.pausedPlay();
 		mPauseButton.setImageResource(R.drawable.video_detail_player_start);
 	}
-	private void seekPostion(int position){
+	@Override
+	public void seekPosition(int position){
 		mVideoPlayerView.seekPosition(position);
 	}
+	@Override
 	public void stopPlay(){
 		mVideoPlayerView.stopPlay();
 		setVisibility(View.GONE);
+	}
+	@Override
+	public boolean isPlaying() {
+		// TODO Auto-generated method stub
+		return mVideoPlayerView.isPlaying();
+	}
+	@Override
+	public int getCurrentPosition() {
+		return mVideoPlayerView.getCurrentPosition();
 	}
 }

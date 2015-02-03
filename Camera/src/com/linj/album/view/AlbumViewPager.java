@@ -87,8 +87,8 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 			List<String> paths=new ArrayList<String>();
 			int currentItem=0;
 			for (File file : files) {
-				if(fileName!=null&&file.getName().equals(fileName))
-					currentItem=imageList.indexOf(file);
+				if(fileName!=null&&file.getName().contains(fileName))
+					currentItem=files.indexOf(file);
 				paths.add(file.getAbsolutePath());
 			}
 			setAdapter(new ViewPagerAdapter(paths));

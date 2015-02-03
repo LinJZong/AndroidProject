@@ -9,6 +9,7 @@ import com.linj.video.view.VideoPlayerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
@@ -39,6 +40,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 	private TextView mCountView;
 	private View mHeaderBar,mBottomBar;
 	private Button mDeleteButton;
+	private Button mEditButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,12 +57,14 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mHeaderBar=findViewById(R.id.album_item_header_bar);
 		mBottomBar=findViewById(R.id.album_item_bottom_bar);
 		mDeleteButton=(Button)findViewById(R.id.delete);
-
+		mEditButton=(Button) findViewById(R.id.edit);
+		
 		mBackView.setOnClickListener(this);
 		mCameraView.setOnClickListener(this);
 		mCountView.setOnClickListener(this);
 		mDeleteButton.setOnClickListener(this);
-
+		mEditButton.setOnClickListener(this);
+		
 		mSaveRoot="test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
@@ -70,6 +74,8 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		if(currentFileName!=null){
 			File file=new File(currentFileName);
 			currentFileName=file.getName();
+			if(currentFileName.indexOf(".")>0)
+				currentFileName=currentFileName.substring(0, currentFileName.lastIndexOf("."));
 		}
 
 		//设置网络图片加载参数
@@ -146,6 +152,10 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			if(result!=null)
 				mCountView.setText(result);
 			break;
+		case R.id.edit:
+			mContainer.setVisibility(View.VISIBLE);
+			
+			break;
 		default:
 			break;
 		}
@@ -156,8 +166,12 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			mContainer.stopPlay();
 		else {
 			super.onBackPressed();
-		}
-		
+		}	
 	}
-
+	@Override
+	protected void onStop() {
+		if(mContainer.getVisibility()==View.VISIBLE)
+			mContainer.stopPlay();
+		super.onStop();
+	}
 }

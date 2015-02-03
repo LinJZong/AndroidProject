@@ -3,6 +3,9 @@ package com.linj.video.view;
 import java.io.IOException;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -23,7 +26,7 @@ import android.widget.Toast;
  * @date 2015-1-21 下午2:38:53 
  *  
  */
-public class VideoPlayerView extends SurfaceView {
+public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation {
 	private final static String TAG="VideoSurfaceView";
 	private MediaPlayer mMediaPlayer;
 	public VideoPlayerView(Context context){
@@ -47,7 +50,7 @@ public class VideoPlayerView extends SurfaceView {
 	 *  设置播放器监听函数
 	 *  @param listener   
 	 */
-	public void setPalyerListener(PlayerListener listener){
+	protected void setPalyerListener(PlayerListener listener){
 		mMediaPlayer.setOnCompletionListener(listener);
 		mMediaPlayer.setOnSeekCompleteListener(listener);
 		mMediaPlayer.setOnPreparedListener(listener);
@@ -56,6 +59,7 @@ public class VideoPlayerView extends SurfaceView {
 	 *  获取当前播放器是否在播放状态
 	 *  @return   
 	 */
+	@Override
 	public boolean isPlaying(){
 		return mMediaPlayer.isPlaying();
 	}
@@ -64,6 +68,7 @@ public class VideoPlayerView extends SurfaceView {
 	 *  获取当前播放时间，单位毫秒
 	 *  @return   
 	 */
+	@Override
 	public int getCurrentPosition(){
 		if(isPlaying())
 			return mMediaPlayer.getCurrentPosition();
@@ -71,21 +76,21 @@ public class VideoPlayerView extends SurfaceView {
 	}
 
 
-	/**  
-	 * 播放/暂停切换
-	 *  @param paused   是否切换为暂停，true为暂停
-	 */
-	public void switchPlayOrPaused(boolean paused){
-		if(paused)
-			mMediaPlayer.pause();
-		else {
-			mMediaPlayer.start();
-		}
+
+	@Override
+	public void pausedPlay() {
+		mMediaPlayer.pause();
 	}
-	
+	@Override
+	public void resumePlay() {
+		// TODO Auto-generated method stub
+		mMediaPlayer.start();
+	}
+
 	/**  
-	*   设置当前播放位置
-	*/
+	 *   设置当前播放位置
+	 */
+	@Override
 	public void seekPosition(int position){
 		if(isPlaying())
 			mMediaPlayer.pause();
@@ -97,20 +102,21 @@ public class VideoPlayerView extends SurfaceView {
 		//设置时间
 		mMediaPlayer.seekTo(position);
 	}
-	
+
 	/**  
-	*   停止播放
-	*/
+	 *   停止播放
+	 */
+	@Override
 	public void stopPlay() {
 		mMediaPlayer.stop();
 		mMediaPlayer.reset();
 	}
-	
+
 	private SurfaceHolder.Callback callback=new SurfaceHolder.Callback() {
 
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
-			mMediaPlayer.setDisplay(getHolder());       	
+			mMediaPlayer.setDisplay(getHolder());  		
 		}
 
 		@Override
@@ -126,8 +132,9 @@ public class VideoPlayerView extends SurfaceView {
 			mMediaPlayer.reset();
 		}
 	};
+	@Override
+	public void playVideo(String path) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
 
-	public void play(String path) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException{
 		if(mMediaPlayer!=null&&mMediaPlayer.isPlaying()){
 			mMediaPlayer.stop();
 		}
@@ -147,7 +154,4 @@ public class VideoPlayerView extends SurfaceView {
 	OnSeekCompleteListener,OnPreparedListener{
 
 	}
-
-	
-
 }

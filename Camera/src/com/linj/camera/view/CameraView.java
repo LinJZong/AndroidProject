@@ -13,6 +13,7 @@ import com.example.camera.FileOperateUtil;
 import com.example.camera.R;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 
+import android.R.integer;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.media.MediaRecorder.OnInfoListener;
@@ -207,8 +209,10 @@ public class CameraView extends SurfaceView implements CameraOperation{
 
 	private Bitmap saveThumbnail() throws FileNotFoundException, IOException {
 		if(mRecordPath!=null){
-			//创建缩略图
-			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MINI_KIND);
+			//创建缩略图,该方法只能获取384X512的缩略图，舍弃，使用源码中的获取缩略图方法
+			//			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MINI_KIND);
+			Bitmap bitmap=getVideoThumbnail(mRecordPath);
+
 			if(bitmap!=null){
 				String mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, "test");
 				File folder=new File(mThumbnailFolder);
@@ -228,6 +232,51 @@ public class CameraView extends SurfaceView implements CameraOperation{
 		}
 		return null;
 	}
+
+	/**  
+	 *  获取帧缩略图，根据容器的高宽进行缩放
+	 *  @param filePath
+	 *  @return   
+	 */
+	public Bitmap getVideoThumbnail(String filePath) {  
+		Bitmap bitmap = null;  
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();  
+		try {  
+			retriever.setDataSource(filePath);  
+			bitmap = retriever.getFrameAtTime(-1);  
+		}   
+		catch(IllegalArgumentException e) {  
+			e.printStackTrace();  
+		}   
+		catch (RuntimeException e) {  
+			e.printStackTrace();  
+		}   
+		finally {  
+			try {  
+				retriever.release();  
+			}   
+			catch (RuntimeException e) {  
+				e.printStackTrace();  
+			}  
+		} 
+		if(bitmap==null)
+			return null;
+		// Scale down the bitmap if it's too large.
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		Log.i(TAG, "bitmap:"+width+" "+height);
+		int pWidth=getWidth();// 容器宽度
+		int pHeight=getHeight();//容器高度
+		Log.i(TAG, "parent:"+pWidth+" "+pHeight);
+		//获取宽高跟容器宽高相比较小的倍数，以此为标准进行缩放
+		float scale = Math.min((float)width/pWidth, (float)height/pHeight);
+		Log.i(TAG, scale+"");
+		int w = Math.round(scale * pWidth);
+		int h = Math.round(scale * pHeight);
+		Log.i(TAG, "parent:"+w+" "+h);
+		bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
+		return bitmap;  
+	}  
 
 	/**  
 	 *   转换前置和后置照相机

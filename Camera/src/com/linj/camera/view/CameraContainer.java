@@ -144,10 +144,22 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 		}
 	};
 
+	public Bitmap stopRecord(TakePictureListener listener){
+		mListener=listener;
+		return stopRecord();
+	}
+	
 	@Override
 	public Bitmap stopRecord(){
 		mRecordingInfoTextView.setVisibility(View.GONE);
-		return mCameraView.stopRecord();
+		Bitmap thumbnailBitmap=mCameraView.stopRecord();
+		if(thumbnailBitmap!=null){
+			mTempImageView.setListener(mListener);
+			mTempImageView.isVideo(true);
+			mTempImageView.setImageBitmap(thumbnailBitmap);
+			mTempImageView.startAnimation(R.anim.tempview_show);
+		}
+		return thumbnailBitmap;
 	}
 	
 	/**  
@@ -312,11 +324,11 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 			if(mDataHandler==null) mDataHandler=new DataHandler();	
 			mDataHandler.setMaxSize(200);
 			Bitmap bm=mDataHandler.save(data);
-
-			//重新打开预览图，进行下一次的拍照准备
 			mTempImageView.setListener(mListener);
+			mTempImageView.isVideo(false);
 			mTempImageView.setImageBitmap(bm);
 			mTempImageView.startAnimation(R.anim.tempview_show);
+			//重新打开预览图，进行下一次的拍照准备
 			camera.startPreview();
 			if(mListener!=null) mListener.onTakePictureEnd(bm);
 		}
@@ -566,8 +578,9 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 
 		/**  临时图片动画结束后触发
 		 * @param bm 拍照生成的图片 
+		 * @param isVideo true：当前为录像缩略图 false:为拍照缩略图
 		 * */
-		public void onAnimtionEnd(Bitmap bm);
+		public void onAnimtionEnd(Bitmap bm,boolean isVideo);
 	}
 
 

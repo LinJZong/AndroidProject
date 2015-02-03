@@ -39,6 +39,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 	/** 拍照动作监听接口  */ 
 	private TakePictureListener mListener;
 
+	private boolean mIsVideo;
 	public TempImageView(Context context) {
 		// TODO Auto-generated constructor stub
 		super(context);
@@ -66,7 +67,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 		if(drawable!=null&&drawable instanceof BitmapDrawable)
 			bm=((BitmapDrawable)drawable).getBitmap();
 		//相机监听接口不为空，则执行拍照结束操作
-		if (mListener!=null) mListener.onAnimtionEnd(bm);
+		if (mListener!=null) mListener.onAnimtionEnd(bm,mIsVideo);
 	}
 
 	@Override
@@ -109,6 +110,9 @@ public class TempImageView extends ImageView implements AnimationListener{
 			animation.setAnimationListener(this);
 			super.startAnimation(animation);
 		}
+	}
+	public void isVideo(boolean isVideo){
+		mIsVideo=isVideo;
 	}
 
 	@Override
