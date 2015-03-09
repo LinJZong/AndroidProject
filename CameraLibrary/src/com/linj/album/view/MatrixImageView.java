@@ -1,8 +1,5 @@
 package com.linj.album.view;
 
-
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 /** 
  * @ClassName: MatrixImageView 
@@ -37,17 +35,27 @@ public class MatrixImageView extends ImageView{
 	;
 	private OnMovingListener moveListener;
 	private OnSingleTapListener singleTapListener;
+
 	public MatrixImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		MatrixTouchListener mListener=new MatrixTouchListener();
 		setOnTouchListener(mListener);
 		mGestureDetector=new GestureDetector(getContext(), new GestureListener(mListener));
 		//背景设置为balck
-		setBackgroundColor(Color.BLACK);
-		//将缩放类型设置为FIT_CENTER，表示把图片按比例扩大/缩小到View的宽度，居中显示
-		setScaleType(ScaleType.FIT_XY);
+	    setBackgroundColor(Color.BLACK);
+		//将缩放类型设置为CENTER_INSIDE，表示把图片居中显示,并且宽高最大值为控件宽高
+		setScaleType(ScaleType.FIT_CENTER);
 	}
-
+	public MatrixImageView(Context context) {
+		super(context, null);
+		MatrixTouchListener mListener=new MatrixTouchListener();
+		setOnTouchListener(mListener);
+		mGestureDetector=new GestureDetector(getContext(), new GestureListener(mListener));
+		//背景设置为balck
+	    setBackgroundColor(Color.BLACK);
+	  //将缩放类型设置为CENTER_INSIDE，表示把图片居中显示,并且宽高最大值为控件宽高
+		setScaleType(ScaleType.FIT_CENTER);	
+	}
 	public void setOnMovingListener(OnMovingListener listener){
 		moveListener=listener;
 	}
@@ -74,8 +82,6 @@ public class MatrixImageView extends ImageView{
 		}else {
 			initData();
 		}		
-
-
 	}
 
 	/**  
