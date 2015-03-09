@@ -2,17 +2,18 @@ package com.linj.album.view;
 
 
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 /** 
@@ -35,14 +36,14 @@ public class MatrixImageView extends ImageView{
 	private float mScale
 	;
 	private OnMovingListener moveListener;
-    private OnSingleTapListener singleTapListener;
+	private OnSingleTapListener singleTapListener;
 	public MatrixImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		MatrixTouchListener mListener=new MatrixTouchListener();
 		setOnTouchListener(mListener);
 		mGestureDetector=new GestureDetector(getContext(), new GestureListener(mListener));
 		//背景设置为balck
-	    setBackgroundColor(Color.BLACK);
+		setBackgroundColor(Color.BLACK);
 		//将缩放类型设置为FIT_CENTER，表示把图片按比例扩大/缩小到View的宽度，居中显示
 		setScaleType(ScaleType.FIT_XY);
 	}
@@ -57,6 +58,30 @@ public class MatrixImageView extends ImageView{
 	public void setImageBitmap(Bitmap bm) {
 		// TODO Auto-generated method stub
 		super.setImageBitmap(bm);
+		//大小为0 表示当前控件大小未测量  设置监听函数  在绘制前赋值
+		if(getWidth()==0){
+			ViewTreeObserver vto = getViewTreeObserver();   
+			vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+			{
+				public boolean onPreDraw()
+				{
+					initData();
+					//赋值结束后，移除该监听函数
+					MatrixImageView.this.getViewTreeObserver().removeOnPreDrawListener(this);
+					return true;
+				}
+			});
+		}else {
+			initData();
+		}		
+
+
+	}
+
+	/**  
+	 *   初始化模板Matrix和图片的其他数据
+	 */
+	private void initData() {
 		//设置完图片后，获取该图片的坐标变换矩阵
 		mMatrix.set(getImageMatrix());
 		float[] values=new float[9];
@@ -83,14 +108,14 @@ public class MatrixImageView extends ImageView{
 		private float mStartDis;
 		/**   当前Matrix*/ 
 		private Matrix mCurrentMatrix = new Matrix();	
-		
+
 		/** 用于记录开始时候的坐标位置 */
-		
+
 		/** 和ViewPager交互相关，判断当前是否可以左移、右移  */ 
 		boolean mLeftDragable;
 		boolean mRightDragable;
-	      /**  是否第一次移动 */ 
-	    boolean mFirstMove=false;
+		/**  是否第一次移动 */ 
+		boolean mFirstMove=false;
 		private PointF mStartPoint = new PointF();
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
@@ -133,22 +158,22 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		*   子控件开始进入移动状态，令ViewPager无法拦截对子控件的Touch事件
-		*/
+		 *   子控件开始进入移动状态，令ViewPager无法拦截对子控件的Touch事件
+		 */
 		private void startDrag(){
 			if(moveListener!=null) moveListener.startDrag();
 
 		}
 		/**  
-		*   子控件开始停止移动状态，ViewPager将拦截对子控件的Touch事件
-		*/
+		 *   子控件开始停止移动状态，ViewPager将拦截对子控件的Touch事件
+		 */
 		private void stopDrag(){
 			if(moveListener!=null) moveListener.stopDrag();
 		}
-		
+
 		/**  
-		*   根据当前图片左右边缘设置可拖拽状态
-		*/
+		 *   根据当前图片左右边缘设置可拖拽状态
+		 */
 		private void checkDragable() {
 			mLeftDragable=true;
 			mRightDragable=true;
@@ -163,11 +188,11 @@ public class MatrixImageView extends ImageView{
 				mLeftDragable=false;
 			}
 		}
-		
+
 		/**  
-		*  设置拖拽状态下的Matrix
-		*  @param event   
-		*/
+		 *  设置拖拽状态下的Matrix
+		 *  @param event   
+		 */
 		public void setDragMatrix(MotionEvent event) {
 			if(isZoomChanged()){
 				float dx = event.getX() - mStartPoint.x; // 得到x轴的移动距离
@@ -219,7 +244,7 @@ public class MatrixImageView extends ImageView{
 				dy=-(mImageHeight*values[Matrix.MSCALE_Y]-height)-values[Matrix.MTRANS_Y];
 			return dy;
 		}
-   
+
 		/**  
 		 *  和当前矩阵对比，检验dx，使图像移动后不会超出ImageView边界
 		 *  @param values
@@ -247,7 +272,7 @@ public class MatrixImageView extends ImageView{
 			if(mFirstMove) mFirstMove=false;
 			if(mImageWidth*values[Matrix.MSCALE_X]<width){
 				return 0;
-				
+
 			}
 			if(values[Matrix.MTRANS_X]+dx>0){
 				dx=-values[Matrix.MTRANS_X];
@@ -447,24 +472,24 @@ public class MatrixImageView extends ImageView{
 
 	}
 	/** 
-	* @ClassName: OnChildMovingListener 
-	* @Description:  MatrixImageView移动监听接口,用以组织ViewPager对Move操作的拦截
-	* @author LinJ
-	* @date 2015-1-12 下午4:39:32 
-	*  
-	*/
+	 * @ClassName: OnChildMovingListener 
+	 * @Description:  MatrixImageView移动监听接口,用以组织ViewPager对Move操作的拦截
+	 * @author LinJ
+	 * @date 2015-1-12 下午4:39:32 
+	 *  
+	 */
 	public interface OnMovingListener{
 		public void  startDrag();
 		public void  stopDrag();
 	}
 
 	/** 
-	* @ClassName: OnSingleTapListener 
-	* @Description:  监听ViewPager屏幕单击事件，本质是监听子控件MatrixImageView的单击事件
-	* @author LinJ
-	* @date 2015-1-12 下午4:48:52 
-	*  
-	*/
+	 * @ClassName: OnSingleTapListener 
+	 * @Description:  监听ViewPager屏幕单击事件，本质是监听子控件MatrixImageView的单击事件
+	 * @author LinJ
+	 * @date 2015-1-12 下午4:48:52 
+	 *  
+	 */
 	public interface OnSingleTapListener{
 		public void onSingleTap();
 	}

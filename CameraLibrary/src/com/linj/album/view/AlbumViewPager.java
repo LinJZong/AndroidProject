@@ -2,7 +2,6 @@ package com.linj.album.view;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +14,13 @@ import com.linj.imageloader.DisplayImageOptions;
 import com.linj.imageloader.ImageLoader;
 import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,43 +63,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	}
 
 
-	/**  
-	 *  加载图片
-	 *  @param rootPath   图片根路径
-	 */
-	public void loadAlbum(String rootPath,String fileName,TextView view){
-		//获取根目录下缩略图文件夹
-		String folder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, rootPath);
-		String thumbnailFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_THUMBNAIL, rootPath);
-		//获取图片文件大图
-		List<File> imageList=FileOperateUtil.listFiles(folder, ".jpg");
-		//获取视频文件缩略图
-		List<File> videoList=FileOperateUtil.listFiles(thumbnailFolder, ".jpg","video");
-		List<File> files=new ArrayList<File>();
-		//将视频文件缩略图加入图片大图列表中
-		if(videoList!=null&&videoList.size()>0){
-			files.addAll(videoList);
-		}
-		if(imageList!=null&&imageList.size()>0){
-			files.addAll(imageList);
-		}
-		FileOperateUtil.sortList(files, false);
-		if(files.size()>0){
-			List<String> paths=new ArrayList<String>();
-			int currentItem=0;
-			for (File file : files) {
-				if(fileName!=null&&file.getName().contains(fileName))
-					currentItem=files.indexOf(file);
-				paths.add(file.getAbsolutePath());
-			}
-			setAdapter(new ViewPagerAdapter(paths));
-			setCurrentItem(currentItem);
-			view.setText((currentItem+1)+"/"+paths.size());
-		}
-		else {
-			view.setText("0/0");
-		}
-	}
+	
 
 	/**  
 	 *  删除当前项

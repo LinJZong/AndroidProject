@@ -56,24 +56,7 @@ public class AlbumGridView extends GridView{
 	}
 
 
-	/**  
-	 *  加载图片
-	 *  @param rootPath 根目录文件夹名 
-	 *  @param format 需要加载的文件格式 
-	 */
-	public void loadAlbum(String rootPath,String format){
-		//获取根目录下缩略图文件夹
-		String thumbFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_THUMBNAIL, rootPath);
-		List<File> files=FileOperateUtil.listFiles(thumbFolder, format);
-		if(files!=null&&files.size()>0){
-			List<String> paths=new ArrayList<String>();
-			for (File file : files) {
-				paths.add(file.getAbsolutePath());
-			}
-			setAdapter(new AlbumViewAdapter(paths));
-		}
-	}
-
+	
 	/**  
 	 *  全选图片
 	 *  @param listener 选择图片后执行的回调函数   

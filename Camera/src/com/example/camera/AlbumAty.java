@@ -1,9 +1,13 @@
 package com.example.camera;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.linj.FileOperateUtil;
 import com.linj.album.view.AlbumGridView;
+import com.linj.album.view.AlbumGridView.AlbumViewAdapter;
 
 
 import android.app.Activity;
@@ -101,14 +105,33 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 
 	}
 
-   
+	/**  
+	 *  加载图片
+	 *  @param rootPath 根目录文件夹名 
+	 *  @param format 需要加载的文件格式 
+	 */
+	public void loadAlbum(String rootPath,String format){
+		//获取根目录下缩略图文件夹
+		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, rootPath);
+		List<File> files=FileOperateUtil.listFiles(thumbFolder, format);
+		if(files!=null&&files.size()>0){
+			List<String> paths=new ArrayList<String>();
+			for (File file : files) {
+				paths.add(file.getAbsolutePath());
+			}
+			mAlbumView.setAdapter(mAlbumView.new AlbumViewAdapter(paths));
+		}
+	}
+
 
 	@Override
 	protected void onResume() {
-		mAlbumView.loadAlbum(mSaveRoot,".jpg");
+		loadAlbum(mSaveRoot,".jpg");
 		super.onResume();
 	}
 
+	
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -175,7 +198,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 					boolean flag=FileOperateUtil.deleteThumbFile(path,AlbumAty.this);
 					if(!flag) Log.i(TAG, path);
 				}
-				mAlbumView.loadAlbum(mSaveRoot,".jpg");
+				loadAlbum(mSaveRoot,".jpg");
 				leaveEdit();
 			}
 		})

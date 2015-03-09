@@ -1,9 +1,13 @@
 package com.example.camera;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.linj.FileOperateUtil;
 import com.linj.album.view.AlbumViewPager;
 import com.linj.album.view.AlbumViewPager.OnPlayVideoListener;
+import com.linj.album.view.AlbumViewPager.ViewPagerAdapter;
 import com.linj.album.view.MatrixImageView.OnSingleTapListener;
 import com.linj.video.view.VideoPlayerContainer;
 import com.linj.video.view.VideoPlayerView;
@@ -80,13 +84,48 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			if(currentFileName.indexOf(".")>0)
 				currentFileName=currentFileName.substring(0, currentFileName.lastIndexOf("."));
 		}
-
-		//设置网络图片加载参数
-		mViewPager.loadAlbum(mSaveRoot,currentFileName,mCountView);
+		
+		loadAlbum(mSaveRoot,currentFileName);
 	}
 
 
-
+	/**  
+	 *  加载图片
+	 *  @param rootPath   图片根路径
+	 */
+	public void loadAlbum(String rootPath,String fileName){
+		//获取根目录下缩略图文件夹
+		String folder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_IMAGE, rootPath);
+		String thumbnailFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, rootPath);
+		//获取图片文件大图
+		List<File> imageList=FileOperateUtil.listFiles(folder, ".jpg");
+		//获取视频文件缩略图
+		List<File> videoList=FileOperateUtil.listFiles(thumbnailFolder, ".jpg","video");
+		List<File> files=new ArrayList<File>();
+		//将视频文件缩略图加入图片大图列表中
+		if(videoList!=null&&videoList.size()>0){
+			files.addAll(videoList);
+		}
+		if(imageList!=null&&imageList.size()>0){
+			files.addAll(imageList);
+		}
+		FileOperateUtil.sortList(files, false);
+		if(files.size()>0){
+			List<String> paths=new ArrayList<String>();
+			int currentItem=0;
+			for (File file : files) {
+				if(fileName!=null&&file.getName().contains(fileName))
+					currentItem=files.indexOf(file);
+				paths.add(file.getAbsolutePath());
+			}
+			mViewPager.setAdapter(mViewPager.new ViewPagerAdapter(paths));
+			mViewPager.setCurrentItem(currentItem);
+			mCountView.setText((currentItem+1)+"/"+paths.size());
+		}
+		else {
+			mCountView.setText("0/0");
+		}
+	}
 
 
 	private OnPageChangeListener pageChangeListener=new OnPageChangeListener() {
