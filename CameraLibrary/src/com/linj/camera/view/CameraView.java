@@ -6,80 +6,69 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.linj.cameralibrary.R;
-import com.linj.FileOperateUtil;
-import com.linj.camera.view.CameraContainer.TakePictureListener;
-
-import android.R.integer;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
-import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Area;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
-import android.media.ThumbnailUtils;
-import android.media.MediaRecorder.OnInfoListener;
-import android.net.Uri;
-import android.os.Handler;
-import android.provider.MediaStore.Video.Thumbnails;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.OrientationEventListener;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Toast;
+
+import com.linj.FileOperateUtil;
+import com.linj.camera.view.CameraContainer.TakePictureListener;
 
 
 /** 
  * @ClassName: CameraView 
- * @Description: ºÍÏà»ú°ó¶¨µÄSurfaceView ·â×°ÁËÅÄÕÕ·½·¨
+ * @Description: å’Œç›¸æœºç»‘å®šçš„SurfaceView å°è£…äº†æ‹ç…§æ–¹æ³•
  * @author LinJ
- * @date 2014-12-31 ÉÏÎç9:44:56 
+ * @date 2014-12-31 ä¸Šåˆ9:44:56 
  *  
  */
 public class CameraView extends SurfaceView implements CameraOperation{
 
 	public final static String TAG="CameraView";
-	/** ºÍ¸ÃView°ó¶¨µÄCamera¶ÔÏó */
+	/** å’Œè¯¥Viewç»‘å®šçš„Cameraå¯¹è±¡ */
 	private Camera mCamera;
 
-	/** µ±Ç°ÉÁ¹âµÆÀàĞÍ£¬Ä¬ÈÏÎª¹Ø±Õ */ 
-	private FlashMode mFlashMode=FlashMode.ON;
+	/** å½“å‰é—ªå…‰ç¯ç±»å‹ï¼Œé»˜è®¤ä¸ºå…³é—­ */ 
+	private FlashMode mFlashMode=FlashMode.AUTO;
 
-	/** µ±Ç°Ëõ·Å¼¶±ğ  Ä¬ÈÏÎª0*/ 
+	/** å½“å‰ç¼©æ”¾çº§åˆ«  é»˜è®¤ä¸º0*/ 
 	private int mZoom=0;
 
-	/** µ±Ç°ÆÁÄ»Ğı×ª½Ç¶È*/ 
+	/** å½“å‰å±å¹•æ—‹è½¬è§’åº¦*/ 
 	private int mOrientation=0;
-	/** ÊÇ·ñ´ò¿ªÇ°ÖÃÏà»ú,trueÎªÇ°ÖÃ,falseÎªºóÖÃ  */ 
+	/** æ˜¯å¦æ‰“å¼€å‰ç½®ç›¸æœº,trueä¸ºå‰ç½®,falseä¸ºåç½®  */ 
 	private boolean mIsFrontCamera;
-	/**  Â¼ÏñÀà */ 
+	/**  å½•åƒç±» */ 
 	private MediaRecorder mMediaRecorder;
-	/**  Ïà»úÅäÖÃ£¬ÔÚÂ¼ÏñÇ°¼ÇÂ¼£¬ÓÃÒÔÂ¼Ïñ½áÊøºó»Ö¸´Ô­ÅäÖÃ */ 
+	/**  ç›¸æœºé…ç½®ï¼Œåœ¨å½•åƒå‰è®°å½•ï¼Œç”¨ä»¥å½•åƒç»“æŸåæ¢å¤åŸé…ç½® */ 
 	private Camera.Parameters mParameters;
-	/**  Â¼Ïñ´æ·ÅÂ·¾¶ £¬ÓÃÒÔÉú³ÉËõÂÔÍ¼*/ 
+	/**  å½•åƒå­˜æ”¾è·¯å¾„ ï¼Œç”¨ä»¥ç”Ÿæˆç¼©ç•¥å›¾*/ 
 	private String mRecordPath=null;
+	/** è®¾ç½®é»˜è®¤è‡ªåŠ¨å¯¹ç„¦ */
+	private AutoFocusCallback autoFocus;
+	/** å½•è§†é¢‘ä¿å­˜è·¯å¾„ */
+	private String videoSavePath;
+	/** å½•è§†é¢‘æ—¶çš„å°ºå¯¸ */
+	private int videoMode = CamcorderProfile.QUALITY_1080P;
 	public CameraView(Context context){
 		super(context);
-		//³õÊ¼»¯ÈİÆ÷
+		//åˆå§‹åŒ–å®¹å™¨
 		getHolder().addCallback(callback);
 		openCamera();
 		mIsFrontCamera=false;
@@ -87,7 +76,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 
 	public CameraView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		//³õÊ¼»¯ÈİÆ÷
+		//åˆå§‹åŒ–å®¹å™¨
 		getHolder().addCallback(callback);
 		openCamera();
 		mIsFrontCamera=false;
@@ -104,21 +93,24 @@ public class CameraView extends SurfaceView implements CameraOperation{
 				setCameraParameters();
 				mCamera.setPreviewDisplay(getHolder());
 			} catch (Exception e) {
-				Toast.makeText(getContext(), "´ò¿ªÏà»úÊ§°Ü", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "æ‰“å¼€ç›¸æœºå¤±è´¥", Toast.LENGTH_SHORT).show();
 				Log.e(TAG,e.getMessage());
 			}
 			mCamera.startPreview();
+			mCamera.cancelAutoFocus();
 		}
 
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int width,
 				int height) {
+			mCamera.autoFocus(autoFocus);
+			setCameraParameters();
 			updateCameraOrientation();
 		}
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
-			//Í£Ö¹Â¼Ïñ
+			//åœæ­¢å½•åƒ
 			stopRecord();
 			if (mCamera != null) {
 				mCamera.stopPreview();
@@ -132,10 +124,26 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	protected boolean isRecording(){
 		return mMediaRecorder!=null;
 	}
-
+	/**
+	 * 
+	 * @param quality </br>{@link CamcorderProfile#QUALITY_480P}
+	 * </br>{@link CamcorderProfile#QUALITY_720P }
+	 * </br>{@link CamcorderProfile#QUALITY_1080P}
+	 * </br>{@link CamcorderProfile#QUALITY_QVGA}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_QCIF}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_CIF}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_480P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_720P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_1080P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_QVGA}
+	 */
+	public void setProfile(int quality){
+		this.videoMode = quality;
+	}
+ 
 	/**  
-	 *  ¿ªÊ¼Â¼Ïñ
-	 *  @return ¿ªÊ¼Â¼ÏñÊÇ·ñ³É¹¦   
+	 *  å¼€å§‹å½•åƒ
+	 *  @return å¼€å§‹å½•åƒæ˜¯å¦æˆåŠŸ   
 	 */
 	@Override
 	public boolean startRecord(){
@@ -155,11 +163,11 @@ public class CameraView extends SurfaceView implements CameraOperation{
 		.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 		mMediaRecorder
 		.setAudioSource(MediaRecorder.AudioSource.MIC);
-		//ÉèÖÃÂ¼Ïñ²ÎÊı£¬ÓÉÓÚÓ¦ÓÃĞèÒª´Ë´¦È¡Ò»¸ö½ÏĞ¡¸ñÊ½µÄÊÓÆµ
-		mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
-		//ÉèÖÃÊä³öÊÓÆµ³¯Ïò£¬±ãÓÚ²¥·ÅÆ÷Ê¶±ğ¡£ÓÉÓÚÊÇÊúÆÁÂ¼ÖÆ£¬ĞèÒªÕı×ª90¡ã
+		//è®¾ç½®å½•åƒå‚æ•°ï¼Œç”±äºåº”ç”¨éœ€è¦æ­¤å¤„å–ä¸€ä¸ªè¾ƒå°æ ¼å¼çš„è§†é¢‘
+		mMediaRecorder.setProfile(CamcorderProfile.get(videoMode));
+		//è®¾ç½®è¾“å‡ºè§†é¢‘æœå‘ï¼Œä¾¿äºæ’­æ”¾å™¨è¯†åˆ«ã€‚ç”±äºæ˜¯ç«–å±å½•åˆ¶ï¼Œéœ€è¦æ­£è½¬90Â°
 		mMediaRecorder.setOrientationHint(90);
-		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VIDEO, "test");
+		String path=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_VIDEO, videoSavePath);
 		File directory=new File(path);
 		if(!directory.exists())
 			directory.mkdirs();
@@ -171,7 +179,9 @@ public class CameraView extends SurfaceView implements CameraOperation{
 					.getAbsolutePath());
 			mMediaRecorder.prepare();
 			mMediaRecorder.start();
+			Log.w(TAG, "video path"+mRecordPath);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -179,6 +189,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 
 	@Override
 	public Bitmap stopRecord(){
+		Log.w(TAG, "video stopRecord"+mRecordPath);
 		Bitmap bitmap=null;
 		try {
 			if(mMediaRecorder!=null){
@@ -186,17 +197,17 @@ public class CameraView extends SurfaceView implements CameraOperation{
 				mMediaRecorder.reset();
 				mMediaRecorder.release();
 				mMediaRecorder=null;
-				//±£´æÊÓÆµµÄËõÂÔÍ¼
+				//ä¿å­˜è§†é¢‘çš„ç¼©ç•¥å›¾
 				bitmap=saveThumbnail();
 			}
 			if(mParameters!=null&&mCamera!=null){
-				//ÖØĞÂÁ¬½ÓÏà»ú
+				//é‡æ–°è¿æ¥ç›¸æœº
 				mCamera.reconnect();
-				//Í£Ö¹Ô¤ÀÀ£¬×¢ÒâÕâÀï±ØĞëÏÈµ÷ÓÃÍ£Ö¹Ô¤ÀÀÔÙÉèÖÃ²ÎÊı²ÅÓĞĞ§
+				//åœæ­¢é¢„è§ˆï¼Œæ³¨æ„è¿™é‡Œå¿…é¡»å…ˆè°ƒç”¨åœæ­¢é¢„è§ˆå†è®¾ç½®å‚æ•°æ‰æœ‰æ•ˆ
 				mCamera.stopPreview();
-				//ÉèÖÃ²ÎÊıÎªÂ¼ÏñÇ°µÄ²ÎÊı£¬²»È»Èç¹ûÂ¼ÏñÊÇµÍÅä£¬½áÊøÂ¼ÖÆºóÔ¤ÀÀĞ§¹û»¹ÊÇµÍÅä»­Ãæ
+				//è®¾ç½®å‚æ•°ä¸ºå½•åƒå‰çš„å‚æ•°ï¼Œä¸ç„¶å¦‚æœå½•åƒæ˜¯ä½é…ï¼Œç»“æŸå½•åˆ¶åé¢„è§ˆæ•ˆæœè¿˜æ˜¯ä½é…ç”»é¢
 				mCamera.setParameters(mParameters);
-				//ÖØĞÂ´ò¿ª
+				//é‡æ–°æ‰“å¼€
 				mCamera.startPreview();
 				mParameters=null;
 			}
@@ -209,19 +220,19 @@ public class CameraView extends SurfaceView implements CameraOperation{
 
 	private Bitmap saveThumbnail() throws FileNotFoundException, IOException {
 		if(mRecordPath!=null){
-			//´´½¨ËõÂÔÍ¼,¸Ã·½·¨Ö»ÄÜ»ñÈ¡384X512µÄËõÂÔÍ¼£¬ÉáÆú£¬Ê¹ÓÃÔ´ÂëÖĞµÄ»ñÈ¡ËõÂÔÍ¼·½·¨
+			//åˆ›å»ºç¼©ç•¥å›¾,è¯¥æ–¹æ³•åªèƒ½è·å–384X512çš„ç¼©ç•¥å›¾ï¼Œèˆå¼ƒï¼Œä½¿ç”¨æºç ä¸­çš„è·å–ç¼©ç•¥å›¾æ–¹æ³•
 			//			Bitmap bitmap=ThumbnailUtils.createVideoThumbnail(mRecordPath, Thumbnails.MINI_KIND);
 			Bitmap bitmap=getVideoThumbnail(mRecordPath);
 
 			if(bitmap!=null){
-				String mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, "test");
+				String mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, videoSavePath);
 				File folder=new File(mThumbnailFolder);
 				if(!folder.exists()){
 					folder.mkdirs();
 				}
 				File file=new File(mRecordPath);
 				file=new File(folder+File.separator+file.getName().replace("3gp", "jpg"));
-				//´æÍ¼Æ¬Ğ¡Í¼
+				//å­˜å›¾ç‰‡å°å›¾
 				BufferedOutputStream bufferos=new BufferedOutputStream(new FileOutputStream(file));
 				bitmap.compress(Bitmap.CompressFormat.JPEG,100, bufferos);
 				bufferos.flush();
@@ -234,7 +245,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 *  »ñÈ¡Ö¡ËõÂÔÍ¼£¬¸ù¾İÈİÆ÷µÄ¸ß¿í½øĞĞËõ·Å
+	 *  è·å–å¸§ç¼©ç•¥å›¾ï¼Œæ ¹æ®å®¹å™¨çš„é«˜å®½è¿›è¡Œç¼©æ”¾
 	 *  @param filePath
 	 *  @return   
 	 */
@@ -265,10 +276,10 @@ public class CameraView extends SurfaceView implements CameraOperation{
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
 		Log.i(TAG, "bitmap:"+width+" "+height);
-		int pWidth=getWidth();// ÈİÆ÷¿í¶È
-		int pHeight=getHeight();//ÈİÆ÷¸ß¶È
+		int pWidth=getWidth();// å®¹å™¨å®½åº¦
+		int pHeight=getHeight();//å®¹å™¨é«˜åº¦
 		Log.i(TAG, "parent:"+pWidth+" "+pHeight);
-		//»ñÈ¡¿í¸ß¸úÈİÆ÷¿í¸ßÏà±È½ÏĞ¡µÄ±¶Êı£¬ÒÔ´ËÎª±ê×¼½øĞĞËõ·Å
+		//è·å–å®½é«˜è·Ÿå®¹å™¨å®½é«˜ç›¸æ¯”è¾ƒå°çš„å€æ•°ï¼Œä»¥æ­¤ä¸ºæ ‡å‡†è¿›è¡Œç¼©æ”¾
 		float scale = Math.min((float)width/pWidth, (float)height/pHeight);
 		Log.i(TAG, scale+"");
 		int w = Math.round(scale * pWidth);
@@ -279,7 +290,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}  
 
 	/**  
-	 *   ×ª»»Ç°ÖÃºÍºóÖÃÕÕÏà»ú
+	 *   è½¬æ¢å‰ç½®å’Œåç½®ç…§ç›¸æœº
 	 */
 	@Override
 	public void switchCamera(){
@@ -299,7 +310,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 *   ¸ù¾İµ±Ç°ÕÕÏà»ú×´Ì¬(Ç°ÖÃ»òºóÖÃ)£¬´ò¿ª¶ÔÓ¦Ïà»ú
+	 *   æ ¹æ®å½“å‰ç…§ç›¸æœºçŠ¶æ€(å‰ç½®æˆ–åç½®)ï¼Œæ‰“å¼€å¯¹åº”ç›¸æœº
 	 */
 	private boolean openCamera()  {
 		if (mCamera != null) {
@@ -307,7 +318,6 @@ public class CameraView extends SurfaceView implements CameraOperation{
 			mCamera.release();
 			mCamera = null;
 		}
-
 		if(mIsFrontCamera){
 			Camera.CameraInfo cameraInfo=new CameraInfo();
 			for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
@@ -335,7 +345,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 *  »ñÈ¡µ±Ç°ÉÁ¹âµÆÀàĞÍ
+	 *  è·å–å½“å‰é—ªå…‰ç¯ç±»å‹
 	 *  @return   
 	 */
 	@Override
@@ -344,7 +354,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 *  ÉèÖÃÉÁ¹âµÆÀàĞÍ
+	 *  è®¾ç½®é—ªå…‰ç¯ç±»å‹
 	 *  @param flashMode   
 	 */
 	@Override
@@ -374,12 +384,13 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 * ÊÖ¶¯¾Û½¹ 
-	 *  @param point ´¥ÆÁ×ø±ê
+	 * æ‰‹åŠ¨èšç„¦ 
+	 *  @param point è§¦å±åæ ‡
 	 */
 	protected void onFocus(Point point,AutoFocusCallback callback){
+		this.autoFocus = callback;
 		Camera.Parameters parameters=mCamera.getParameters();
-		//²»Ö§³ÖÉèÖÃ×Ô¶¨Òå¾Û½¹£¬ÔòÊ¹ÓÃ×Ô¶¯¾Û½¹£¬·µ»Ø
+		//ä¸æ”¯æŒè®¾ç½®è‡ªå®šä¹‰èšç„¦ï¼Œåˆ™ä½¿ç”¨è‡ªåŠ¨èšç„¦ï¼Œè¿”å›
 		if (parameters.getMaxNumFocusAreas()<=0) {
 			mCamera.autoFocus(callback);
 			return;
@@ -396,8 +407,8 @@ public class CameraView extends SurfaceView implements CameraOperation{
 		areas.add(new Area(new Rect(left,top,right,bottom), 100));
 		parameters.setFocusAreas(areas);
 		try {
-			//±¾ÈËÊ¹ÓÃµÄĞ¡Ã×ÊÖ»úÔÚÉèÖÃ¾Û½¹ÇøÓòµÄÊ±ºò¾­³£»á³öÒì³££¬¿´ÈÕÖ¾·¢ÏÖÊÇ¿ò¼Ü²ãµÄ×Ö·û´®×ªintµÄÊ±ºò³ö´íÁË£¬
-			//Ä¿²âÊÇĞ¡Ã×ĞŞ¸ÄÁË¿ò¼Ü²ã´úÂëµ¼ÖÂ£¬ÔÚ´Ëtryµô£¬¶ÔÊµ¼Ê¾Û½¹Ğ§¹ûÃ»Ó°Ïì
+			//æœ¬äººä½¿ç”¨çš„å°ç±³æ‰‹æœºåœ¨è®¾ç½®èšç„¦åŒºåŸŸçš„æ—¶å€™ç»å¸¸ä¼šå‡ºå¼‚å¸¸ï¼Œçœ‹æ—¥å¿—å‘ç°æ˜¯æ¡†æ¶å±‚çš„å­—ç¬¦ä¸²è½¬intçš„æ—¶å€™å‡ºé”™äº†ï¼Œ
+			//ç›®æµ‹æ˜¯å°ç±³ä¿®æ”¹äº†æ¡†æ¶å±‚ä»£ç å¯¼è‡´ï¼Œåœ¨æ­¤tryæ‰ï¼Œå¯¹å®é™…èšç„¦æ•ˆæœæ²¡å½±å“
 			mCamera.setParameters(parameters);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -407,7 +418,7 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**  
-	 *  »ñÈ¡×î´óËõ·Å¼¶±ğ£¬×î´óÎª40
+	 *  è·å–æœ€å¤§ç¼©æ”¾çº§åˆ«ï¼Œæœ€å¤§ä¸º40
 	 *  @return   
 	 */
 	@Override
@@ -418,15 +429,15 @@ public class CameraView extends SurfaceView implements CameraOperation{
 		return parameters.getMaxZoom()>40?40:parameters.getMaxZoom();
 	}
 	/**  
-	 *  ÉèÖÃÏà»úËõ·Å¼¶±ğ
+	 *  è®¾ç½®ç›¸æœºç¼©æ”¾çº§åˆ«
 	 *  @param zoom   
 	 */
 	@Override
 	public void setZoom(int zoom){
 		if(mCamera==null) return;
 		Camera.Parameters parameters;
-		//×¢Òâ´Ë´¦ÎªÂ¼ÏñÄ£Ê½ÏÂµÄsetZoom·½Ê½¡£ÔÚCamera.unlockÖ®ºó£¬µ÷ÓÃgetParameters·½·¨»áÒıÆğandroid¿ò¼Üµ×²ãµÄÒì³£
-		//stackoverflowÉÏ¿´µ½µÄ½âÊÍÊÇÓÉÓÚ¶àÏß³ÌÍ¬Ê±·ÃÎÊCameraµ¼ÖÂµÄ³åÍ»£¬ËùÒÔÔÚ´ËÊ¹ÓÃÂ¼ÏñÇ°±£´æµÄmParameters¡£
+		//æ³¨æ„æ­¤å¤„ä¸ºå½•åƒæ¨¡å¼ä¸‹çš„setZoomæ–¹å¼ã€‚åœ¨Camera.unlockä¹‹åï¼Œè°ƒç”¨getParametersæ–¹æ³•ä¼šå¼•èµ·androidæ¡†æ¶åº•å±‚çš„å¼‚å¸¸
+		//stackoverflowä¸Šçœ‹åˆ°çš„è§£é‡Šæ˜¯ç”±äºå¤šçº¿ç¨‹åŒæ—¶è®¿é—®Cameraå¯¼è‡´çš„å†²çªï¼Œæ‰€ä»¥åœ¨æ­¤ä½¿ç”¨å½•åƒå‰ä¿å­˜çš„mParametersã€‚
 		if(mParameters!=null)
 			parameters=mParameters;
 		else {
@@ -444,48 +455,52 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}
 
 	/**
-	 * ÉèÖÃÕÕÏà»ú²ÎÊı
+	 * è®¾ç½®ç…§ç›¸æœºå‚æ•°
 	 */
 	private void setCameraParameters(){
 		Camera.Parameters parameters = mCamera.getParameters();
-		// Ñ¡ÔñºÏÊÊµÄÔ¤ÀÀ³ß´ç   
-		List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-		if (sizeList.size()>0) {
-			Size cameraSize=sizeList.get(0);
-			//Ô¤ÀÀÍ¼Æ¬´óĞ¡
-			parameters.setPreviewSize(cameraSize.width, cameraSize.height);
+		// é€‰æ‹©åˆé€‚çš„é¢„è§ˆå°ºå¯¸   
+//		List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+//		if (sizeList.size()>0) {
+//			Size cameraSize=sizeList.get(0);
+//			//é¢„è§ˆå›¾ç‰‡å¤§å°
+//			parameters.setPreviewSize(cameraSize.width, cameraSize.height);
+//		}
+//
+//		//è®¾ç½®ç”Ÿæˆçš„å›¾ç‰‡å¤§å°
+//		sizeList = parameters.getSupportedPictureSizes();
+//		if (sizeList.size()>0) {
+//			Size cameraSize=sizeList.get(0);
+//			for (Size size : sizeList) {
+//				//å°äº100Wåƒç´ 
+//				if (size.width*size.height<100*10000) {
+//					cameraSize=size;
+//					break;
+//				}
+//			}
+//			parameters.setPictureSize(cameraSize.width, cameraSize.height);
+//		}
+//		//è®¾ç½®å›¾ç‰‡æ ¼å¼
+//		parameters.setPictureFormat(ImageFormat.JPEG);       
+//		parameters.setJpegQuality(100);
+//		parameters.setJpegThumbnailQuality(100);
+//		//è‡ªåŠ¨èšç„¦æ¨¡å¼
+		if(mIsFrontCamera){
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		}else{
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//å‰æ‘„åƒå¤´ä¼šå´©æºƒ
 		}
-
-		//ÉèÖÃÉú³ÉµÄÍ¼Æ¬´óĞ¡
-		sizeList = parameters.getSupportedPictureSizes();
-		if (sizeList.size()>0) {
-			Size cameraSize=sizeList.get(0);
-			for (Size size : sizeList) {
-				//Ğ¡ÓÚ100WÏñËØ
-				if (size.width*size.height<100*10000) {
-					cameraSize=size;
-					break;
-				}
-			}
-			parameters.setPictureSize(cameraSize.width, cameraSize.height);
-		}
-		//ÉèÖÃÍ¼Æ¬¸ñÊ½
-		parameters.setPictureFormat(ImageFormat.JPEG);       
-		parameters.setJpegQuality(100);
-		parameters.setJpegThumbnailQuality(100);
-		//×Ô¶¯¾Û½¹Ä£Ê½
-		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 		mCamera.setParameters(parameters);
-		//ÉèÖÃÉÁ¹âµÆÄ£Ê½¡£´Ë´¦Ö÷ÒªÊÇÓÃÓÚÔÚÏà»ú´İ»ÙºóÓÖÖØ½¨£¬±£³ÖÖ®Ç°µÄ×´Ì¬
-		setFlashMode(mFlashMode);
-		//ÉèÖÃËõ·Å¼¶±ğ
+		//è®¾ç½®é—ªå…‰ç¯æ¨¡å¼ã€‚æ­¤å¤„ä¸»è¦æ˜¯ç”¨äºåœ¨ç›¸æœºæ‘§æ¯ååˆé‡å»ºï¼Œä¿æŒä¹‹å‰çš„çŠ¶æ€
+//		setFlashMode(mFlashMode);
+		//è®¾ç½®ç¼©æ”¾çº§åˆ«
 		setZoom(mZoom);
-		//¿ªÆôÆÁÄ»³¯Ïò¼àÌı
+		//å¼€å¯å±å¹•æœå‘ç›‘å¬
 		startOrientationChangeListener();
 	}
 
 	/**  
-	 *   Æô¶¯ÆÁÄ»³¯Ïò¸Ä±ä¼àÌıº¯Êı ÓÃÓÚÔÚÆÁÄ»ºáÊúÆÁÇĞ»»Ê±¸Ä±ä±£´æµÄÍ¼Æ¬µÄ·½Ïò  
+	 *   å¯åŠ¨å±å¹•æœå‘æ”¹å˜ç›‘å¬å‡½æ•° ç”¨äºåœ¨å±å¹•æ¨ªç«–å±åˆ‡æ¢æ—¶æ”¹å˜ä¿å­˜çš„å›¾ç‰‡çš„æ–¹å‘  
 	 */
 	private  void startOrientationChangeListener() {  
 		OrientationEventListener mOrEventListener = new OrientationEventListener(getContext()) {  
@@ -515,36 +530,50 @@ public class CameraView extends SurfaceView implements CameraOperation{
 	}  
 
 	/**  
-	 *   ¸ù¾İµ±Ç°³¯ÏòĞŞ¸Ä±£´æÍ¼Æ¬µÄĞı×ª½Ç¶È
+	 *   æ ¹æ®å½“å‰æœå‘ä¿®æ”¹ä¿å­˜å›¾ç‰‡çš„æ—‹è½¬è§’åº¦
 	 */
 	private void updateCameraOrientation(){
 		if(mCamera!=null){
 			Camera.Parameters parameters = mCamera.getParameters();
-			//rotation²ÎÊıÎª 0¡¢90¡¢180¡¢270¡£Ë®Æ½·½ÏòÎª0¡£
+			//rotationå‚æ•°ä¸º 0ã€90ã€180ã€270ã€‚æ°´å¹³æ–¹å‘ä¸º0ã€‚
 			int rotation=90+mOrientation==360?0:90+mOrientation;
-			//Ç°ÖÃÉãÏñÍ·ĞèÒª¶Ô´¹Ö±·½Ïò×ö±ä»»£¬·ñÔòÕÕÆ¬ÊÇµßµ¹µÄ
+			//å‰ç½®æ‘„åƒå¤´éœ€è¦å¯¹å‚ç›´æ–¹å‘åšå˜æ¢ï¼Œå¦åˆ™ç…§ç‰‡æ˜¯é¢ å€’çš„
 			if(mIsFrontCamera){
 				if(rotation==90) rotation=270;
 				else if (rotation==270) rotation=90;
 			}
-			parameters.setRotation(rotation);//Éú³ÉµÄÍ¼Æ¬×ª90¡ã
-			//Ô¤ÀÀÍ¼Æ¬Ğı×ª90¡ã
-			mCamera.setDisplayOrientation(90);//Ô¤ÀÀ×ª90¡ã
+			parameters.setRotation(rotation);//ç”Ÿæˆçš„å›¾ç‰‡è½¬90Â°
+			//é¢„è§ˆå›¾ç‰‡æ—‹è½¬90Â°
+			mCamera.setDisplayOrientation(90);//é¢„è§ˆè½¬90Â°
 			mCamera.setParameters(parameters);
 		}
 	}
 
 	/** 
-	 * @Description: ÉÁ¹âµÆÀàĞÍÃ¶¾Ù Ä¬ÈÏÎª¹Ø±Õ
+	 * @Description: é—ªå…‰ç¯ç±»å‹æšä¸¾ é»˜è®¤ä¸ºå…³é—­
 	 */
 	public enum FlashMode{
-		/** ON:ÅÄÕÕÊ±´ò¿ªÉÁ¹âµÆ   */ 
+		/** ON:æ‹ç…§æ—¶æ‰“å¼€é—ªå…‰ç¯   */ 
 		ON,
-		/** OFF£º²»´ò¿ªÉÁ¹âµÆ  */ 
+		/** OFFï¼šä¸æ‰“å¼€é—ªå…‰ç¯  */ 
 		OFF,
-		/** AUTO£ºÏµÍ³¾ö¶¨ÊÇ·ñ´ò¿ªÉÁ¹âµÆ  */ 
+		/** AUTOï¼šç³»ç»Ÿå†³å®šæ˜¯å¦æ‰“å¼€é—ªå…‰ç¯  */ 
 		AUTO,
-		/** TORCH£ºÒ»Ö±´ò¿ªÉÁ¹âµÆ  */ 
+		/** TORCHï¼šä¸€ç›´æ‰“å¼€é—ªå…‰ç¯  */ 
 		TORCH
 	}
+
+	public void setAutoFocus(AutoFocusCallback autoFocusCallback) {
+		this.autoFocus = autoFocusCallback;
+		
+	}
+	/**
+	 * è®¾ç½®è§†é¢‘ä¿å­˜è·¯å¾„
+	 * @param videoSavePath
+	 */
+	public void setSaveVideoPath(String videoSavePath) {
+		this.videoSavePath = videoSavePath;
+	}
+	
+	
 }

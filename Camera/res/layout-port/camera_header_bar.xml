@@ -35,7 +35,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_flash_on" />
+        android:src="@drawable/btn_flash_auto" />
 
     <ImageView
         android:id="@+id/btn_other_setting"

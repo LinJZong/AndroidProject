@@ -19,9 +19,9 @@ import android.widget.ImageView;
 
 /** 
  * @ClassName: TempImageView 
- * @Description:   ÁÙÊ±ImageView£¬ÔÚÖ´ĞĞÍêÒ»¸ö¶¯»­ºó×Ô¶¯Òş²Ø
+ * @Description:   ä¸´æ—¶ImageViewï¼Œåœ¨æ‰§è¡Œå®Œä¸€ä¸ªåŠ¨ç”»åè‡ªåŠ¨éšè—
  * @author LinJ
- * @date 2014-12-31 ÉÏÎç9:45:34 
+ * @date 2014-12-31 ä¸Šåˆ9:45:34 
  *  
  */
 public class TempImageView extends ImageView implements AnimationListener{
@@ -29,15 +29,15 @@ public class TempImageView extends ImageView implements AnimationListener{
 	public final static String TAG="TempImageView";
 
 	/**
-	 * ²»´æÔÚµÄ¶¯»­ID
+	 * ä¸å­˜åœ¨çš„åŠ¨ç”»ID
 	 */
 	public static final int NO_ID=-1;
 	/**
-	 * ÉèÖÃµÄ¶¯»­Ğ§¹ûID
+	 * è®¾ç½®çš„åŠ¨ç”»æ•ˆæœID
 	 */
 	private int mAnimationID=NO_ID;
 
-	/** ÅÄÕÕ¶¯×÷¼àÌı½Ó¿Ú  */ 
+	/** æ‹ç…§åŠ¨ä½œç›‘å¬æ¥å£  */ 
 	private TakePictureListener mListener;
 
 	private boolean mIsVideo;
@@ -67,7 +67,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 		Bitmap bm = null;
 		if(drawable!=null&&drawable instanceof BitmapDrawable)
 			bm=((BitmapDrawable)drawable).getBitmap();
-		//Ïà»ú¼àÌı½Ó¿Ú²»Îª¿Õ£¬ÔòÖ´ĞĞÅÄÕÕ½áÊø²Ù×÷
+		//ç›¸æœºç›‘å¬æ¥å£ä¸ä¸ºç©ºï¼Œåˆ™æ‰§è¡Œæ‹ç…§ç»“æŸæ“ä½œ
 		if (mListener!=null) mListener.onAnimtionEnd(bm,mIsVideo);
 	}
 
@@ -79,7 +79,7 @@ public class TempImageView extends ImageView implements AnimationListener{
 
 
 	/**  
-	 * @Description: ¿ªÊ¼¶¯»­
+	 * @Description: å¼€å§‹åŠ¨ç”»
 	 * @param    
 	 * @return void    
 	 * @throws 
@@ -90,8 +90,8 @@ public class TempImageView extends ImageView implements AnimationListener{
 
 
 	/** 
-	 * @Description: ¿ªÊ¼¶¯»­
-	 * @param @param resourceID ¶¯»­×ÊÔ´µÄID  
+	 * @Description: å¼€å§‹åŠ¨ç”»
+	 * @param @param resourceID åŠ¨ç”»èµ„æºçš„ID  
 	 * @return void    
 	 * @throws 
 	 */

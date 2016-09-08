@@ -8,55 +8,55 @@ import com.linj.camera.view.CameraView.FlashMode;
 
 /** 
  * @ClassName: CameraOperation 
- * @Description:Ïà»ú²Ù×÷½Ó¿Ú£¬ÓÃÒÔÍ³Ò»CameraContainerºÍCameraViewµÄ¹¦ÄÜ
+ * @Description:ç›¸æœºæ“ä½œæ¥å£ï¼Œç”¨ä»¥ç»Ÿä¸€CameraContainerå’ŒCameraViewçš„åŠŸèƒ½
  * @author LinJ
- * @date 2015-1-26 ÏÂÎç2:41:31 
+ * @date 2015-1-26 ä¸‹åˆ2:41:31 
  *  
  */
 public interface CameraOperation {
 	/**  
-	 *  ¿ªÊ¼Â¼Ïñ
-	 *  @return  ÊÇ·ñ³É¹¦¿ªÊ¼Â¼Ïñ
+	 *  å¼€å§‹å½•åƒ
+	 *  @return  æ˜¯å¦æˆåŠŸå¼€å§‹å½•åƒ
 	 */
 	public boolean startRecord();
 
 	/**  
-	 *  Í£Ö¹Â¼Ïñ
-	 *  @return Â¼ÏñËõÂÔÍ¼
+	 *  åœæ­¢å½•åƒ
+	 *  @return å½•åƒç¼©ç•¥å›¾
 	 */
 	public Bitmap stopRecord();
 	/**  
-	 *   ÇĞ»»Ç°ÖÃºÍºóÖÃÏà»ú
+	 *   åˆ‡æ¢å‰ç½®å’Œåç½®ç›¸æœº
 	 */
 	public void switchCamera();
 	/**  
-	 *  »ñÈ¡µ±Ç°ÉÁ¹âµÆÄ£Ê½
+	 *  è·å–å½“å‰é—ªå…‰ç¯æ¨¡å¼
 	 *  @return   
 	 */
 	public FlashMode getFlashMode();
 	/**  
-	 *  ÉèÖÃÉÁ¹âµÆÄ£Ê½
+	 *  è®¾ç½®é—ªå…‰ç¯æ¨¡å¼
 	 *  @param flashMode   
 	 */
 	public void setFlashMode(FlashMode flashMode);
 	/**  
-	 *  ÅÄÕÕ
-	 *  @param callback ÅÄÕÕ»Øµ÷º¯Êı 
-	 *  @param listener ÅÄÕÕ¶¯×÷¼àÌıº¯Êı  
+	 *  æ‹ç…§
+	 *  @param callback æ‹ç…§å›è°ƒå‡½æ•° 
+	 *  @param listener æ‹ç…§åŠ¨ä½œç›‘å¬å‡½æ•°  
 	 */
 	public void takePicture(PictureCallback callback,TakePictureListener listener);
 	/**  
-	 *  Ïà»ú×î´óËõ·Å¼¶±ğ
+	 *  ç›¸æœºæœ€å¤§ç¼©æ”¾çº§åˆ«
 	 *  @return   
 	 */
 	public int getMaxZoom();
 	/**  
-	 *  ÉèÖÃµ±Ç°Ëõ·Å¼¶±ğ
+	 *  è®¾ç½®å½“å‰ç¼©æ”¾çº§åˆ«
 	 *  @param zoom   
 	 */
 	public void setZoom(int zoom);
 	/**  
-	 *  »ñÈ¡µ±Ç°Ëõ·Å¼¶±ğ
+	 *  è·å–å½“å‰ç¼©æ”¾çº§åˆ«
 	 *  @return   
 	 */
 	public int getZoom();

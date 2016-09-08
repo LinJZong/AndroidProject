@@ -1,10 +1,7 @@
 package com.linj;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,45 +12,72 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.linj.cameralibrary.R;
-
-import android.app.Activity;
 import android.content.Context;
-import android.os.Environment;
+import android.text.TextUtils;
+
+import com.linj.cameralibrary.R;
 
 /** 
  * @ClassName: FileOperateUtil 
- * @Description:  ÎÄ¼ş²Ù×÷¹¤¾ßÀà
+ * @Description:  æ–‡ä»¶æ“ä½œå·¥å…·ç±»
  * @author LinJ
- * @date 2014-12-31 ÉÏÎç9:44:38 
+ * @date 2014-12-31 ä¸Šåˆ9:44:38 
  *  
  */
 public class FileOperateUtil {
 	public final static String TAG="FileOperateUtil";
 
-	public final static int ROOT=0;//¸ùÄ¿Â¼
-	public final static int TYPE_IMAGE=1;//Í¼Æ¬
-	public final static int TYPE_THUMBNAIL=2;//ËõÂÔÍ¼
-	public final static int TYPE_VIDEO=3;//ÊÓÆµ
+	public final static int ROOT=0;//æ ¹ç›®å½•
+	public final static int TYPE_IMAGE=1;//å›¾ç‰‡
+	public final static int TYPE_THUMBNAIL=2;//ç¼©ç•¥å›¾
+	public final static int TYPE_VIDEO=3;//è§†é¢‘
 
 	/**
-	 *»ñÈ¡ÎÄ¼ş¼ĞÂ·¾¶
-	 * @param type ÎÄ¼ş¼ĞÀà±ğ
-	 * @param rootPath ¸ùÄ¿Â¼ÎÄ¼ş¼ĞÃû×Ö ÎªÒµÎñÁ÷Ë®ºÅ
+	 *è·å–æ–‡ä»¶å¤¹è·¯å¾„
+	 * @param type æ–‡ä»¶å¤¹ç±»åˆ«
+	 * @param rootPath æ ¹ç›®å½•æ–‡ä»¶å¤¹åå­— ä¸ºä¸šåŠ¡æµæ°´å·
 	 * @return
 	 */
-	public static String getFolderPath(Context context,int type,String rootPath) {
-		//±¾ÒµÎñÎÄ¼şÖ÷Ä¿Â¼
+	public static String getExternalFolderPath(Context context,int type,String rootPath) {
+		//æœ¬ä¸šåŠ¡æ–‡ä»¶ä¸»ç›®å½•
 		StringBuilder pathBuilder=new StringBuilder();
-		//Ìí¼ÓÓ¦ÓÃ´æ´¢Â·¾¶
+		//æ·»åŠ åº”ç”¨å­˜å‚¨è·¯å¾„
 		pathBuilder.append(context.getExternalFilesDir(null).getAbsolutePath());
 		pathBuilder.append(File.separator);
-		//Ìí¼ÓÎÄ¼ş×ÜÄ¿Â¼
+		//æ·»åŠ æ–‡ä»¶æ€»ç›®å½•
 		pathBuilder.append(context.getString(R.string.Files));
 		pathBuilder.append(File.separator);
-		//Ìí¼Óµ±È»ÎÄ¼şÀà±ğµÄÂ·¾¶
-		pathBuilder.append(rootPath);
-		pathBuilder.append(File.separator);
+		//æ·»åŠ å½“ç„¶æ–‡ä»¶ç±»åˆ«çš„è·¯å¾„
+		if(!TextUtils.isEmpty(rootPath)){
+			pathBuilder.append(rootPath);
+			pathBuilder.append(File.separator);
+		}
+		switch (type) {
+		case TYPE_IMAGE:
+			pathBuilder.append(context.getString(R.string.Image));
+			break;
+		case TYPE_VIDEO:
+			pathBuilder.append(context.getString(R.string.Video));
+			break;
+		case TYPE_THUMBNAIL:
+			pathBuilder.append(context.getString(R.string.Thumbnail));
+			break;
+		default:
+			break;
+		}
+		return pathBuilder.toString();
+	}
+	public static String getFolderPath(Context context,int type,String rootPath) {
+		if(TextUtils.isEmpty(rootPath)){
+			return getExternalFolderPath(context, type, rootPath);
+		}
+		//æœ¬ä¸šåŠ¡æ–‡ä»¶ä¸»ç›®å½•
+		StringBuilder pathBuilder=new StringBuilder();
+		//æ·»åŠ å½“ç„¶æ–‡ä»¶ç±»åˆ«çš„è·¯å¾„
+		if(!TextUtils.isEmpty(rootPath)){
+			pathBuilder.append(rootPath);
+			pathBuilder.append(File.separator);
+		}
 		switch (type) {
 		case TYPE_IMAGE:
 			pathBuilder.append(context.getString(R.string.Image));
@@ -71,10 +95,10 @@ public class FileOperateUtil {
 	}
 
 	/**
-	 * »ñÈ¡Ä¿±êÎÄ¼ş¼ĞÄÚÖ¸¶¨ºó×ºÃûµÄÎÄ¼şÊı×é,°´ÕÕĞŞ¸ÄÈÕÆÚÅÅĞò
-	 * @param file Ä¿±êÎÄ¼ş¼ĞÂ·¾¶
-	 * @param extension Ö¸¶¨ºó×ºÃû
-	 * @param content °üº¬µÄÄÚÈİ,ÓÃÒÔ²éÕÒÊÓÆµËõÂÔÍ¼
+	 * è·å–ç›®æ ‡æ–‡ä»¶å¤¹å†…æŒ‡å®šåç¼€åçš„æ–‡ä»¶æ•°ç»„,æŒ‰ç…§ä¿®æ”¹æ—¥æœŸæ’åº
+	 * @param file ç›®æ ‡æ–‡ä»¶å¤¹è·¯å¾„
+	 * @param extension æŒ‡å®šåç¼€å
+	 * @param content åŒ…å«çš„å†…å®¹,ç”¨ä»¥æŸ¥æ‰¾è§†é¢‘ç¼©ç•¥å›¾
 	 * @return
 	 */
 	public static List<File> listFiles(String file,final String format,String content){
@@ -84,10 +108,10 @@ public class FileOperateUtil {
 		return listFiles(new File(file), format,null);
 	}
 	/**
-	 * »ñÈ¡Ä¿±êÎÄ¼ş¼ĞÄÚÖ¸¶¨ºó×ºÃûµÄÎÄ¼şÊı×é,°´ÕÕĞŞ¸ÄÈÕÆÚÅÅĞò
-	 * @param file Ä¿±êÎÄ¼ş¼Ğ
-	 * @param extension Ö¸¶¨ºó×ºÃû
-	 * @param content °üº¬µÄÄÚÈİ,ÓÃÒÔ²éÕÒÊÓÆµËõÂÔÍ¼
+	 * è·å–ç›®æ ‡æ–‡ä»¶å¤¹å†…æŒ‡å®šåç¼€åçš„æ–‡ä»¶æ•°ç»„,æŒ‰ç…§ä¿®æ”¹æ—¥æœŸæ’åº
+	 * @param file ç›®æ ‡æ–‡ä»¶å¤¹
+	 * @param extension æŒ‡å®šåç¼€å
+	 * @param content åŒ…å«çš„å†…å®¹,ç”¨ä»¥æŸ¥æ‰¾è§†é¢‘ç¼©ç•¥å›¾
 	 * @return
 	 */
 	public static List<File> listFiles(File file,final String extension,final String content){
@@ -115,12 +139,12 @@ public class FileOperateUtil {
 	}
 
 	/**  
-	 *  ¸ù¾İĞŞ¸ÄÊ±¼äÎªÎÄ¼şÁĞ±íÅÅĞò
-	 *  @param list ÅÅĞòµÄÎÄ¼şÁĞ±í
-	 *  @param asc  ÊÇ·ñÉıĞòÅÅĞò trueÎªÉıĞò falseÎª½µĞò 
+	 *  æ ¹æ®ä¿®æ”¹æ—¶é—´ä¸ºæ–‡ä»¶åˆ—è¡¨æ’åº
+	 *  @param list æ’åºçš„æ–‡ä»¶åˆ—è¡¨
+	 *  @param asc  æ˜¯å¦å‡åºæ’åº trueä¸ºå‡åº falseä¸ºé™åº 
 	 */
 	public static void sortList(List<File> list,final boolean asc){
-		//°´ĞŞ¸ÄÈÕÆÚÅÅĞò
+		//æŒ‰ä¿®æ”¹æ—¥æœŸæ’åº
 		Collections.sort(list, new Comparator<File>() {
 			public int compare(File file, File newFile) {
 				if (file.lastModified() > newFile.lastModified()) {
@@ -145,62 +169,62 @@ public class FileOperateUtil {
 
 	/**
 	 * 
-	 * @param extension ºó×ºÃû Èç".jpg"
+	 * @param extension åç¼€å å¦‚".jpg"
 	 * @return
 	 */
 	public static String createFileNmae(String extension){
 		DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss",Locale.getDefault());
-		// ×ª»»Îª×Ö·û´®
+		// è½¬æ¢ä¸ºå­—ç¬¦ä¸²
 		String formatDate = format.format(new Date());
-		//²é¿´ÊÇ·ñ´ø"."
+		//æŸ¥çœ‹æ˜¯å¦å¸¦"."
 		if(!extension.startsWith("."))
 			extension="."+extension;
 		return formatDate+extension;
 	}
 
 	/**  
-	 *  É¾³ıËõÂÔÍ¼ Í¬Ê±É¾³ıÔ´Í¼»òÔ´ÊÓÆµ
-	 *  @param thumbPath ËõÂÔÍ¼Â·¾¶
+	 *  åˆ é™¤ç¼©ç•¥å›¾ åŒæ—¶åˆ é™¤æºå›¾æˆ–æºè§†é¢‘
+	 *  @param thumbPath ç¼©ç•¥å›¾è·¯å¾„
 	 *  @return   
 	 */
 	public static boolean deleteThumbFile(String thumbPath,Context context) {
 		boolean flag = false;
 
 		File file = new File(thumbPath);
-		if (!file.exists()) { // ÎÄ¼ş²»´æÔÚÖ±½Ó·µ»Ø
+		if (!file.exists()) { // æ–‡ä»¶ä¸å­˜åœ¨ç›´æ¥è¿”å›
 			return flag;
 		}
 
 		flag = file.delete();
-		//Ô´ÎÄ¼şÂ·¾¶
+		//æºæ–‡ä»¶è·¯å¾„
 		String sourcePath=thumbPath.replace(context.getString(R.string.Thumbnail),
 				context.getString(R.string.Image));
 		file = new File(sourcePath);
-		if (!file.exists()) { // ÎÄ¼ş²»´æÔÚÖ±½Ó·µ»Ø
+		if (!file.exists()) { // æ–‡ä»¶ä¸å­˜åœ¨ç›´æ¥è¿”å›
 			return flag;
 		}
 		flag = file.delete();
 		return flag;
 	}
 	/**  
-	 *  É¾³ıÔ´Í¼»òÔ´ÊÓÆµ Í¬Ê±É¾³ıËõÂÔÍ¼
-	 *  @param sourcePath ËõÂÔÍ¼Â·¾¶
+	 *  åˆ é™¤æºå›¾æˆ–æºè§†é¢‘ åŒæ—¶åˆ é™¤ç¼©ç•¥å›¾
+	 *  @param sourcePath ç¼©ç•¥å›¾è·¯å¾„
 	 *  @return   
 	 */
 	public static boolean deleteSourceFile(String sourcePath,Context context) {
 		boolean flag = false;
 
 		File file = new File(sourcePath);
-		if (!file.exists()) { // ÎÄ¼ş²»´æÔÚÖ±½Ó·µ»Ø
+		if (!file.exists()) { // æ–‡ä»¶ä¸å­˜åœ¨ç›´æ¥è¿”å›
 			return flag;
 		}
 
 		flag = file.delete();
-		//ËõÂÔÍ¼ÎÄ¼şÂ·¾¶
+		//ç¼©ç•¥å›¾æ–‡ä»¶è·¯å¾„
 		String thumbPath=sourcePath.replace(context.getString(R.string.Image),
 				context.getString(R.string.Thumbnail));
 		file = new File(thumbPath);
-		if (!file.exists()) { // ÎÄ¼ş²»´æÔÚÖ±½Ó·µ»Ø
+		if (!file.exists()) { // æ–‡ä»¶ä¸å­˜åœ¨ç›´æ¥è¿”å›
 			return flag;
 		}
 		flag = file.delete();

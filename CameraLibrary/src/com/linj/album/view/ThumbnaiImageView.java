@@ -26,9 +26,9 @@ import android.widget.ImageView;
 
 /** 
  * @ClassName: AlbumItemView 
- * @Description:  Ïà²áItemÏî ÌáÈ¡³öÀ´Ö÷ÒªÊÇÎªÁËÊµÏÖµã»÷ImageView±ä°µĞ§¹û
+ * @Description:  ç›¸å†ŒItemé¡¹ æå–å‡ºæ¥ä¸»è¦æ˜¯ä¸ºäº†å®ç°ç‚¹å‡»ImageViewå˜æš—æ•ˆæœ
  * @author LinJ
- * @date 2015-1-5 ÏÂÎç5:39:35 
+ * @date 2015-1-5 ä¸‹åˆ5:39:35 
  *  
  */
 public class ThumbnaiImageView extends FrameLayout  {
@@ -51,24 +51,24 @@ public class ThumbnaiImageView extends FrameLayout  {
 	}
 
 	/**  
-	 *  ÉèÖÃ±êÇ©
-	 *  @param path ÉèÖÃitemÖ¸ÏòµÄÎÄ¼şÂ·¾¶ »áÍ¬Ê±°ÑcheckboxµÄ±êÇ©ÉèÖÃÎª¸ÃÖµ
-	 *  @param editable ÊÇ·ñ¿É±à¼­×´Ì¬
-	 *  @param checked  checkboxÊÇ·ñÑ¡ÖĞ
+	 *  è®¾ç½®æ ‡ç­¾
+	 *  @param path è®¾ç½®itemæŒ‡å‘çš„æ–‡ä»¶è·¯å¾„ ä¼šåŒæ—¶æŠŠcheckboxçš„æ ‡ç­¾è®¾ç½®ä¸ºè¯¥å€¼
+	 *  @param editable æ˜¯å¦å¯ç¼–è¾‘çŠ¶æ€
+	 *  @param checked  checkboxæ˜¯å¦é€‰ä¸­
 	 */
 	public void setTags(String path,int position,boolean editable,boolean checked){
-		//¿É±à¼­×´Ì¬£¬ÏÔÊ¾checkbox
+		//å¯ç¼–è¾‘çŠ¶æ€ï¼Œæ˜¾ç¤ºcheckbox
 		if (editable) {
 			mViewHolder.checkBox.setVisibility(View.VISIBLE);
 			mViewHolder.checkBox.setChecked(checked);
 		}else {
 			mViewHolder.checkBox.setVisibility(View.GONE);
 		}
-		//Ô­Â·¾¶ºÍµ±Ç°Â·¾¶²»Í¬£¬¸üĞÂÍ¼Æ¬
+		//åŸè·¯å¾„å’Œå½“å‰è·¯å¾„ä¸åŒï¼Œæ›´æ–°å›¾ç‰‡
 		if (mPath==null||!mPath.equals(path)) {
 			mImageLoader.loadImage(path, mViewHolder.imageView, mOptions);
 			mPath=path;
-			//¸øcheckboxÉèÖÃtag,ÓÃÒÔ¼ÇÂ¼µ±Ç°Ñ¡ÖĞÏî
+			//ç»™checkboxè®¾ç½®tag,ç”¨ä»¥è®°å½•å½“å‰é€‰ä¸­é¡¹
 			mViewHolder.checkBox.setTag(path);
 			setTag(path);
 			if(mPath.contains("video")){
@@ -84,7 +84,7 @@ public class ThumbnaiImageView extends FrameLayout  {
 		return mPosition;
 	}
 	/**  
-	 * ÉèÖÃcheckboxµÄ×´Ì¬¸Ä±äÊÂ¼ş
+	 * è®¾ç½®checkboxçš„çŠ¶æ€æ”¹å˜äº‹ä»¶
 	 *  @param listener   
 	 */
 	public void setOnCheckedChangeListener(OnCheckedChangeListener listener){
@@ -93,7 +93,7 @@ public class ThumbnaiImageView extends FrameLayout  {
 
 	@Override
 	public void setOnClickListener(OnClickListener l) {
-		//ÖØĞ´clickÊÂ¼ş£¬½«¸ÃViewµÄclick×ªµ½imageview´¥·¢
+		//é‡å†™clickäº‹ä»¶ï¼Œå°†è¯¥Viewçš„clickè½¬åˆ°imageviewè§¦å‘
 		mViewHolder.imageView.setOnClickListener(l);
 	}
 
@@ -103,9 +103,9 @@ public class ThumbnaiImageView extends FrameLayout  {
 			this.checkBox=checkBox;
 			this.videoIconView=icon;
 		}
-		ImageView imageView;//ËõÂÔÍ¼
-		ImageView videoIconView;//²¥·ÅÊÓÆµÍ¼±ê
-		CheckBox checkBox;//¹´Ñ¡¿ò
+		ImageView imageView;//ç¼©ç•¥å›¾
+		ImageView videoIconView;//æ’­æ”¾è§†é¢‘å›¾æ ‡
+		CheckBox checkBox;//å‹¾é€‰æ¡†
 
 	}
 }

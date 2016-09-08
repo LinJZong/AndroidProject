@@ -4,9 +4,9 @@ import java.io.IOException;
 
 /** 
 * @ClassName: VideoPlayerOperation 
-* @Description:  ÊÓÆµ²¥·ÅÆ÷²Ù×÷½Ó¿Ú
+* @Description:  è§†é¢‘æ’­æ”¾å™¨æ“ä½œæ¥å£
 * @author LinJ
-* @date 2015-1-27 ÏÂÎç1:59:38 
+* @date 2015-1-27 ä¸‹åˆ1:59:38 
 *  
 */
 public interface VideoPlayerOperation {

@@ -14,14 +14,14 @@ import android.widget.ImageView;
 
 /** 
  * @ClassName: FilterImageView 
- * @Description:  µã»÷Ê±ÏÔÊ¾Ã÷°µ±ä»¯(ÂË¾µĞ§¹û)µÄImageView£¬¸ÃView²¶»ñÁËTouchÊÂ¼ş£¬»áµ¼ÖÂÈİÆ÷µÄClickÊÂ¼şÎŞ·¨´¥·¢
+ * @Description:  ç‚¹å‡»æ—¶æ˜¾ç¤ºæ˜æš—å˜åŒ–(æ»¤é•œæ•ˆæœ)çš„ImageViewï¼Œè¯¥Viewæ•è·äº†Touchäº‹ä»¶ï¼Œä¼šå¯¼è‡´å®¹å™¨çš„Clickäº‹ä»¶æ— æ³•è§¦å‘
  * @author LinJ
- * @date 2015-1-6 ÏÂÎç2:13:46 
+ * @date 2015-1-6 ä¸‹åˆ2:13:46 
  *  
  */
 public class FilterImageView extends ImageView implements GestureDetector.OnGestureListener{
 	public static final String TAG="FilterImageView";
-	/**   ¼àÌıÊÖÊÆ*/ 
+	/**   ç›‘å¬æ‰‹åŠ¿*/ 
 	private GestureDetector mGestureDetector;
 	public FilterImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -31,8 +31,8 @@ public class FilterImageView extends ImageView implements GestureDetector.OnGest
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		//ÔÚcancelÀï½«ÂË¾µÈ¡Ïû£¬×¢Òâ²»Òª²¶»ñcacncelÊÂ¼ş,mGestureDetectorÀïÓĞ¶ÔcancelµÄ²¶»ñ²Ù×÷
- 		//ÔÚ»¬¶¯GridViewÊ±£¬AbsListView»áÀ¹½ØµôMoveºÍUPÊÂ¼ş£¬Ö±½Ó¸ø×Ó¿Ø¼ş·µ»ØCancel
+		//åœ¨cancelé‡Œå°†æ»¤é•œå–æ¶ˆï¼Œæ³¨æ„ä¸è¦æ•è·cacnceläº‹ä»¶,mGestureDetectoré‡Œæœ‰å¯¹cancelçš„æ•è·æ“ä½œ
+ 		//åœ¨æ»‘åŠ¨GridViewæ—¶ï¼ŒAbsListViewä¼šæ‹¦æˆªæ‰Moveå’ŒUPäº‹ä»¶ï¼Œç›´æ¥ç»™å­æ§ä»¶è¿”å›Cancel
 		if(event.getActionMasked()== MotionEvent.ACTION_CANCEL
 				||event.getActionMasked()== MotionEvent.ACTION_UP){
 			removeFilter();
@@ -41,32 +41,32 @@ public class FilterImageView extends ImageView implements GestureDetector.OnGest
 	}
 
 	/**  
-	 *   ÉèÖÃÂË¾µ
+	 *   è®¾ç½®æ»¤é•œ
 	 */
 	private void setFilter() {
-		//ÏÈ»ñÈ¡ÉèÖÃµÄsrcÍ¼Æ¬
+		//å…ˆè·å–è®¾ç½®çš„srcå›¾ç‰‡
 		Drawable drawable=getDrawable();
-		//µ±srcÍ¼Æ¬ÎªNull£¬»ñÈ¡±³¾°Í¼Æ¬
+		//å½“srcå›¾ç‰‡ä¸ºNullï¼Œè·å–èƒŒæ™¯å›¾ç‰‡
 		if (drawable==null) {
 			drawable=getBackground();
 		}
 		if(drawable!=null){
-			//ÉèÖÃÂË¾µ
+			//è®¾ç½®æ»¤é•œ
 			drawable.setColorFilter(Color.GRAY,PorterDuff.Mode.MULTIPLY);;
 		}
 	}
 	/**  
-	 *   Çå³ıÂË¾µ
+	 *   æ¸…é™¤æ»¤é•œ
 	 */
 	private void removeFilter() {
-		//ÏÈ»ñÈ¡ÉèÖÃµÄsrcÍ¼Æ¬
+		//å…ˆè·å–è®¾ç½®çš„srcå›¾ç‰‡
 		Drawable drawable=getDrawable();
-		//µ±srcÍ¼Æ¬ÎªNull£¬»ñÈ¡±³¾°Í¼Æ¬
+		//å½“srcå›¾ç‰‡ä¸ºNullï¼Œè·å–èƒŒæ™¯å›¾ç‰‡
 		if (drawable==null) {
 			drawable=getBackground();
 		}
 		if(drawable!=null){
-			//Çå³ıÂË¾µ
+			//æ¸…é™¤æ»¤é•œ
 			drawable.clearColorFilter();
 		}
 	}
@@ -74,7 +74,7 @@ public class FilterImageView extends ImageView implements GestureDetector.OnGest
 	@Override
 	public boolean onDown(MotionEvent e) {
 		setFilter();
-		//ÕâÀï±ØĞë·µ»Øtrue£¬±íÊ¾²¶»ñ±¾´ÎtouchÊÂ¼ş
+		//è¿™é‡Œå¿…é¡»è¿”å›trueï¼Œè¡¨ç¤ºæ•è·æœ¬æ¬¡touchäº‹ä»¶
 		return true;
 	}
 
@@ -100,7 +100,7 @@ public class FilterImageView extends ImageView implements GestureDetector.OnGest
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		//³¤°´Ê±£¬ÊÖ¶¯´¥·¢³¤°²ÊÂ¼ş
+		//é•¿æŒ‰æ—¶ï¼Œæ‰‹åŠ¨è§¦å‘é•¿å®‰äº‹ä»¶
 		performLongClick();
 	}
 

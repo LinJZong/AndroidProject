@@ -8,113 +8,222 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.PictureCallback;
+import android.media.CamcorderProfile;
+import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.linj.FileOperateUtil;
 import com.linj.camera.view.CameraView.FlashMode;
 import com.linj.cameralibrary.R;
 
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.PictureCallback;
-import android.media.ThumbnailUtils;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Toast;
-
-
 /** 
  * @ClassName: CameraContainer 
- * @Description:  Ïà»ú½çÃæµÄÈİÆ÷ °üº¬Ïà»ú°ó¶¨µÄsurfaceview¡¢ÅÄÕÕºóµÄÁÙÊ±Í¼Æ¬ViewºÍ¾Û½¹View 
+ * @Description:  ç›¸æœºç•Œé¢çš„å®¹å™¨ åŒ…å«ç›¸æœºç»‘å®šçš„surfaceviewã€æ‹ç…§åçš„ä¸´æ—¶å›¾ç‰‡Viewå’Œèšç„¦View 
  * @author LinJ
- * @date 2014-12-31 ÉÏÎç9:38:52 
+ * @date 2014-12-31 ä¸Šåˆ9:38:52 
  *  
  */
-public class CameraContainer extends RelativeLayout implements CameraOperation{
+public class CameraContainer extends RelativeLayout implements CameraOperation,View.OnDragListener{
 
 	public final static String TAG="CameraContainer";
 
-	/** Ïà»ú°ó¶¨µÄSurfaceView  */ 
+	/** ç›¸æœºç»‘å®šçš„SurfaceView  */ 
 	private CameraView mCameraView;
 
-	/** ÅÄÕÕÉú³ÉµÄÍ¼Æ¬£¬²úÉúÒ»¸öÏÂÒÆµ½×óÏÂ½ÇµÄ¶¯»­Ğ§¹ûºóÒş²Ø */ 
+	/** æ‹ç…§ç”Ÿæˆçš„å›¾ç‰‡ï¼Œäº§ç”Ÿä¸€ä¸ªä¸‹ç§»åˆ°å·¦ä¸‹è§’çš„åŠ¨ç”»æ•ˆæœåéšè— */ 
 	private TempImageView mTempImageView;
 
-	/** ´¥ÃşÆÁÄ»Ê±ÏÔÊ¾µÄ¾Û½¹Í¼°¸  */ 
+	/** è§¦æ‘¸å±å¹•æ—¶æ˜¾ç¤ºçš„èšç„¦å›¾æ¡ˆ  */ 
 	private FocusImageView mFocusImageView;
 
-	/** ÏÔÊ¾Â¼ÏñÓÃÊ±µÄTextView  */ 
+	/** æ˜¾ç¤ºå½•åƒç”¨æ—¶çš„TextView  */ 
 	private TextView mRecordingInfoTextView;
 
-	/** ÏÔÊ¾Ë®Ó¡Í¼°¸  */ 
+	/** æ˜¾ç¤ºæ°´å°å›¾æ¡ˆ  */ 
 	private ImageView mWaterMarkImageView; 
 
-	/** ´æ·ÅÕÕÆ¬µÄ¸ùÄ¿Â¼ */ 
+	/** å­˜æ”¾ç…§ç‰‡çš„æ ¹ç›®å½• */ 
 	private String mSavePath;
 
-	/** ÕÕÆ¬×Ö½ÚÁ÷´¦ÀíÀà  */ 
+	/** ç…§ç‰‡å­—èŠ‚æµå¤„ç†ç±»  */ 
 	private DataHandler mDataHandler;
 
-	/** ÅÄÕÕ¼àÌı½Ó¿Ú£¬ÓÃÒÔÔÚÅÄÕÕ¿ªÊ¼ºÍ½áÊøºóÖ´ĞĞÏàÓ¦²Ù×÷  */ 
+	/** æ‹ç…§ç›‘å¬æ¥å£ï¼Œç”¨ä»¥åœ¨æ‹ç…§å¼€å§‹å’Œç»“æŸåæ‰§è¡Œç›¸åº”æ“ä½œ  */ 
 	private TakePictureListener mListener;
 
-	/** Ëõ·Å¼¶±ğÍÏ¶¯Ìõ */ 
+	/** ç¼©æ”¾çº§åˆ«æ‹–åŠ¨æ¡ */ 
 	private SeekBar mZoomSeekBar;
+	/** è®¾ç½®ä¿å­˜å›¾ç‰‡çš„æ—‹è½¬è§’åº¦ */
+	private int bitmepRotateAngle;
 
-	/** ÓÃÒÔÖ´ĞĞ¶¨Ê±ÈÎÎñµÄHandler¶ÔÏó*/
+	/** ç”¨ä»¥æ‰§è¡Œå®šæ—¶ä»»åŠ¡çš„Handlerå¯¹è±¡*/
 	private Handler mHandler;
 	private long mRecordStartTime;
 	private SimpleDateFormat mTimeFormat;
+	
 	public CameraContainer(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initView(context);
 		mHandler=new Handler();
 		mTimeFormat=new SimpleDateFormat("mm:ss",Locale.getDefault());
 		setOnTouchListener(new TouchListener());
+		setOnDragListener(this);
+		displayMetrics = context.getResources().getDisplayMetrics();
 	}
+	
+	@Override
+    public boolean onDrag(View v, DragEvent event) {
+        int action = event.getAction();
+//        Log.e("jingo", "x =" + event.getX() +" y = "+event.getY() + "event" + event.getAction());
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWaterMarkImageView.getLayoutParams();
+        switch (event.getAction()) {
+		case DragEvent.ACTION_DRAG_STARTED:
+			Log.d(TAG, "Action is DragEvent.ACTION_DRAG_STARTED");
+			// Do nothing
+			break;
+		case DragEvent.ACTION_DRAG_ENTERED:
+			Log.d(TAG, "Action is DragEvent.ACTION_DRAG_ENTERED");
+			int x_cord = (int) event.getX();
+			int y_cord = (int) event.getY();
+			break;
+		case DragEvent.ACTION_DRAG_EXITED:
+			Log.d(TAG, "Action is DragEvent.ACTION_DRAG_EXITED");
+			break;
+		case DragEvent.ACTION_DRAG_LOCATION:
+
+			Log.d(TAG, "Action is DragEvent.ACTION_DRAG_LOCATION");
+			x_cord = (int) event.getX();
+			y_cord = (int) event.getY();
+			break;
+		case DragEvent.ACTION_DRAG_ENDED:// ç»“æŸæ—¶
+			int x_cord2 = (int) event.getX();
+			int y_cord2 = (int) event.getY();
+			Log.d(TAG, "Action is DragEvent.ACTION_DRAG_ENDED");
+			// Do nothing
+			break;
+		case DragEvent.ACTION_DROP:
+			Log.d(TAG, "ACTION_DROP event");
+			int height = mWaterMarkImageView.getHeight();
+			int width = mWaterMarkImageView.getWidth();
+			float x2 = mWaterMarkImageView.getX();
+			System.out.println("x2-----"+x2);
+			
+			x_cord = (int) event.getX()-width/2;
+			y_cord = (int) event.getY()-height/2;
+			layoutParams.leftMargin = x_cord;
+			layoutParams.topMargin = y_cord;
+			mWaterMarkImageView.setLayoutParams(layoutParams);
+			x2 = mWaterMarkImageView.getX();
+			System.out.println("x2-----"+x2);
+			// v.setLayoutParams(layoutParams);
+			break;
+		default:
+			break;
+		}
+		return true;
+    }
 
 	/**  
-	 *  ³õÊ¼»¯×Ó¿Ø¼ş
+	 *  åˆå§‹åŒ–å­æ§ä»¶
 	 *  @param context   
 	 */
 	private void initView(Context context) {
 		inflate(context, R.layout.cameracontainer, this);
+		mImageFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, mSavePath);
+		mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, mSavePath);
+		imgName = FileOperateUtil.createFileNmae(".jpg");
+		imagePath = mImageFolder+File.separator+imgName;
+		thumbPath = mThumbnailFolder+File.separator+imgName;
+		
 		mCameraView=(CameraView) findViewById(R.id.cameraView);
+		
+		mCameraView.setAutoFocus(autoFocusCallback);
 
 		mTempImageView=(TempImageView) findViewById(R.id.tempImageView);
 
-		mFocusImageView=(FocusImageView) findViewById(R.id.focusImageView);
+		mFocusImageView=(FocusImageView) findViewById(R.id.focusImageView);//å¯¹ç„¦ä½ç½®æ˜¾ç¤ºçš„å›¾ç‰‡
 
 		mRecordingInfoTextView=(TextView) findViewById(R.id.recordInfo);
 
 		mWaterMarkImageView=(ImageView) findViewById(R.id.waterMark);
 
 		mZoomSeekBar=(SeekBar) findViewById(R.id.zoomSeekBar);
-		//»ñÈ¡µ±Ç°ÕÕÏà»úÖ§³ÖµÄ×î´óËõ·Å¼¶±ğ£¬ÖµĞ¡ÓÚ0±íÊ¾²»Ö§³ÖËõ·Å¡£µ±Ö§³ÖËõ·ÅÊ±£¬¼ÓÈëÍÏ¶¯Ìõ¡£
+		//è·å–å½“å‰ç…§ç›¸æœºæ”¯æŒçš„æœ€å¤§ç¼©æ”¾çº§åˆ«ï¼Œå€¼å°äº0è¡¨ç¤ºä¸æ”¯æŒç¼©æ”¾ã€‚å½“æ”¯æŒç¼©æ”¾æ—¶ï¼ŒåŠ å…¥æ‹–åŠ¨æ¡ã€‚
 		int maxZoom=mCameraView.getMaxZoom();
 		if(maxZoom>0){
 			mZoomSeekBar.setMax(maxZoom);
 			mZoomSeekBar.setOnSeekBarChangeListener(onSeekBarChangeListener);
 		}
+		mWaterMarkImageView.setTag("IMAGE_TAG");
+		mWaterMarkImageView.setOnLongClickListener(new View.OnLongClickListener() {
+	         @Override
+	         public boolean onLongClick(View v) {
+	            ClipData.Item item = new ClipData.Item((CharSequence)v.getTag());
+
+	            String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+//	            ClipData d = new ClipData(description, new Item(""));
+	            ClipData dragData = new ClipData(v.getTag().toString(), 
+	            mimeTypes, item);
+
+	            // Instantiates the drag shadow builder.
+	            View.DragShadowBuilder myShadow = new DragShadowBuilder(mWaterMarkImageView);
+
+	            // Starts the drag
+	            v.startDrag(dragData,  // the data to be dragged
+	            myShadow,  // the drag shadow builder
+	            null,      // no need to use local data
+	            0          // flags (not currently used, set to 0)
+	            );
+	            return true;
+	         }
+	      });
+	}
+	
+	/**
+	 * è®¾ç½®å½•åˆ¶è§†é¢‘çš„å°ºå¯¸
+	 * @param quality </br>{@link CamcorderProfile#QUALITY_480P}
+	 * </br>{@link CamcorderProfile#QUALITY_720P }
+	 * </br>{@link CamcorderProfile#QUALITY_1080P}
+	 * </br>{@link CamcorderProfile#QUALITY_QVGA}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_QCIF}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_CIF}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_480P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_720P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_1080P}
+	 * </br>{@link CamcorderProfile#QUALITY_TIME_LAPSE_QVGA}
+	 */
+	public void setProfile(int quality){
+		mCameraView.setProfile(quality);
 	}
 
 
@@ -164,19 +273,17 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 	}
 	
 	/**  
-	 *  ¸Ä±äÏà»úÄ£Ê½ ÔÚÅÄÕÕÄ£Ê½ºÍÂ¼ÏñÄ£Ê½¼äÇĞ»» Á½¸öÄ£Ê½µÄ³õÊ¼Ëõ·Å¼¶±ğ²»Í¬
-	 *  @param zoom   Ëõ·Å¼¶±ğ
+	 *  æ”¹å˜ç›¸æœºæ¨¡å¼ åœ¨æ‹ç…§æ¨¡å¼å’Œå½•åƒæ¨¡å¼é—´åˆ‡æ¢ ä¸¤ä¸ªæ¨¡å¼çš„åˆå§‹ç¼©æ”¾çº§åˆ«ä¸åŒ
+	 *  @param zoom   ç¼©æ”¾çº§åˆ«
 	 */
 	public void switchMode(int zoom){
 		mZoomSeekBar.setProgress(zoom);
 		mCameraView.setZoom(zoom);
-		//×Ô¶¯¶Ô½¹
+		//è‡ªåŠ¨å¯¹ç„¦
 		mCameraView.onFocus(new Point(getWidth()/2, getHeight()/2), autoFocusCallback);   
-		//Òş²ØË®Ó¡
+		//éšè—æ°´å°
 		mWaterMarkImageView.setVisibility(View.GONE);
 	}
-
-
 
 	public void setWaterMark(){
 		if (mWaterMarkImageView.getVisibility()==View.VISIBLE) {
@@ -187,14 +294,14 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 	}
 
 	/**  
-	 *   Ç°ÖÃ¡¢ºóÖÃÉãÏñÍ·×ª»»
+	 *   å‰ç½®ã€åç½®æ‘„åƒå¤´è½¬æ¢
 	 */
 	@Override
 	public void switchCamera(){
 		mCameraView.switchCamera();
 	}
 	/**  
-	 *  »ñÈ¡µ±Ç°ÉÁ¹âµÆÀàĞÍ
+	 *  è·å–å½“å‰é—ªå…‰ç¯ç±»å‹
 	 *  @return   
 	 */
 	@Override
@@ -203,7 +310,7 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 	}
 
 	/**  
-	 *  ÉèÖÃÉÁ¹âµÆÀàĞÍ
+	 *  è®¾ç½®é—ªå…‰ç¯ç±»å‹
 	 *  @param flashMode   
 	 */
 	@Override
@@ -212,18 +319,39 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 	}
 
 	/**
-	 * ÉèÖÃÎÄ¼ş±£´æÂ·¾¶
+	 * è®¾ç½®æ–‡ä»¶ä¿å­˜è·¯å¾„
 	 * @param rootPath
 	 */
 	public void setRootPath(String rootPath){
 		this.mSavePath=rootPath;
 
 	}
-
-
+	/**
+	 * è®¾ç½®å›¾ç‰‡ä¿å­˜ä½ç½®
+	 * @param imagePath å›¾ä½ç½®
+	 * @param thumbPath ç¼©ç•¥å›¾ä½ç½®
+	 */
+	public void setSavePath(String imagePath,String thumbPath){
+		imgName = FileOperateUtil.createFileNmae(".jpg");
+		if(!TextUtils.isEmpty(imagePath)){
+			mImageFolder = FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, thumbPath);
+			this.imagePath = mImageFolder+File.separator + imgName;
+		}
+		if(!TextUtils.isEmpty(thumbPath)){
+			mThumbnailFolder = FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, thumbPath);
+			this.thumbPath = mThumbnailFolder + File.separator + imgName;
+		}
+	}
+	/**
+	 * è§†é¢‘ä¿å­˜è·¯å¾„
+	 */
+	public void setSaveVideoPath(String path){
+		mCameraView.setSaveVideoPath(path);
+	}
+	
 
 	/**
-	 * ÅÄÕÕ·½·¨
+	 * æ‹ç…§æ–¹æ³•
 	 * @param callback
 	 */
 	public void takePicture(){
@@ -231,8 +359,8 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 	}
 
 	/**  
-	 * @Description: ÅÄÕÕ·½·¨
-	 * @param @param listener ÅÄÕÕ¼àÌı½Ó¿Ú
+	 * @Description: æ‹ç…§æ–¹æ³•
+	 * @param @param listener æ‹ç…§ç›‘å¬æ¥å£
 	 * @return void    
 	 * @throws 
 	 */
@@ -274,7 +402,7 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 			// TODO Auto-generated method stub
 			mCameraView.setZoom(progress);
 			mHandler.removeCallbacksAndMessages(mZoomSeekBar);
-			//ZOOMÄ£Ê½ÏÂ ÔÚ½áÊøÁ½ÃëºóÒş²Øseekbar ÉèÖÃtokenÎªmZoomSeekBarÓÃÒÔÔÚÁ¬Ğøµã»÷Ê±ÒÆ³ıÇ°Ò»¸ö¶¨Ê±ÈÎÎñ
+			//ZOOMæ¨¡å¼ä¸‹ åœ¨ç»“æŸä¸¤ç§’åéšè—seekbar è®¾ç½®tokenä¸ºmZoomSeekBarç”¨ä»¥åœ¨è¿ç»­ç‚¹å‡»æ—¶ç§»é™¤å‰ä¸€ä¸ªå®šæ—¶ä»»åŠ¡
 			mHandler.postAtTime(new Runnable() {
 
 				@Override
@@ -301,101 +429,134 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 
 		}
 	};
-
+	/**
+	 * è®¾ç½®ç›¸æœºçš„è‡ªåŠ¨å¯¹ç„¦ï¼Œç›‘å¬
+	 */
 	private final AutoFocusCallback autoFocusCallback=new AutoFocusCallback() {
 
 		@Override
 		public void onAutoFocus(boolean success, Camera camera) {
-			//¾Û½¹Ö®ºó¸ù¾İ½á¹ûĞŞ¸ÄÍ¼Æ¬
+			//èšç„¦ä¹‹åæ ¹æ®ç»“æœä¿®æ”¹å›¾ç‰‡
 			if (success) {
 				mFocusImageView.onFocusSuccess();
+				camera.cancelAutoFocus();// åªæœ‰åŠ ä¸Šäº†è¿™ä¸€å¥ï¼Œæ‰ä¼šè‡ªåŠ¨å¯¹ç„¦ã€‚
+//				camera.startPreview();
 			}else {
-				//¾Û½¹Ê§°ÜÏÔÊ¾µÄÍ¼Æ¬£¬ÓÉÓÚÎ´ÕÒµ½ºÏÊÊµÄ×ÊÔ´£¬ÕâÀïÈÔÏÔÊ¾Í¬Ò»ÕÅÍ¼Æ¬
+				//èšç„¦å¤±è´¥æ˜¾ç¤ºçš„å›¾ç‰‡ï¼Œç”±äºæœªæ‰¾åˆ°åˆé€‚çš„èµ„æºï¼Œè¿™é‡Œä»æ˜¾ç¤ºåŒä¸€å¼ å›¾ç‰‡
 				mFocusImageView.onFocusFailed();
 
 			}
 		}
 	};
-
+	/**
+	 * å‹ç¼©åçš„å›¾ç‰‡æœ€å¤§å€¼ å•ä½KB
+	 * @param maxSize
+	 */
+	public void setMaxSize(int maxSize){
+		this.maxSize = maxSize;
+	}
+	/**
+	 * è°ƒç”¨ä¿å­˜æ—¶çš„ç›‘å¬
+	 */
 	private final PictureCallback pictureCallback=new PictureCallback() {
 
 		@Override
-		public void onPictureTaken(byte[] data, Camera camera) {
+		public void onPictureTaken(final byte[] data, Camera camera) {
 			if(mSavePath==null) throw new RuntimeException("mSavePath is null");
-			if(mDataHandler==null) mDataHandler=new DataHandler();	
-			mDataHandler.setMaxSize(200);
-			Bitmap bm=mDataHandler.save(data);
-			mTempImageView.setListener(mListener);
-			mTempImageView.isVideo(false);
-			mTempImageView.setImageBitmap(bm);
-			mTempImageView.startAnimation(R.anim.tempview_show);
-			//ÖØĞÂ´ò¿ªÔ¤ÀÀÍ¼£¬½øĞĞÏÂÒ»´ÎµÄÅÄÕÕ×¼±¸
+			if(mDataHandler==null) mDataHandler=new DataHandler();
+			new AsyncTask<Bitmap, Void, Bitmap>() {
+				@Override
+				protected void onPostExecute(Bitmap bm) {
+					mTempImageView.setListener(mListener);
+					mTempImageView.isVideo(false);
+					mTempImageView.setImageBitmap(bm);
+					mTempImageView.startAnimation(R.anim.tempview_show);
+					//é‡æ–°æ‰“å¼€é¢„è§ˆå›¾ï¼Œè¿›è¡Œä¸‹ä¸€æ¬¡çš„æ‹ç…§å‡†å¤‡
+					
+					if(mListener!=null) mListener.onTakePictureEnd(bm);
+					super.onPostExecute(bm);
+				}
+				@Override
+				protected Bitmap doInBackground(Bitmap... params) {
+					Bitmap bm=mDataHandler.handerSave(data);//æ·»åŠ æ°´å°/å¹¶ä¿å­˜
+					return bm;
+				}
+			}.execute();
+//			at.execute(Void);
 			camera.startPreview();
-			if(mListener!=null) mListener.onTakePictureEnd(bm);
+//			mTempImageView.setListener(mListener);
+//			mTempImageView.isVideo(false);
+//			mTempImageView.setImageBitmap(bm);
+//			mTempImageView.startAnimation(R.anim.tempview_show);
+//			//é‡æ–°æ‰“å¼€é¢„è§ˆå›¾ï¼Œè¿›è¡Œä¸‹ä¸€æ¬¡çš„æ‹ç…§å‡†å¤‡
+//			camera.startPreview();
+//			if(mListener!=null) mListener.onTakePictureEnd(bm);
 		}
 	};
 
+	private DisplayMetrics displayMetrics;
+
 	private final class TouchListener implements OnTouchListener {
 
-		/** ¼ÇÂ¼ÊÇÍÏÀ­ÕÕÆ¬Ä£Ê½»¹ÊÇ·Å´óËõĞ¡ÕÕÆ¬Ä£Ê½ */
+		/** è®°å½•æ˜¯æ‹–æ‹‰ç…§ç‰‡æ¨¡å¼è¿˜æ˜¯æ”¾å¤§ç¼©å°ç…§ç‰‡æ¨¡å¼ */
 
 		private static final int MODE_INIT = 0;
-		/** ·Å´óËõĞ¡ÕÕÆ¬Ä£Ê½ */
+		/** æ”¾å¤§ç¼©å°ç…§ç‰‡æ¨¡å¼ */
 		private static final int MODE_ZOOM = 1;
-		private int mode = MODE_INIT;// ³õÊ¼×´Ì¬ 
+		private int mode = MODE_INIT;// åˆå§‹çŠ¶æ€ 
 
-		/** ÓÃÓÚ¼ÇÂ¼ÍÏÀ­Í¼Æ¬ÒÆ¶¯µÄ×ø±êÎ»ÖÃ */
+		/** ç”¨äºè®°å½•æ‹–æ‹‰å›¾ç‰‡ç§»åŠ¨çš„åæ ‡ä½ç½® */
 
 		private float startDis;
 
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			/** Í¨¹ıÓëÔËËã±£Áô×îºó°ËÎ» MotionEvent.ACTION_MASK = 255 */
+			/** é€šè¿‡ä¸è¿ç®—ä¿ç•™æœ€åå…«ä½ MotionEvent.ACTION_MASK = 255 */
 			switch (event.getAction() & MotionEvent.ACTION_MASK) {
-			// ÊÖÖ¸Ñ¹ÏÂÆÁÄ»
+			// æ‰‹æŒ‡å‹ä¸‹å±å¹•
 			case MotionEvent.ACTION_DOWN:
 				mode = MODE_INIT;
 				break;
 			case MotionEvent.ACTION_POINTER_DOWN:
-				//Èç¹ûmZoomSeekBarÎªnull ±íÊ¾¸ÃÉè±¸²»Ö§³ÖËõ·Å Ö±½ÓÌø¹ıÉèÖÃmode MoveÖ¸ÁîÒ²ÎŞ·¨Ö´ĞĞ
+				//å¦‚æœmZoomSeekBarä¸ºnull è¡¨ç¤ºè¯¥è®¾å¤‡ä¸æ”¯æŒç¼©æ”¾ ç›´æ¥è·³è¿‡è®¾ç½®mode MoveæŒ‡ä»¤ä¹Ÿæ— æ³•æ‰§è¡Œ
 				if(mZoomSeekBar==null) return true;
-				//ÒÆ³ıtoken¶ÔÏóÎªmZoomSeekBarµÄÑÓÊ±ÈÎÎñ
+				//ç§»é™¤tokenå¯¹è±¡ä¸ºmZoomSeekBarçš„å»¶æ—¶ä»»åŠ¡
 				mHandler.removeCallbacksAndMessages(mZoomSeekBar);
 				mZoomSeekBar.setVisibility(View.VISIBLE);
 
 				mode = MODE_ZOOM;
-				/** ¼ÆËãÁ½¸öÊÖÖ¸¼äµÄ¾àÀë */
+				/** è®¡ç®—ä¸¤ä¸ªæ‰‹æŒ‡é—´çš„è·ç¦» */
 				startDis = distance(event);
 				break;
 			case MotionEvent.ACTION_MOVE:
 				if (mode == MODE_ZOOM) {
-					//Ö»ÓĞÍ¬Ê±´¥ÆÁÁ½¸öµãµÄÊ±ºò²ÅÖ´ĞĞ
+					//åªæœ‰åŒæ—¶è§¦å±ä¸¤ä¸ªç‚¹çš„æ—¶å€™æ‰æ‰§è¡Œ
 					if(event.getPointerCount()<2) return true;
-					float endDis = distance(event);// ½áÊø¾àÀë
-					//Ã¿±ä»¯10f zoom±ä1
+					float endDis = distance(event);// ç»“æŸè·ç¦»
+					//æ¯å˜åŒ–10f zoomå˜1
 					int scale=(int) ((endDis-startDis)/10f);
 					if(scale>=1||scale<=-1){
 						int zoom=mCameraView.getZoom()+scale;
-						//zoom²»ÄÜ³¬³ö·¶Î§
+						//zoomä¸èƒ½è¶…å‡ºèŒƒå›´
 						if(zoom>mCameraView.getMaxZoom()) zoom=mCameraView.getMaxZoom();
 						if(zoom<0) zoom=0;
 						mCameraView.setZoom(zoom);
 						mZoomSeekBar.setProgress(zoom);
-						//½«×îºóÒ»´ÎµÄ¾àÀëÉèÎªµ±Ç°¾àÀë
+						//å°†æœ€åä¸€æ¬¡çš„è·ç¦»è®¾ä¸ºå½“å‰è·ç¦»
 						startDis=endDis;
 					}
 				}
 				break;
-				// ÊÖÖ¸Àë¿ªÆÁÄ»
+				// æ‰‹æŒ‡ç¦»å¼€å±å¹•
 			case MotionEvent.ACTION_UP:
 				if(mode!=MODE_ZOOM){
-					//ÉèÖÃ¾Û½¹
+					//è®¾ç½®èšç„¦
 					Point point=new Point((int)event.getX(), (int)event.getY());
 					mCameraView.onFocus(point,autoFocusCallback);
 					mFocusImageView.startFocus(point);
 				}else {
-					//ZOOMÄ£Ê½ÏÂ ÔÚ½áÊøÁ½ÃëºóÒş²Øseekbar ÉèÖÃtokenÎªmZoomSeekBarÓÃÒÔÔÚÁ¬Ğøµã»÷Ê±ÒÆ³ıÇ°Ò»¸ö¶¨Ê±ÈÎÎñ
+					//ZOOMæ¨¡å¼ä¸‹ åœ¨ç»“æŸä¸¤ç§’åéšè—seekbar è®¾ç½®tokenä¸ºmZoomSeekBarç”¨ä»¥åœ¨è¿ç»­ç‚¹å‡»æ—¶ç§»é™¤å‰ä¸€ä¸ªå®šæ—¶ä»»åŠ¡
 					mHandler.postAtTime(new Runnable() {
 
 						@Override
@@ -409,32 +570,36 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 			}
 			return true;
 		}
-		/** ¼ÆËãÁ½¸öÊÖÖ¸¼äµÄ¾àÀë */
+		/** è®¡ç®—ä¸¤ä¸ªæ‰‹æŒ‡é—´çš„è·ç¦» */
 		private float distance(MotionEvent event) {
 			float dx = event.getX(1) - event.getX(0);
 			float dy = event.getY(1) - event.getY(0);
-			/** Ê¹ÓÃ¹´¹É¶¨Àí·µ»ØÁ½µãÖ®¼äµÄ¾àÀë */
+			/** ä½¿ç”¨å‹¾è‚¡å®šç†è¿”å›ä¸¤ç‚¹ä¹‹é—´çš„è·ç¦» */
 			return (float) Math.sqrt(dx * dx + dy * dy);
 		}
 
 	}
-
+	/** å‹ç¼©åçš„å›¾ç‰‡æœ€å¤§å€¼ å•ä½KB*/
+	private int maxSize=200;
 	/**
-	 * ÅÄÕÕ·µ»ØµÄbyteÊı¾İ´¦ÀíÀà
+	 * æ‹ç…§è¿”å›çš„byteæ•°æ®å¤„ç†ç±»
 	 * @author linj
 	 *
 	 */
-	private final class DataHandler{
-		/** ´óÍ¼´æ·ÅÂ·¾¶  */
-		private String mThumbnailFolder;
-		/** Ğ¡Í¼´æ·ÅÂ·¾¶ */
-		private String mImageFolder;
-		/** Ñ¹ËõºóµÄÍ¼Æ¬×î´óÖµ µ¥Î»KB*/
-		private int maxSize=200;
+	/** å¤§å›¾å­˜æ”¾è·¯å¾„  */
+	private String mThumbnailFolder;
+	/** å°å›¾å­˜æ”¾è·¯å¾„ */
+	private String mImageFolder;
 
+	private String imgName;
+
+	private String imagePath;
+
+	private String thumbPath;
+	private final class DataHandler{
+		
 		public DataHandler(){
-			mImageFolder=FileOperateUtil.getFolderPath(getContext(), FileOperateUtil.TYPE_IMAGE, mSavePath);
-			mThumbnailFolder=FileOperateUtil.getFolderPath(getContext(),  FileOperateUtil.TYPE_THUMBNAIL, mSavePath);
+			
 			File folder=new File(mImageFolder);
 			if(!folder.exists()){
 				folder.mkdirs();
@@ -446,33 +611,35 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 		}
 
 		/**
-		 * ±£´æÍ¼Æ¬
-		 * @param Ïà»ú·µ»ØµÄÎÄ¼şÁ÷
-		 * @return ½âÎöÁ÷Éú³ÉµÄËõÂÔÍ¼
+		 * ä¿å­˜å›¾ç‰‡
+		 * @param ç›¸æœºè¿”å›çš„æ–‡ä»¶æµ
+		 * @return è§£ææµç”Ÿæˆçš„ç¼©ç•¥å›¾
 		 */
-		public Bitmap save(byte[] data){
+		public Bitmap handerSave(byte[] data){
 			if(data!=null){
-				//½âÎöÉú³ÉÏà»ú·µ»ØµÄÍ¼Æ¬
+				//è§£æç”Ÿæˆç›¸æœºè¿”å›çš„å›¾ç‰‡
 				Bitmap bm=BitmapFactory.decodeByteArray(data, 0, data.length);
-				//»ñÈ¡¼ÓË®Ó¡µÄÍ¼Æ¬
+//				Matrix m = new Matrix();
+//				m.setRotate(bitmepRotateAngle, bm.getWidth(), bm.getHeight());
+//				bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
+				//è·å–åŠ æ°´å°çš„å›¾ç‰‡
 				bm=getBitmapWithWaterMark(bm);
-				//Éú³ÉËõÂÔÍ¼
+				//ç”Ÿæˆç¼©ç•¥å›¾
 				Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
-				//²úÉúĞÂµÄÎÄ¼şÃû
-				String imgName=FileOperateUtil.createFileNmae(".jpg");
-				String imagePath=mImageFolder+File.separator+imgName;
-				String thumbPath=mThumbnailFolder+File.separator+imgName;
+				//äº§ç”Ÿæ–°çš„æ–‡ä»¶å
+				
 
 				File file=new File(imagePath);  
 				File thumFile=new File(thumbPath);
 				try{
-					//´æÍ¼Æ¬´óÍ¼
+					//å­˜å›¾ç‰‡å¤§å›¾
 					FileOutputStream fos=new FileOutputStream(file);
-					ByteArrayOutputStream bos=compress(bm);
+					ByteArrayOutputStream bos=compress(bm);//å‹ç¼©è¦ä¿å­˜çš„å›¾ç‰‡
 					fos.write(bos.toByteArray());
 					fos.flush();
 					fos.close();
-					//´æÍ¼Æ¬Ğ¡Í¼
+					Log.w(TAG, "bitmap--> path:"+imagePath+" fileSize: "+maxSize);
+					//å­˜å›¾ç‰‡å°å›¾
 					BufferedOutputStream bufferos=new BufferedOutputStream(new FileOutputStream(thumFile));
 					thumbnail.compress(Bitmap.CompressFormat.JPEG, 50, bufferos);
 					bufferos.flush();
@@ -480,20 +647,28 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 					return bm; 
 				}catch(Exception e){
 					Log.e(TAG, e.toString());
-					Toast.makeText(getContext(), "½âÎöÏà»ú·µ»ØÁ÷Ê§°Ü", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(), "è§£æç›¸æœºè¿”å›æµå¤±è´¥", Toast.LENGTH_SHORT).show();
 
 				}
 			}else{
-				Toast.makeText(getContext(), "ÅÄÕÕÊ§°Ü£¬ÇëÖØÊÔ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "æ‹ç…§å¤±è´¥ï¼Œè¯·é‡è¯•", Toast.LENGTH_SHORT).show();
 			}
 			return null;
 		}
-
+		/**
+		 * è®¾ç½®ä¸Šæ°´å°
+		 * @param bm
+		 * @return
+		 */
 		private Bitmap getBitmapWithWaterMark(Bitmap bm) {
 			// TODO Auto-generated method stub
 			if(!(mWaterMarkImageView.getVisibility()==View.VISIBLE)){
 				return bm;
 			}
+			//è®¡ç®—å›¾ç‰‡å’Œå±å¹•çš„æ¯”ä¾‹
+			int zoom = displayMetrics.widthPixels/bm.getWidth();
+			
+			
 			Drawable mark=mWaterMarkImageView.getDrawable();
 			Bitmap wBitmap=drawableToBitmap(mark);
 			int w = bm.getWidth();
@@ -504,18 +679,31 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 
 			int wh = wBitmap.getHeight();
 			Bitmap newb = Bitmap.createBitmap( w, h, Config.ARGB_8888 );
+			Matrix matrix = new Matrix();
+			
+			Bitmap b = Bitmap.createBitmap( w/zoom, h/zoom, Config.ARGB_8888 );
+			wBitmap = Bitmap.createBitmap(wBitmap, 0, 0, mWaterMarkImageView.getWidth(), mWaterMarkImageView.getHeight());
 			Canvas canvas=new Canvas(newb);
 			//draw src into
 
-			canvas.drawBitmap( bm, 0, 0, null );//ÔÚ 0£¬0×ø±ê¿ªÊ¼»­Èësrc
-			canvas.drawBitmap( wBitmap, w - ww + 5, h - wh + 5, null );//ÔÚsrcµÄÓÒÏÂ½Ç»­ÈëË®Ó¡
+			canvas.drawBitmap( bm, 0, 0, null );//åœ¨ 0ï¼Œ0åæ ‡å¼€å§‹ç”»å…¥src
+			wBitmap = ThumbnailUtils.extractThumbnail(wBitmap, w/zoom, h/zoom,ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+			
+//			canvas.drawBitmap( wBitmap, w - ww + 5, h - wh + 5, null );//åœ¨srcçš„å³ä¸‹è§’ç”»å…¥æ°´å°
+			float x2 = mWaterMarkImageView.getX();
+			float y2 = mWaterMarkImageView.getY();
+			System.out.println(x2);
+			System.out.println(y2);
+			System.out.println(b.getWidth());
+			canvas.drawBitmap( wBitmap, 0, 0, null );//åœ¨srcçš„å³ä¸‹è§’ç”»å…¥æ°´å°
+//			canvas.drawBitmap( wBitmap, 0, 0, null );//åœ¨srcçš„å³ä¸‹è§’ç”»å…¥æ°´å°
 			//save all clip
 
-			canvas.save( Canvas.ALL_SAVE_FLAG );//±£´æ
+			canvas.save( Canvas.ALL_SAVE_FLAG );//ä¿å­˜
 
 			//store
 
-			canvas.restore();//´æ´¢
+			canvas.restore();//å­˜å‚¨
 			bm.recycle();
 			bm=null;
 			wBitmap.recycle();
@@ -535,58 +723,55 @@ public class CameraContainer extends RelativeLayout implements CameraOperation{
 			return bitmap;
 		}
 		/**
-		 * Í¼Æ¬Ñ¹Ëõ·½·¨
-		 * @param bitmap Í¼Æ¬ÎÄ¼ş
-		 * @param max ÎÄ¼ş´óĞ¡×î´óÖµ
-		 * @return Ñ¹ËõºóµÄ×Ö½ÚÁ÷
+		 * å›¾ç‰‡å‹ç¼©æ–¹æ³•
+		 * @param bitmap å›¾ç‰‡æ–‡ä»¶
+		 * @param max æ–‡ä»¶å¤§å°æœ€å¤§å€¼
+		 * @return å‹ç¼©åçš„å­—èŠ‚æµ
 		 * @throws Exception
 		 */
 		public ByteArrayOutputStream compress(Bitmap bitmap){
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);// ÖÊÁ¿Ñ¹Ëõ·½·¨£¬ÕâÀï100±íÊ¾²»Ñ¹Ëõ£¬°ÑÑ¹ËõºóµÄÊı¾İ´æ·Åµ½baosÖĞ
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);// è´¨é‡å‹ç¼©æ–¹æ³•ï¼Œè¿™é‡Œ100è¡¨ç¤ºä¸å‹ç¼©ï¼ŒæŠŠå‹ç¼©åçš„æ•°æ®å­˜æ”¾åˆ°baosä¸­
 			int options = 99;
-			while ( baos.toByteArray().length / 1024 > maxSize) { // Ñ­»·ÅĞ¶ÏÈç¹ûÑ¹ËõºóÍ¼Æ¬ÊÇ·ñ´óÓÚ100kb,´óÓÚ¼ÌĞøÑ¹Ëõ
-				options -= 3;// Ã¿´Î¶¼¼õÉÙ10
-				//Ñ¹Ëõ±ÈĞ¡ÓÚ0£¬²»ÔÙÑ¹Ëõ
+			while ( baos.toByteArray().length / 1024 > maxSize) { // å¾ªç¯åˆ¤æ–­å¦‚æœå‹ç¼©åå›¾ç‰‡æ˜¯å¦å¤§äº100kb,å¤§äºç»§ç»­å‹ç¼©
+				options -= 3;// æ¯æ¬¡éƒ½å‡å°‘10
+				//å‹ç¼©æ¯”å°äº0ï¼Œä¸å†å‹ç¼©
 				if (options<0) {
 					break;
 				}
 				Log.i(TAG,baos.toByteArray().length / 1024+"");
-				baos.reset();// ÖØÖÃbaos¼´Çå¿Õbaos
-				bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);// ÕâÀïÑ¹Ëõoptions%£¬°ÑÑ¹ËõºóµÄÊı¾İ´æ·Åµ½baosÖĞ
+				baos.reset();// é‡ç½®baoså³æ¸…ç©ºbaos
+				bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);// è¿™é‡Œå‹ç¼©options%ï¼ŒæŠŠå‹ç¼©åçš„æ•°æ®å­˜æ”¾åˆ°baosä¸­
 			}
 			return baos;
 		}
 
-		public void setMaxSize(int maxSize) {
-			this.maxSize = maxSize;
-		}
 	}
 
 	/** 
 	 * @ClassName: TakePictureListener 
-	 * @Description:  ÅÄÕÕ¼àÌı½Ó¿Ú£¬ÓÃÒÔÔÚÅÄÕÕ¿ªÊ¼ºÍ½áÊøºóÖ´ĞĞÏàÓ¦²Ù×÷
+	 * @Description:  æ‹ç…§ç›‘å¬æ¥å£ï¼Œç”¨ä»¥åœ¨æ‹ç…§å¼€å§‹å’Œç»“æŸåæ‰§è¡Œç›¸åº”æ“ä½œ
 	 * @author LinJ
-	 * @date 2014-12-31 ÉÏÎç9:50:33 
+	 * @date 2014-12-31 ä¸Šåˆ9:50:33 
 	 *  
 	 */
 	public static interface TakePictureListener{		
 		/**  
-		 *ÅÄÕÕ½áÊøÖ´ĞĞµÄ¶¯×÷£¬¸Ã·½·¨»áÔÚonPictureTakenº¯ÊıÖ´ĞĞºó´¥·¢
-		 *  @param bm ÅÄÕÕÉú³ÉµÄÍ¼Æ¬ 
+		 *æ‹ç…§ç»“æŸæ‰§è¡Œçš„åŠ¨ä½œï¼Œè¯¥æ–¹æ³•ä¼šåœ¨onPictureTakenå‡½æ•°æ‰§è¡Œåè§¦å‘
+		 *  @param bm æ‹ç…§ç”Ÿæˆçš„å›¾ç‰‡ 
 		 */
 		public void onTakePictureEnd(Bitmap bm);
 
-		/**  ÁÙÊ±Í¼Æ¬¶¯»­½áÊøºó´¥·¢
-		 * @param bm ÅÄÕÕÉú³ÉµÄÍ¼Æ¬ 
-		 * @param isVideo true£ºµ±Ç°ÎªÂ¼ÏñËõÂÔÍ¼ false:ÎªÅÄÕÕËõÂÔÍ¼
+		/**  ä¸´æ—¶å›¾ç‰‡åŠ¨ç”»ç»“æŸåè§¦å‘
+		 * @param bm æ‹ç…§ç”Ÿæˆçš„å›¾ç‰‡ 
+		 * @param isVideo trueï¼šå½“å‰ä¸ºå½•åƒç¼©ç•¥å›¾ false:ä¸ºæ‹ç…§ç¼©ç•¥å›¾
 		 * */
 		public void onAnimtionEnd(Bitmap bm,boolean isVideo);
 	}
 
 
 	/**  
-	 * dip×ªpx
+	 * dipè½¬px
 	 *  @param dipValue
 	 *  @return   
 	 */

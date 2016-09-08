@@ -3,35 +3,30 @@ package com.example.camera;
 import java.io.File;
 import java.util.List;
 
-import com.linj.FileOperateUtil;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import com.linj.FileOperateUtil;
 import com.linj.album.view.FilterImageView;
 import com.linj.camera.view.CameraContainer;
 import com.linj.camera.view.CameraContainer.TakePictureListener;
 import com.linj.camera.view.CameraView.FlashMode;
 
-
-
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.ThumbnailUtils;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 /** 
  * @ClassName: CameraAty 
- * @Description:  ×Ô¶¨ÒåÕÕÏà»úÀà
+ * @Description:  è‡ªå®šä¹‰ç…§ç›¸æœºç±»
  * @author LinJ
- * @date 2014-12-31 ÉÏÎç9:44:25 
+ * @date 2014-12-31 ä¸Šåˆ9:44:25 
  *  
  */
 public class CameraAty extends Activity implements View.OnClickListener,TakePictureListener{
@@ -41,7 +36,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private CameraContainer mContainer;
 	private FilterImageView mThumbView;
 	private ImageButton mCameraShutterButton;
-	private ImageButton mRecordShutterButton;
+//	private ImageButton mRecordShutterButton;
 	private ImageView mFlashView;
 	private ImageButton mSwitchModeButton;
 	private ImageView mSwitchCameraView;
@@ -49,6 +44,7 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private ImageView mVideoIconView;
 	private View mHeaderBar;
 	private boolean isRecording=false;
+	private String path;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,22 +52,23 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.camera);
-
 		mHeaderBar=findViewById(R.id.camera_header_bar);
 		mContainer=(CameraContainer)findViewById(R.id.container);
 		mThumbView=(FilterImageView)findViewById(R.id.btn_thumbnail);
 		mVideoIconView=(ImageView)findViewById(R.id.videoicon);
 		mCameraShutterButton=(ImageButton)findViewById(R.id.btn_shutter_camera);
-		mRecordShutterButton=(ImageButton)findViewById(R.id.btn_shutter_record);
+//		mRecordShutterButton=(ImageButton)findViewById(R.id.btn_shutter_record);
 		mSwitchCameraView=(ImageView)findViewById(R.id.btn_switch_camera);
 		mFlashView=(ImageView)findViewById(R.id.btn_flash_mode);
 		mSwitchModeButton=(ImageButton)findViewById(R.id.btn_switch_mode);
 		mSettingView=(ImageView)findViewById(R.id.btn_other_setting);
-
-
+		mContainer.setMaxSize(1024*15);
+		path = Environment.getExternalStorageDirectory()+"/test";
+		mContainer.setSavePath(path, path);
+		mContainer.setSaveVideoPath(path);
 		mThumbView.setOnClickListener(this);
 		mCameraShutterButton.setOnClickListener(this);
-		mRecordShutterButton.setOnClickListener(this);
+//		mRecordShutterButton.setOnClickListener(this);
 		mFlashView.setOnClickListener(this);
 		mSwitchModeButton.setOnClickListener(this);
 		mSwitchCameraView.setOnClickListener(this);
@@ -84,16 +81,16 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 
 
 	/**
-	 * ¼ÓÔØËõÂÔÍ¼
+	 * åŠ è½½ç¼©ç•¥å›¾
 	 */
 	private void initThumbnail() {
-		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, mSaveRoot);
+		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, path);
 		List<File> files=FileOperateUtil.listFiles(thumbFolder, ".jpg");
 		if(files!=null&&files.size()>0){
 			Bitmap thumbBitmap=BitmapFactory.decodeFile(files.get(0).getAbsolutePath());
 			if(thumbBitmap!=null){
 				mThumbView.setImageBitmap(thumbBitmap);
-				//ÊÓÆµËõÂÔÍ¼ÏÔÊ¾²¥·ÅÍ¼°¸
+				//è§†é¢‘ç¼©ç•¥å›¾æ˜¾ç¤ºæ’­æ”¾å›¾æ¡ˆ
 				if(files.get(0).getAbsolutePath().contains("video")){
 					mVideoIconView.setVisibility(View.VISIBLE);
 				}else {
@@ -109,16 +106,28 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
 		switch (view.getId()) {
-		case R.id.btn_shutter_camera:
-			mCameraShutterButton.setClickable(false);
-			mContainer.takePicture(this);
+		case R.id.btn_shutter_camera://æ‹ç…§æŒ‰é’®
+			if(!mCameraShutterButton.isSelected()){
+				mCameraShutterButton.setClickable(false);
+				mCameraShutterButton.setEnabled(false);
+				mContainer.takePicture(this);//æ‹æ‘„ç›‘å¬
+			}else{
+				if(!isRecording){
+					isRecording=mContainer.startRecord();
+//					if (isRecording) {
+//						mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_recording);
+//					}
+				}else {
+					stopRecord();	
+				}
+			}
+			
 			break;
-		case R.id.btn_thumbnail:
+		case R.id.btn_thumbnail://ç›¸å†Œ
 			startActivity(new Intent(this,AlbumAty.class));
 			break;
-		case R.id.btn_flash_mode:
+		case R.id.btn_flash_mode://é—ªå…‰ç¯æ§åˆ¶
 			if(mContainer.getFlashMode()==FlashMode.ON){
 				mContainer.setFlashMode(FlashMode.OFF);
 				mFlashView.setImageResource(R.drawable.btn_flash_off);
@@ -138,9 +147,11 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 		case R.id.btn_switch_mode:
 			if(mIsRecordMode){
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_camera);
-				mCameraShutterButton.setVisibility(View.VISIBLE);
-				mRecordShutterButton.setVisibility(View.GONE);
-				//ÅÄÕÕÄ£Ê½ÏÂÏÔÊ¾¶¥²¿²Ëµ¥
+				mCameraShutterButton.setSelected(false);
+				mCameraShutterButton.setEnabled(false);
+//				mCameraShutterButton.setVisibility(View.VISIBLE);
+//				mRecordShutterButton.setVisibility(View.GONE);
+				//æ‹ç…§æ¨¡å¼ä¸‹æ˜¾ç¤ºé¡¶éƒ¨èœå•
 				mHeaderBar.setVisibility(View.VISIBLE);
 				mIsRecordMode=false;
 				mContainer.switchMode(0);
@@ -148,28 +159,30 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 			}
 			else {
 				mSwitchModeButton.setImageResource(R.drawable.ic_switch_video);
-				mCameraShutterButton.setVisibility(View.GONE);
-				mRecordShutterButton.setVisibility(View.VISIBLE);
-				//Â¼ÏñÄ£Ê½ÏÂÒş²Ø¶¥²¿²Ëµ¥ 
+				mCameraShutterButton.setSelected(true);
+				mCameraShutterButton.setEnabled(true);
+//				mCameraShutterButton.setVisibility(View.GONE);
+//				mRecordShutterButton.setVisibility(View.VISIBLE);
+				//å½•åƒæ¨¡å¼ä¸‹éšè—é¡¶éƒ¨èœå• 
 				mHeaderBar.setVisibility(View.GONE);
 				mIsRecordMode=true;
 				mContainer.switchMode(5);
 			}
 			break;
-		case R.id.btn_shutter_record:
-			if(!isRecording){
-				isRecording=mContainer.startRecord();
-				if (isRecording) {
-					mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_recording);
-				}
-			}else {
-				stopRecord();	
-			}
-			break;
-		case R.id.btn_switch_camera:
+//		case R.id.btn_shutter_record:
+//			if(!isRecording){
+//				isRecording=mContainer.startRecord();
+//				if (isRecording) {
+//					mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_recording);
+//				}
+//			}else {
+//				stopRecord();	
+//			}
+//			break;
+		case R.id.btn_switch_camera://ç›¸æœºåè½¬
 			mContainer.switchCamera();
 			break;
-		case R.id.btn_other_setting:
+		case R.id.btn_other_setting://æ·»åŠ æ°´å°
 			mContainer.setWaterMark();
 			break;
 		default:
@@ -181,18 +194,19 @@ public class CameraAty extends Activity implements View.OnClickListener,TakePict
 	private void stopRecord() {
 		mContainer.stopRecord(this);
 		isRecording=false;
-		mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
+//		mRecordShutterButton.setBackgroundResource(R.drawable.btn_shutter_record);
 	}
 	
 	@Override
 	public void onTakePictureEnd(Bitmap thumBitmap) {
-		mCameraShutterButton.setClickable(true);	
+		mCameraShutterButton.setClickable(true);
+		mCameraShutterButton.setEnabled(true);
 	}
 
 	@Override
 	public void onAnimtionEnd(Bitmap bm,boolean isVideo) {
 		if(bm!=null){
-			//Éú³ÉËõÂÔÍ¼
+			//ç”Ÿæˆç¼©ç•¥å›¾
 			Bitmap thumbnail=ThumbnailUtils.extractThumbnail(bm, 213, 213);
 			mThumbView.setImageBitmap(thumbnail);
 			if(isVideo)

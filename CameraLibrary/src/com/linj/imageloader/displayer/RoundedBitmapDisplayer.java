@@ -27,9 +27,9 @@ import android.widget.ImageView.ScaleType;
 
 /** 
 * @ClassName: RoundedBitmapDisplayer 
-* @Description:  Ô²ĞÎÍ¼Æ¬
+* @Description:  åœ†å½¢å›¾ç‰‡
 * @author LinJ
-* @date 2015-1-8 ÉÏÎç9:47:31 
+* @date 2015-1-8 ä¸Šåˆ9:47:31 
 *  
 */
 public class RoundedBitmapDisplayer implements BitmapDisplayer {

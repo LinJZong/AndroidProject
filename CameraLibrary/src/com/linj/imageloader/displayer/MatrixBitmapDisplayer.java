@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2013 Sergey Tarasevich, Daniel Mart¨ª
+ * Copyright 2011-2013 Sergey Tarasevich, Daniel MartÃ­
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import android.widget.ImageView.ScaleType;
 
 /** 
 * @ClassName: MatrixBitmapDisplayer 
-* @Description:  MatrixĞ§¹ûµÄBitmapDisplayer
+* @Description:  Matrixæ•ˆæœçš„BitmapDisplayer
 * @author LinJ
-* @date 2015-1-8 ÉÏÎç9:54:22 
+* @date 2015-1-8 ä¸Šåˆ9:54:22 
 *  
 */
 public class MatrixBitmapDisplayer implements BitmapDisplayer {
@@ -35,14 +35,14 @@ public class MatrixBitmapDisplayer implements BitmapDisplayer {
 
 	@Override
 	public void display(Bitmap bitmap, ImageView imageView) {
-		//Õı³£µÄÍ¼Æ¬ÉèÖÃÎªFIT_CENTER
+		//æ­£å¸¸çš„å›¾ç‰‡è®¾ç½®ä¸ºFIT_CENTER
 		imageView.setScaleType(ScaleType.FIT_CENTER);
 		imageView.setImageBitmap(bitmap);
 	}
 
 	@Override
 	public void display(int resouceID, ImageView imageView) {
-		// ¼ÓÔØÇ°ºÍ³ö´íµÄµÄÍ¼Æ¬²»×Ô¶¯À­Éì
+		// åŠ è½½å‰å’Œå‡ºé”™çš„çš„å›¾ç‰‡ä¸è‡ªåŠ¨æ‹‰ä¼¸
 		imageView.setScaleType(ScaleType.CENTER);
 		imageView.setImageResource(resouceID);
 	}

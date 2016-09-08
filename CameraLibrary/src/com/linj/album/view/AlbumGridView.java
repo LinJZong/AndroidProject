@@ -24,24 +24,24 @@ import android.widget.GridView;
 
 /** 
  * @ClassName: AlbumView 
- * @Description:  Ïà²áView£¬¼Ì³ĞÓÚGridView£¬·â×°ÁËAdapterºÍÍ¼Æ¬¼ÓÔØ·½·¨
+ * @Description:  ç›¸å†ŒViewï¼Œç»§æ‰¿äºGridViewï¼Œå°è£…äº†Adapterå’Œå›¾ç‰‡åŠ è½½æ–¹æ³•
  * @author LinJ
- * @date 2015-1-5 ÏÂÎç5:09:08 
+ * @date 2015-1-5 ä¸‹åˆ5:09:08 
  *  
  */
 public class AlbumGridView extends GridView{
 	public final static String TAG="AlbumView";
-	/**  Í¼Æ¬¼ÓÔØÆ÷ ÓÅ»¯ÁËÁË»º´æ  */ 
+	/**  å›¾ç‰‡åŠ è½½å™¨ ä¼˜åŒ–äº†äº†ç¼“å­˜  */ 
 	private ImageLoader mImageLoader;
-	/**  ¼ÓÔØÍ¼Æ¬ÅäÖÃ²ÎÊı */ 
+	/**  åŠ è½½å›¾ç‰‡é…ç½®å‚æ•° */ 
 	private DisplayImageOptions mOptions;	
-	/**  µ±Ç°ÊÇ·ñ´¦ÓÚ±à¼­×´Ì¬ trueÎª±à¼­ */ 
+	/**  å½“å‰æ˜¯å¦å¤„äºç¼–è¾‘çŠ¶æ€ trueä¸ºç¼–è¾‘ */ 
 	private boolean mEditable;
 
 	public AlbumGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mImageLoader= ImageLoader.getInstance(context);
-		//ÉèÖÃÍøÂçÍ¼Æ¬¼ÓÔØ²ÎÊı
+		//è®¾ç½®ç½‘ç»œå›¾ç‰‡åŠ è½½å‚æ•°
 		DisplayImageOptions.Builder builder= new DisplayImageOptions.Builder();
 		builder =builder
 				.showImageOnLoading(R.drawable.ic_stub)
@@ -51,39 +51,39 @@ public class AlbumGridView extends GridView{
 				.displayer(new RoundedBitmapDisplayer(20));
 		mOptions=builder.build();
 		setBackgroundColor(Color.WHITE);
-		//Òş²Ø´¹Ö±¹ö¶¯Ìõ
+		//éšè—å‚ç›´æ»šåŠ¨æ¡
 		setVerticalScrollBarEnabled(false);
 	}
 
 
 	
 	/**  
-	 *  È«Ñ¡Í¼Æ¬
-	 *  @param listener Ñ¡ÔñÍ¼Æ¬ºóÖ´ĞĞµÄ»Øµ÷º¯Êı   
+	 *  å…¨é€‰å›¾ç‰‡
+	 *  @param listener é€‰æ‹©å›¾ç‰‡åæ‰§è¡Œçš„å›è°ƒå‡½æ•°   
 	 */
 	public void selectAll(AlbumGridView.OnCheckedChangeListener listener){
 		((AlbumViewAdapter)getAdapter()).selectAll(listener);
 	}
 	/**  
-	 * È¡ÏûÈ«Ñ¡Í¼Æ¬
-	 *  @param listener   Ñ¡ÔñÍ¼Æ¬ºóÖ´ĞĞµÄ»Øµ÷º¯Êı  
+	 * å–æ¶ˆå…¨é€‰å›¾ç‰‡
+	 *  @param listener   é€‰æ‹©å›¾ç‰‡åæ‰§è¡Œçš„å›è°ƒå‡½æ•°  
 	 */
 	public void unSelectAll(AlbumGridView.OnCheckedChangeListener listener){
 		((AlbumViewAdapter)getAdapter()).unSelectAll(listener);
 	}
 
 	/**  
-	 * ÉèÖÃ¿É±à¼­×´Ì¬
-	 *  @param editable ÊÇ·ñ¿É±à¼­   
+	 * è®¾ç½®å¯ç¼–è¾‘çŠ¶æ€
+	 *  @param editable æ˜¯å¦å¯ç¼–è¾‘   
 	 */
 	public void setEditable(boolean editable){
 		mEditable=editable;
 		((AlbumViewAdapter)getAdapter()).notifyDataSetChanged(null);
 	}
 	/**  
-	 * ÉèÖÃ¿É±à¼­×´Ì¬
-	 *  @param editable ÊÇ·ñ¿É±à¼­   
-	 *  @param listener Ñ¡ÔñÍ¼Æ¬ºóÖ´ĞĞµÄ»Øµ÷º¯Êı  
+	 * è®¾ç½®å¯ç¼–è¾‘çŠ¶æ€
+	 *  @param editable æ˜¯å¦å¯ç¼–è¾‘   
+	 *  @param listener é€‰æ‹©å›¾ç‰‡åæ‰§è¡Œçš„å›è°ƒå‡½æ•°  
 	 */
 	public void setEditable(boolean editable,AlbumGridView.OnCheckedChangeListener listener){
 		mEditable=editable;
@@ -91,7 +91,7 @@ public class AlbumGridView extends GridView{
 	}
 
 	/**  
-	 *  »ñÈ¡¿É±à¼­×´Ì¬
+	 *  è·å–å¯ç¼–è¾‘çŠ¶æ€
 	 *  @return   
 	 */
 	public boolean getEditable(){
@@ -99,7 +99,7 @@ public class AlbumGridView extends GridView{
 	}
 
 	/**  
-	 *  »ñÈ¡µ±Ç°Ñ¡ÔñµÄÍ¼Æ¬Â·¾¶¼¯ºÏ
+	 *  è·å–å½“å‰é€‰æ‹©çš„å›¾ç‰‡è·¯å¾„é›†åˆ
 	 *  @return   
 	 */
 	public Set<String> getSelectedItems(){
@@ -113,9 +113,9 @@ public class AlbumGridView extends GridView{
 
 	/** 
 	 * @ClassName: OnCheckedChangeListener 
-	 * @Description:  Í¼Æ¬Ñ¡ÖĞºóµÄ¼àÌı½Ó¿Ú£¬ÓÃÒÔÔÚactivityÄÚ×ö»Øµ÷´¦Àí
+	 * @Description:  å›¾ç‰‡é€‰ä¸­åçš„ç›‘å¬æ¥å£ï¼Œç”¨ä»¥åœ¨activityå†…åšå›è°ƒå¤„ç†
 	 * @author LinJ
-	 * @date 2015-1-5 ÏÂÎç5:13:43 
+	 * @date 2015-1-5 ä¸‹åˆ5:13:43 
 	 *  
 	 */
 	public interface OnCheckedChangeListener{
@@ -125,21 +125,21 @@ public class AlbumGridView extends GridView{
 
 	/** 
 	 * @ClassName: AlbumViewAdapter 
-	 * @Description:  Ïà²áGridViewÊÊÅäÆ÷
+	 * @Description:  ç›¸å†ŒGridViewé€‚é…å™¨
 	 * @author LinJ
-	 * @date 2015-1-5 ÏÂÎç5:14:14 
+	 * @date 2015-1-5 ä¸‹åˆ5:14:14 
 	 *  
 	 */
 	public class AlbumViewAdapter extends BaseAdapter implements OnClickListener,CompoundButton.OnCheckedChangeListener
 	{
 
-		/** ¼ÓÔØµÄÎÄ¼şÂ·¾¶¼¯ºÏ */ 
+		/** åŠ è½½çš„æ–‡ä»¶è·¯å¾„é›†åˆ */ 
 		List<String> mPaths;
 
-		/**  µ±Ç°Ñ¡ÖĞµÄÎÄ¼şµÄ¼¯ºÏ */ 
+		/**  å½“å‰é€‰ä¸­çš„æ–‡ä»¶çš„é›†åˆ */ 
 		Set<String> itemSelectedSet=new HashSet<String>();
 
-		/**  Ñ¡ÖĞÍ¼Æ¬ºóÖ´ĞĞµÄ»Øµ÷º¯Êı */ 
+		/**  é€‰ä¸­å›¾ç‰‡åæ‰§è¡Œçš„å›è°ƒå‡½æ•° */ 
 		AlbumGridView.OnCheckedChangeListener listener=null;
 
 
@@ -149,17 +149,17 @@ public class AlbumGridView extends GridView{
 			this.mPaths = paths;
 		}
 		/**  
-		 * ÊÊÅäÆ÷ÄÚÈİ¸Ä±äÊ±£¬ÖØĞÂ»æÖÆ
+		 * é€‚é…å™¨å†…å®¹æ”¹å˜æ—¶ï¼Œé‡æ–°ç»˜åˆ¶
 		 *  @param listener   
 		 */
 		public void notifyDataSetChanged(AlbumGridView.OnCheckedChangeListener listener) {
-			//ÖØÖÃmap
+			//é‡ç½®map
 			itemSelectedSet=new HashSet<String>();
 			this.listener=listener;
 			super.notifyDataSetChanged();
 		}
 		/**  
-		 * Ñ¡ÖĞËùÓĞÎÄ¼ş
+		 * é€‰ä¸­æ‰€æœ‰æ–‡ä»¶
 		 *  @param listener   
 		 */
 		public void selectAll(AlbumGridView.OnCheckedChangeListener listener){
@@ -172,7 +172,7 @@ public class AlbumGridView extends GridView{
 		}
 
 		/**  
-		 *  È¡ÏûÑ¡ÖĞËùÓĞÎÄ¼ş
+		 *  å–æ¶ˆé€‰ä¸­æ‰€æœ‰æ–‡ä»¶
 		 *  @param listener   
 		 */
 		public void unSelectAll(AlbumGridView.OnCheckedChangeListener listener){
@@ -180,7 +180,7 @@ public class AlbumGridView extends GridView{
 			if(listener!=null) listener.onCheckedChanged(itemSelectedSet);
 		}
 		/**  
-		 * »ñÈ¡µ±Ç°Ñ¡ÖĞÎÄ¼şµÄ¼¯ºÏ
+		 * è·å–å½“å‰é€‰ä¸­æ–‡ä»¶çš„é›†åˆ
 		 *  @return   
 		 */
 		public Set<String> getSelectedItems(){
@@ -213,7 +213,7 @@ public class AlbumGridView extends GridView{
 			ThumbnaiImageView albumItemView = (ThumbnaiImageView)convertView;
 			if (albumItemView == null) albumItemView = new ThumbnaiImageView(getContext(),mImageLoader,mOptions);
 			albumItemView.setOnCheckedChangeListener(this);
-			//ÉèÖÃµã»÷ÊÂ¼ş£¬½«ItemClickÊÂ¼ş×ª»¯ÎªAlbumItemViewµÄClickÊÂ¼ş
+			//è®¾ç½®ç‚¹å‡»äº‹ä»¶ï¼Œå°†ItemClickäº‹ä»¶è½¬åŒ–ä¸ºAlbumItemViewçš„Clickäº‹ä»¶
 			albumItemView.setOnClickListener(this);
 			String path=getItem(position);
 			albumItemView.setTags(path,position, mEditable, itemSelectedSet.contains(path));
@@ -223,7 +223,7 @@ public class AlbumGridView extends GridView{
 		@Override
 		public void onClick(View v) {
 			if(getOnItemClickListener()!=null){
-				//ÕâÀïÈ¡ÁËÉÏÁ½²ã¸¸Àà£¬ÒòÎªÕæÕı´¥onClickµÄÊÇFilterImageView
+				//è¿™é‡Œå–äº†ä¸Šä¸¤å±‚çˆ¶ç±»ï¼Œå› ä¸ºçœŸæ­£è§¦onClickçš„æ˜¯FilterImageView
 				ThumbnaiImageView view=(ThumbnaiImageView)v.getParent().getParent();
 				getOnItemClickListener().onItemClick(AlbumGridView.this, view, view.getPosition(), 0L);
 			}

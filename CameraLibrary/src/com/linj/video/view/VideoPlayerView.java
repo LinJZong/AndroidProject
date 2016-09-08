@@ -21,9 +21,9 @@ import android.widget.Toast;
 
 /** 
  * @ClassName: VideoSurfaceView 
- * @Description:  ºÍMediaPlayer°ó¶¨µÄSurfaceView£¬ÓÃÒÔ²¥·ÅÊÓÆµ
+ * @Description:  å’ŒMediaPlayerç»‘å®šçš„SurfaceViewï¼Œç”¨ä»¥æ’­æ”¾è§†é¢‘
  * @author LinJ
- * @date 2015-1-21 ÏÂÎç2:38:53 
+ * @date 2015-1-21 ä¸‹åˆ2:38:53 
  *  
  */
 public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation {
@@ -39,15 +39,15 @@ public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation
 
 	}
 	/**  
-	 *   ³õÊ¼»¯
+	 *   åˆå§‹åŒ–
 	 */
 	private void init() {
 		mMediaPlayer=new MediaPlayer();
-		//³õÊ¼»¯ÈİÆ÷
+		//åˆå§‹åŒ–å®¹å™¨
 		getHolder().addCallback(callback);
 	}
 	/**  
-	 *  ÉèÖÃ²¥·ÅÆ÷¼àÌıº¯Êı
+	 *  è®¾ç½®æ’­æ”¾å™¨ç›‘å¬å‡½æ•°
 	 *  @param listener   
 	 */
 	protected void setPalyerListener(PlayerListener listener){
@@ -56,7 +56,7 @@ public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation
 		mMediaPlayer.setOnPreparedListener(listener);
 	}
 	/**  
-	 *  »ñÈ¡µ±Ç°²¥·ÅÆ÷ÊÇ·ñÔÚ²¥·Å×´Ì¬
+	 *  è·å–å½“å‰æ’­æ”¾å™¨æ˜¯å¦åœ¨æ’­æ”¾çŠ¶æ€
 	 *  @return   
 	 */
 	@Override
@@ -65,7 +65,7 @@ public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation
 	}
 
 	/**  
-	 *  »ñÈ¡µ±Ç°²¥·ÅÊ±¼ä£¬µ¥Î»ºÁÃë
+	 *  è·å–å½“å‰æ’­æ”¾æ—¶é—´ï¼Œå•ä½æ¯«ç§’
 	 *  @return   
 	 */
 	@Override
@@ -88,23 +88,23 @@ public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation
 	}
 
 	/**  
-	 *   ÉèÖÃµ±Ç°²¥·ÅÎ»ÖÃ
+	 *   è®¾ç½®å½“å‰æ’­æ”¾ä½ç½®
 	 */
 	@Override
 	public void seekPosition(int position){
 		if(isPlaying())
 			mMediaPlayer.pause();
-		//µ±ÉèÖÃµÄÊ±¼äÖµ´óÓÚÊÓÆµ×î´ó³¤¶ÈÊ±£¬Í£Ö¹²¥·Å
+		//å½“è®¾ç½®çš„æ—¶é—´å€¼å¤§äºè§†é¢‘æœ€å¤§é•¿åº¦æ—¶ï¼Œåœæ­¢æ’­æ”¾
 		if(position<0||position>mMediaPlayer.getDuration()){
 			mMediaPlayer.stop();
 			return;
 		}
-		//ÉèÖÃÊ±¼ä
+		//è®¾ç½®æ—¶é—´
 		mMediaPlayer.seekTo(position);
 	}
 
 	/**  
-	 *   Í£Ö¹²¥·Å
+	 *   åœæ­¢æ’­æ”¾
 	 */
 	@Override
 	public void stopPlay() {
@@ -138,16 +138,16 @@ public class VideoPlayerView extends SurfaceView implements VideoPlayerOperation
 		if(mMediaPlayer!=null&&mMediaPlayer.isPlaying()){
 			mMediaPlayer.stop();
 		}
-		mMediaPlayer.reset(); //resetÖØĞÂÉèÖÃ²¥·ÅÆ÷ÒıÇæ
+		mMediaPlayer.reset(); //reseté‡æ–°è®¾ç½®æ’­æ”¾å™¨å¼•æ“
 		mMediaPlayer.setDataSource(path);
 		mMediaPlayer.prepare();
 	}
 
 	/** 
 	 * @ClassName: PlayerListener 
-	 * @Description:  ¼¯ºÏ½Ó¿Ú£¬containerÊµÏÖ¸Ã½Ó¿Ú
+	 * @Description:  é›†åˆæ¥å£ï¼Œcontainerå®ç°è¯¥æ¥å£
 	 * @author LinJ
-	 * @date 2015-1-23 ÏÂÎç3:09:15 
+	 * @date 2015-1-23 ä¸‹åˆ3:09:15 
 	 *  
 	 */
 	public interface PlayerListener extends  OnCompletionListener,
