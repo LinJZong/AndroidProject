@@ -5,9 +5,9 @@ import com.linj.imageloader.displayer.BitmapDisplayer;
 
 /** 
 * @ClassName: DisplayImageOptions 
-* @Description:  Í¼Æ¬¼ÓÔØ²ÎÊı
+* @Description:  å›¾ç‰‡åŠ è½½å‚æ•°
 * @author LinJ
-* @date 2015-1-8 ÉÏÎç9:47:04 
+* @date 2015-1-8 ä¸Šåˆ9:47:04 
 *  
 */
 public class DisplayImageOptions {
@@ -36,8 +36,8 @@ public class DisplayImageOptions {
 		private BitmapDisplayer displayer;
 		private boolean fromNet;
 		/**
-		 * ÉèÖÃ ¼ÓÔØÍ¼Æ¬ÖĞÏÔÊ¾µÄÍ¼Æ¬
-		 * @param imageRes Í¼Æ¬ID
+		 * è®¾ç½® åŠ è½½å›¾ç‰‡ä¸­æ˜¾ç¤ºçš„å›¾ç‰‡
+		 * @param imageRes å›¾ç‰‡ID
 		 * @return
 		 */
 		public Builder showImageOnLoading(int imageRes) {
@@ -45,8 +45,8 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**
-		 * ÉèÖÃ¼ÓÔØÍ¼Æ¬Ê§°ÜÏÔÊ¾µÄÍ¼Æ¬
-		 * @param imageRes Í¼Æ¬ID
+		 * è®¾ç½®åŠ è½½å›¾ç‰‡å¤±è´¥æ˜¾ç¤ºçš„å›¾ç‰‡
+		 * @param imageRes å›¾ç‰‡ID
 		 * @return
 		 */
 		public Builder showImageOnFail(int imageRes) {
@@ -54,7 +54,7 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**
-		 * ÉèÖÃÊÇ·ñÔÚÄÚ´æÖĞ»º´æ
+		 * è®¾ç½®æ˜¯å¦åœ¨å†…å­˜ä¸­ç¼“å­˜
 		 * @param cacheInMemory 
 		 * @return
 		 */
@@ -63,7 +63,7 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**
-		 * ÉèÖÃÊÇ·ñÔÚsd¿¨ÉÏ»º´æ
+		 * è®¾ç½®æ˜¯å¦åœ¨sdå¡ä¸Šç¼“å­˜
 		 * @param cacheOnDisk
 		 * @return
 		 */
@@ -72,7 +72,7 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**
-		 * Í¼Æ¬ÏÔÊ¾Æ÷
+		 * å›¾ç‰‡æ˜¾ç¤ºå™¨
 		 * @param displayer
 		 * @return
 		 */
@@ -82,7 +82,7 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**  
-		*  ÉèÖÃÊÇ·ñ¼ÓÔØÍøÂçÍ¼Æ¬
+		*  è®¾ç½®æ˜¯å¦åŠ è½½ç½‘ç»œå›¾ç‰‡
 		*  @param fromNet
 		*  @return   
 		*/
@@ -91,11 +91,11 @@ public class DisplayImageOptions {
 			return this;
 		}
 		/**
-		 * ´´½¨DisplayImageOptions¶ÔÏó
+		 * åˆ›å»ºDisplayImageOptionså¯¹è±¡
 		 * @return
 		 */
 		public DisplayImageOptions build() {
-			//ÔÚÕâÀï×öbuilderËùÓĞ×Ö¶ÎµÄ·Ç¿ÕÅĞ¶Ï
+			//åœ¨è¿™é‡Œåšbuilderæ‰€æœ‰å­—æ®µçš„éç©ºåˆ¤æ–­
 			return new DisplayImageOptions(this);
 		}
 

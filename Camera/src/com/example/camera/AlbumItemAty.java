@@ -4,42 +4,39 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.linj.FileOperateUtil;
-import com.linj.album.view.AlbumViewPager;
-import com.linj.album.view.AlbumViewPager.OnPlayVideoListener;
-import com.linj.album.view.AlbumViewPager.ViewPagerAdapter;
-import com.linj.album.view.MatrixImageView.OnSingleTapListener;
-import com.linj.video.view.VideoPlayerContainer;
-import com.linj.video.view.VideoPlayerView;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linj.FileOperateUtil;
+import com.linj.album.view.AlbumViewPager;
+import com.linj.album.view.AlbumViewPager.OnPlayVideoListener;
+import com.linj.album.view.MatrixImageView.OnSingleTapListener;
+import com.linj.video.view.VideoPlayerContainer;
+
 /** 
  * @ClassName: AlbumItemAty 
- * @Description:Ïà²áÍ¼Æ¬´óÍ¼Activity °üº¬Í¼Æ¬±à¼­¹¦ÄÜ
+ * @Description:ç›¸å†Œå›¾ç‰‡å¤§å›¾Activity åŒ…å«å›¾ç‰‡ç¼–è¾‘åŠŸèƒ½
  * @author LinJ
- * @date 2015-1-12 ÏÂÎç5:18:25 
+ * @date 2015-1-12 ä¸‹åˆ5:18:25 
  *  
  */
 public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTapListener
 ,OnPlayVideoListener{
 	public final static String TAG="AlbumDetailAty";
 	private String mSaveRoot;
-	private AlbumViewPager mViewPager;//ÏÔÊ¾´óÍ¼
+	private AlbumViewPager mViewPager;//æ˜¾ç¤ºå¤§å›¾
 	private VideoPlayerContainer mContainer;
 	private ImageView mBackView;
 	private ImageView mCameraView;
@@ -71,7 +68,7 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 		mDeleteButton.setOnClickListener(this);
 		mEditButton.setOnClickListener(this);
 
-		mSaveRoot="test";
+		mSaveRoot=Environment.getExternalStorageDirectory()+"/test";
 		mViewPager.setOnPageChangeListener(pageChangeListener);
 		mViewPager.setOnSingleTapListener(this);
 		mViewPager.setOnPlayVideoListener(this);
@@ -83,6 +80,8 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 			currentFileName=file.getName();
 			if(currentFileName.indexOf(".")>0)
 				currentFileName=currentFileName.substring(0, currentFileName.lastIndexOf("."));
+		}else{
+			Toast.makeText(this, "æ²¡æœ‰é¢„è§ˆ", Toast.LENGTH_SHORT).show();
 		}
 		
 		loadAlbum(mSaveRoot,currentFileName);
@@ -90,19 +89,19 @@ public class AlbumItemAty extends Activity implements OnClickListener,OnSingleTa
 
 
 	/**  
-	 *  ¼ÓÔØÍ¼Æ¬
-	 *  @param rootPath   Í¼Æ¬¸ùÂ·¾¶
+	 *  åŠ è½½å›¾ç‰‡
+	 *  @param rootPath   å›¾ç‰‡æ ¹è·¯å¾„
 	 */
 	public void loadAlbum(String rootPath,String fileName){
-		//»ñÈ¡¸ùÄ¿Â¼ÏÂËõÂÔÍ¼ÎÄ¼ş¼Ğ
+		//è·å–æ ¹ç›®å½•ä¸‹ç¼©ç•¥å›¾æ–‡ä»¶å¤¹
 		String folder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_IMAGE, rootPath);
 		String thumbnailFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, rootPath);
-		//»ñÈ¡Í¼Æ¬ÎÄ¼ş´óÍ¼
+		//è·å–å›¾ç‰‡æ–‡ä»¶å¤§å›¾
 		List<File> imageList=FileOperateUtil.listFiles(folder, ".jpg");
-		//»ñÈ¡ÊÓÆµÎÄ¼şËõÂÔÍ¼
+		//è·å–è§†é¢‘æ–‡ä»¶ç¼©ç•¥å›¾
 		List<File> videoList=FileOperateUtil.listFiles(thumbnailFolder, ".jpg","video");
 		List<File> files=new ArrayList<File>();
-		//½«ÊÓÆµÎÄ¼şËõÂÔÍ¼¼ÓÈëÍ¼Æ¬´óÍ¼ÁĞ±íÖĞ
+		//å°†è§†é¢‘æ–‡ä»¶ç¼©ç•¥å›¾åŠ å…¥å›¾ç‰‡å¤§å›¾åˆ—è¡¨ä¸­
 		if(videoList!=null&&videoList.size()>0){
 			files.addAll(videoList);
 		}

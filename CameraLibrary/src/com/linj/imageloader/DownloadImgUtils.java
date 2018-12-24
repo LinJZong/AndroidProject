@@ -25,7 +25,7 @@ public class DownloadImgUtils
 {
 
 	/**
-	 * 根据url下载图片在指定的文件
+	 * 鏍规嵁url涓嬭浇鍥剧墖鍦ㄦ寚瀹氱殑鏂囦欢
 	 * 
 	 * @param urlStr
 	 * @param file
@@ -78,7 +78,7 @@ public class DownloadImgUtils
 	}
 
 	/**
-	 * 根据url下载图片在指定的文件
+	 * 鏍规嵁url涓嬭浇鍥剧墖鍦ㄦ寚瀹氱殑鏂囦欢
 	 * 
 	 * @param urlStr
 	 * @param file
@@ -99,7 +99,7 @@ public class DownloadImgUtils
 			opts.inJustDecodeBounds = true;
 			Bitmap bitmap = BitmapFactory.decodeStream(is, null, opts);
 			
-			//获取imageview想要显示的宽和高
+			//鑾峰彇imageview鎯宠鏄剧ず鐨勫鍜岄珮
 			ImageSize imageViewSize = ImageSizeUtil.getImageViewSize(imageview);
 			opts.inSampleSize = ImageSizeUtil.caculateInSampleSize(opts,
 					imageViewSize.width, imageViewSize.height);

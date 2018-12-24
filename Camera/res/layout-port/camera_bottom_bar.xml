@@ -49,19 +49,21 @@
         android:layout_weight="1.0"
         android:gravity="center" >
 
-        <ImageButton
+        <!-- <ImageButton
             android:id="@+id/btn_shutter_record"
             android:layout_width="@dimen/shutter_bottom_size"
             android:layout_height="@dimen/shutter_bottom_size"
-            android:background="@drawable/btn_shutter_record"
+            android:src="@drawable/btn_img_camera"
+            android:background="@null"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY" />
-
+ -->
         <ImageButton
             android:id="@+id/btn_shutter_camera"
             android:layout_width="@dimen/shutter_bottom_size"
             android:layout_height="@dimen/shutter_bottom_size"
-            android:background="@drawable/btn_shutter_camera"
+            android:src="@drawable/btn_img_camera"
+            android:background="@null"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY" />
     </RelativeLayout>

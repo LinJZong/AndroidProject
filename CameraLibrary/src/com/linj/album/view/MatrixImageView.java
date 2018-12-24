@@ -16,21 +16,21 @@ import android.widget.ImageView.ScaleType;
 
 /** 
  * @ClassName: MatrixImageView 
- * @Description:  ´ø·Å´ó¡¢ËõĞ¡¡¢ÒÆ¶¯Ğ§¹ûµÄImageView
+ * @Description:  å¸¦æ”¾å¤§ã€ç¼©å°ã€ç§»åŠ¨æ•ˆæœçš„ImageView
  * @author LinJ
- * @date 2015-1-7 ÉÏÎç11:15:07 
+ * @date 2015-1-7 ä¸Šåˆ11:15:07 
  *  
  */
 public class MatrixImageView extends ImageView{
 	public final static String TAG="MatrixImageView";
 	private GestureDetector mGestureDetector;
-	/**  Ä£°åMatrix£¬ÓÃÒÔ³õÊ¼»¯ */ 
+	/**  æ¨¡æ¿Matrixï¼Œç”¨ä»¥åˆå§‹åŒ– */ 
 	private  Matrix mMatrix=new Matrix();
-	/**  Í¼Æ¬³¤¶È*/ 
+	/**  å›¾ç‰‡é•¿åº¦*/ 
 	private float mImageWidth;
-	/**  Í¼Æ¬¸ß¶È */ 
+	/**  å›¾ç‰‡é«˜åº¦ */ 
 	private float mImageHeight;
-	/**  Ô­Ê¼Ëõ·Å¼¶±ğ */ 
+	/**  åŸå§‹ç¼©æ”¾çº§åˆ« */ 
 	private float mScale
 	;
 	private OnMovingListener moveListener;
@@ -41,9 +41,9 @@ public class MatrixImageView extends ImageView{
 		MatrixTouchListener mListener=new MatrixTouchListener();
 		setOnTouchListener(mListener);
 		mGestureDetector=new GestureDetector(getContext(), new GestureListener(mListener));
-		//±³¾°ÉèÖÃÎªbalck
+		//èƒŒæ™¯è®¾ç½®ä¸ºbalck
 	    setBackgroundColor(Color.BLACK);
-		//½«Ëõ·ÅÀàĞÍÉèÖÃÎªCENTER_INSIDE£¬±íÊ¾°ÑÍ¼Æ¬¾ÓÖĞÏÔÊ¾,²¢ÇÒ¿í¸ß×î´óÖµÎª¿Ø¼ş¿í¸ß
+		//å°†ç¼©æ”¾ç±»å‹è®¾ç½®ä¸ºCENTER_INSIDEï¼Œè¡¨ç¤ºæŠŠå›¾ç‰‡å±…ä¸­æ˜¾ç¤º,å¹¶ä¸”å®½é«˜æœ€å¤§å€¼ä¸ºæ§ä»¶å®½é«˜
 		setScaleType(ScaleType.FIT_CENTER);
 	}
 	public MatrixImageView(Context context) {
@@ -51,9 +51,9 @@ public class MatrixImageView extends ImageView{
 		MatrixTouchListener mListener=new MatrixTouchListener();
 		setOnTouchListener(mListener);
 		mGestureDetector=new GestureDetector(getContext(), new GestureListener(mListener));
-		//±³¾°ÉèÖÃÎªbalck
+		//èƒŒæ™¯è®¾ç½®ä¸ºbalck
 	    setBackgroundColor(Color.BLACK);
-	  //½«Ëõ·ÅÀàĞÍÉèÖÃÎªCENTER_INSIDE£¬±íÊ¾°ÑÍ¼Æ¬¾ÓÖĞÏÔÊ¾,²¢ÇÒ¿í¸ß×î´óÖµÎª¿Ø¼ş¿í¸ß
+	  //å°†ç¼©æ”¾ç±»å‹è®¾ç½®ä¸ºCENTER_INSIDEï¼Œè¡¨ç¤ºæŠŠå›¾ç‰‡å±…ä¸­æ˜¾ç¤º,å¹¶ä¸”å®½é«˜æœ€å¤§å€¼ä¸ºæ§ä»¶å®½é«˜
 		setScaleType(ScaleType.FIT_CENTER);	
 	}
 	public void setOnMovingListener(OnMovingListener listener){
@@ -66,7 +66,7 @@ public class MatrixImageView extends ImageView{
 	public void setImageBitmap(Bitmap bm) {
 		// TODO Auto-generated method stub
 		super.setImageBitmap(bm);
-		//´óĞ¡Îª0 ±íÊ¾µ±Ç°¿Ø¼ş´óĞ¡Î´²âÁ¿  ÉèÖÃ¼àÌıº¯Êı  ÔÚ»æÖÆÇ°¸³Öµ
+		//å¤§å°ä¸º0 è¡¨ç¤ºå½“å‰æ§ä»¶å¤§å°æœªæµ‹é‡  è®¾ç½®ç›‘å¬å‡½æ•°  åœ¨ç»˜åˆ¶å‰èµ‹å€¼
 		if(getWidth()==0){
 			ViewTreeObserver vto = getViewTreeObserver();   
 			vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
@@ -74,7 +74,7 @@ public class MatrixImageView extends ImageView{
 				public boolean onPreDraw()
 				{
 					initData();
-					//¸³Öµ½áÊøºó£¬ÒÆ³ı¸Ã¼àÌıº¯Êı
+					//èµ‹å€¼ç»“æŸåï¼Œç§»é™¤è¯¥ç›‘å¬å‡½æ•°
 					MatrixImageView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 					return true;
 				}
@@ -85,42 +85,42 @@ public class MatrixImageView extends ImageView{
 	}
 
 	/**  
-	 *   ³õÊ¼»¯Ä£°åMatrixºÍÍ¼Æ¬µÄÆäËûÊı¾İ
+	 *   åˆå§‹åŒ–æ¨¡æ¿Matrixå’Œå›¾ç‰‡çš„å…¶ä»–æ•°æ®
 	 */
 	private void initData() {
-		//ÉèÖÃÍêÍ¼Æ¬ºó£¬»ñÈ¡¸ÃÍ¼Æ¬µÄ×ø±ê±ä»»¾ØÕó
+		//è®¾ç½®å®Œå›¾ç‰‡åï¼Œè·å–è¯¥å›¾ç‰‡çš„åæ ‡å˜æ¢çŸ©é˜µ
 		mMatrix.set(getImageMatrix());
 		float[] values=new float[9];
 		mMatrix.getValues(values);
-		//Í¼Æ¬¿í¶ÈÎªÆÁÄ»¿í¶È³ıËõ·Å±¶Êı
+		//å›¾ç‰‡å®½åº¦ä¸ºå±å¹•å®½åº¦é™¤ç¼©æ”¾å€æ•°
 		mImageWidth=getWidth()/values[Matrix.MSCALE_X];
 		mImageHeight=(getHeight()-values[Matrix.MTRANS_Y]*2)/values[Matrix.MSCALE_Y];
 		mScale=values[Matrix.MSCALE_X];
 	}
 
 	public class MatrixTouchListener implements OnTouchListener{
-		/** ÍÏÀ­ÕÕÆ¬Ä£Ê½ */
+		/** æ‹–æ‹‰ç…§ç‰‡æ¨¡å¼ */
 		private static final int MODE_DRAG = 1;
-		/** ·Å´óËõĞ¡ÕÕÆ¬Ä£Ê½ */
+		/** æ”¾å¤§ç¼©å°ç…§ç‰‡æ¨¡å¼ */
 		private static final int MODE_ZOOM = 2;
-		/**  ²»Ö§³ÖMatrix */ 
+		/**  ä¸æ”¯æŒMatrix */ 
 		private static final int MODE_UNABLE=3;
-		/**   ×î´óËõ·Å¼¶±ğ*/ 
+		/**   æœ€å¤§ç¼©æ”¾çº§åˆ«*/ 
 		float mMaxScale=6;
-		/**   Ë«»÷Ê±µÄËõ·Å¼¶±ğ*/ 
+		/**   åŒå‡»æ—¶çš„ç¼©æ”¾çº§åˆ«*/ 
 		float mDobleClickScale=2;
 		private int mMode = 0;// 
-		/**  Ëõ·Å¿ªÊ¼Ê±µÄÊÖÖ¸¼ä¾à */ 
+		/**  ç¼©æ”¾å¼€å§‹æ—¶çš„æ‰‹æŒ‡é—´è· */ 
 		private float mStartDis;
-		/**   µ±Ç°Matrix*/ 
+		/**   å½“å‰Matrix*/ 
 		private Matrix mCurrentMatrix = new Matrix();	
 
-		/** ÓÃÓÚ¼ÇÂ¼¿ªÊ¼Ê±ºòµÄ×ø±êÎ»ÖÃ */
+		/** ç”¨äºè®°å½•å¼€å§‹æ—¶å€™çš„åæ ‡ä½ç½® */
 
-		/** ºÍViewPager½»»¥Ïà¹Ø£¬ÅĞ¶Ïµ±Ç°ÊÇ·ñ¿ÉÒÔ×óÒÆ¡¢ÓÒÒÆ  */ 
+		/** å’ŒViewPageräº¤äº’ç›¸å…³ï¼Œåˆ¤æ–­å½“å‰æ˜¯å¦å¯ä»¥å·¦ç§»ã€å³ç§»  */ 
 		boolean mLeftDragable;
 		boolean mRightDragable;
-		/**  ÊÇ·ñµÚÒ»´ÎÒÆ¶¯ */ 
+		/**  æ˜¯å¦ç¬¬ä¸€æ¬¡ç§»åŠ¨ */ 
 		boolean mFirstMove=false;
 		private PointF mStartPoint = new PointF();
 		@Override
@@ -128,7 +128,7 @@ public class MatrixImageView extends ImageView{
 			// TODO Auto-generated method stub
 			switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
-				//ÉèÖÃÍÏ¶¯Ä£Ê½
+				//è®¾ç½®æ‹–åŠ¨æ¨¡å¼
 				mMode=MODE_DRAG;
 				mStartPoint.set(event.getX(), event.getY());
 				isMatrixEnable();
@@ -164,21 +164,21 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *   ×Ó¿Ø¼ş¿ªÊ¼½øÈëÒÆ¶¯×´Ì¬£¬ÁîViewPagerÎŞ·¨À¹½Ø¶Ô×Ó¿Ø¼şµÄTouchÊÂ¼ş
+		 *   å­æ§ä»¶å¼€å§‹è¿›å…¥ç§»åŠ¨çŠ¶æ€ï¼Œä»¤ViewPageræ— æ³•æ‹¦æˆªå¯¹å­æ§ä»¶çš„Touchäº‹ä»¶
 		 */
 		private void startDrag(){
 			if(moveListener!=null) moveListener.startDrag();
 
 		}
 		/**  
-		 *   ×Ó¿Ø¼ş¿ªÊ¼Í£Ö¹ÒÆ¶¯×´Ì¬£¬ViewPager½«À¹½Ø¶Ô×Ó¿Ø¼şµÄTouchÊÂ¼ş
+		 *   å­æ§ä»¶å¼€å§‹åœæ­¢ç§»åŠ¨çŠ¶æ€ï¼ŒViewPagerå°†æ‹¦æˆªå¯¹å­æ§ä»¶çš„Touchäº‹ä»¶
 		 */
 		private void stopDrag(){
 			if(moveListener!=null) moveListener.stopDrag();
 		}
 
 		/**  
-		 *   ¸ù¾İµ±Ç°Í¼Æ¬×óÓÒ±ßÔµÉèÖÃ¿ÉÍÏ×§×´Ì¬
+		 *   æ ¹æ®å½“å‰å›¾ç‰‡å·¦å³è¾¹ç¼˜è®¾ç½®å¯æ‹–æ‹½çŠ¶æ€
 		 */
 		private void checkDragable() {
 			mLeftDragable=true;
@@ -186,27 +186,27 @@ public class MatrixImageView extends ImageView{
 			mFirstMove=true;
 			float[] values=new float[9];
 			getImageMatrix().getValues(values);
-			//Í¼Æ¬×ó±ßÔµÀë¿ª×ó±ß½ç£¬±íÊ¾²»¿ÉÓÒÒÆ
+			//å›¾ç‰‡å·¦è¾¹ç¼˜ç¦»å¼€å·¦è¾¹ç•Œï¼Œè¡¨ç¤ºä¸å¯å³ç§»
 			if(values[Matrix.MTRANS_X]>=0)
 				mRightDragable=false;
-			//Í¼Æ¬ÓÒ±ßÔµÀë¿ªÓÒ±ß½ç£¬±íÊ¾²»¿É×óÒÆ
+			//å›¾ç‰‡å³è¾¹ç¼˜ç¦»å¼€å³è¾¹ç•Œï¼Œè¡¨ç¤ºä¸å¯å·¦ç§»
 			if((mImageWidth)*values[Matrix.MSCALE_X]+values[Matrix.MTRANS_X]<=getWidth()){
 				mLeftDragable=false;
 			}
 		}
 
 		/**  
-		 *  ÉèÖÃÍÏ×§×´Ì¬ÏÂµÄMatrix
+		 *  è®¾ç½®æ‹–æ‹½çŠ¶æ€ä¸‹çš„Matrix
 		 *  @param event   
 		 */
 		public void setDragMatrix(MotionEvent event) {
 			if(isZoomChanged()){
-				float dx = event.getX() - mStartPoint.x; // µÃµ½xÖáµÄÒÆ¶¯¾àÀë
-				float dy = event.getY() - mStartPoint.y; // µÃµ½xÖáµÄÒÆ¶¯¾àÀë
-				//±ÜÃâºÍË«»÷³åÍ»,´óÓÚ10f²ÅËãÊÇÍÏ¶¯
+				float dx = event.getX() - mStartPoint.x; // å¾—åˆ°xè½´çš„ç§»åŠ¨è·ç¦»
+				float dy = event.getY() - mStartPoint.y; // å¾—åˆ°xè½´çš„ç§»åŠ¨è·ç¦»
+				//é¿å…å’ŒåŒå‡»å†²çª,å¤§äº10fæ‰ç®—æ˜¯æ‹–åŠ¨
 				if(Math.sqrt(dx*dx+dy*dy)>10f){	
 					mStartPoint.set(event.getX(), event.getY());
-					//ÔÚµ±Ç°»ù´¡ÉÏÒÆ¶¯
+					//åœ¨å½“å‰åŸºç¡€ä¸Šç§»åŠ¨
 					mCurrentMatrix.set(getImageMatrix());
 					float[] values=new float[9];
 					mCurrentMatrix.getValues(values);
@@ -222,20 +222,20 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *  ÅĞ¶ÏËõ·Å¼¶±ğÊÇ·ñÊÇ¸Ä±ä¹ı
-		 *  @return   true±íÊ¾·Ç³õÊ¼Öµ,false±íÊ¾³õÊ¼Öµ
+		 *  åˆ¤æ–­ç¼©æ”¾çº§åˆ«æ˜¯å¦æ˜¯æ”¹å˜è¿‡
+		 *  @return   trueè¡¨ç¤ºéåˆå§‹å€¼,falseè¡¨ç¤ºåˆå§‹å€¼
 		 */
 		private boolean isZoomChanged() {
 			float[] values=new float[9];
 			getImageMatrix().getValues(values);
-			//»ñÈ¡µ±Ç°XÖáËõ·Å¼¶±ğ
+			//è·å–å½“å‰Xè½´ç¼©æ”¾çº§åˆ«
 			float scale=values[Matrix.MSCALE_X];
-			//»ñÈ¡Ä£°åµÄXÖáËõ·Å¼¶±ğ£¬Á½Õß×ö±È½Ï
+			//è·å–æ¨¡æ¿çš„Xè½´ç¼©æ”¾çº§åˆ«ï¼Œä¸¤è€…åšæ¯”è¾ƒ
 			return scale!=mScale;
 		}
 
 		/**  
-		 *  ºÍµ±Ç°¾ØÕó¶Ô±È£¬¼ìÑédy£¬Ê¹Í¼ÏñÒÆ¶¯ºó²»»á³¬³öImageView±ß½ç
+		 *  å’Œå½“å‰çŸ©é˜µå¯¹æ¯”ï¼Œæ£€éªŒdyï¼Œä½¿å›¾åƒç§»åŠ¨åä¸ä¼šè¶…å‡ºImageViewè¾¹ç•Œ
 		 *  @param values
 		 *  @param dy
 		 *  @return   
@@ -252,7 +252,7 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *  ºÍµ±Ç°¾ØÕó¶Ô±È£¬¼ìÑédx£¬Ê¹Í¼ÏñÒÆ¶¯ºó²»»á³¬³öImageView±ß½ç
+		 *  å’Œå½“å‰çŸ©é˜µå¯¹æ¯”ï¼Œæ£€éªŒdxï¼Œä½¿å›¾åƒç§»åŠ¨åä¸ä¼šè¶…å‡ºImageViewè¾¹ç•Œ
 		 *  @param values
 		 *  @param dx
 		 *  @return   
@@ -260,14 +260,14 @@ public class MatrixImageView extends ImageView{
 		private float checkDxBound(float[] values,float dx,float dy) {
 			float width=getWidth();
 			if(!mLeftDragable&&dx<0){
-				//¼ÓÈëºÍyÖáµÄ¶Ô±È£¬±íÊ¾ÔÚ¼àÌıµ½´¹Ö±·½ÏòµÄÊÖÊÆÊ±²»ÇĞ»»Item
+				//åŠ å…¥å’Œyè½´çš„å¯¹æ¯”ï¼Œè¡¨ç¤ºåœ¨ç›‘å¬åˆ°å‚ç›´æ–¹å‘çš„æ‰‹åŠ¿æ—¶ä¸åˆ‡æ¢Item
 				if(Math.abs(dx)*0.4f>Math.abs(dy)&&mFirstMove){
 					stopDrag();
 				}
 				return 0;
 			}
 			if(!mRightDragable&&dx>0){
-				//¼ÓÈëºÍyÖáµÄ¶Ô±È£¬±íÊ¾ÔÚ¼àÌıµ½´¹Ö±·½ÏòµÄÊÖÊÆÊ±²»ÇĞ»»Item
+				//åŠ å…¥å’Œyè½´çš„å¯¹æ¯”ï¼Œè¡¨ç¤ºåœ¨ç›‘å¬åˆ°å‚ç›´æ–¹å‘çš„æ‰‹åŠ¿æ—¶ä¸åˆ‡æ¢Item
 				if(Math.abs(dx)*0.4f>Math.abs(dy)&&mFirstMove){
 					stopDrag();
 				}
@@ -290,17 +290,17 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *  ÉèÖÃËõ·ÅMatrix
+		 *  è®¾ç½®ç¼©æ”¾Matrix
 		 *  @param event   
 		 */
 		private void setZoomMatrix(MotionEvent event) {
-			//Ö»ÓĞÍ¬Ê±´¥ÆÁÁ½¸öµãµÄÊ±ºò²ÅÖ´ĞĞ
+			//åªæœ‰åŒæ—¶è§¦å±ä¸¤ä¸ªç‚¹çš„æ—¶å€™æ‰æ‰§è¡Œ
 			if(event.getPointerCount()<2) return;
-			float endDis = distance(event);// ½áÊø¾àÀë
-			if (endDis > 10f) { // Á½¸öÊÖÖ¸²¢Â£ÔÚÒ»ÆğµÄÊ±ºòÏñËØ´óÓÚ10
-				float scale = endDis / mStartDis;// µÃµ½Ëõ·Å±¶Êı
-				mStartDis=endDis;//ÖØÖÃ¾àÀë
-				mCurrentMatrix.set(getImageMatrix());//³õÊ¼»¯Matrix
+			float endDis = distance(event);// ç»“æŸè·ç¦»
+			if (endDis > 10f) { // ä¸¤ä¸ªæ‰‹æŒ‡å¹¶æ‹¢åœ¨ä¸€èµ·çš„æ—¶å€™åƒç´ å¤§äº10
+				float scale = endDis / mStartDis;// å¾—åˆ°ç¼©æ”¾å€æ•°
+				mStartDis=endDis;//é‡ç½®è·ç¦»
+				mCurrentMatrix.set(getImageMatrix());//åˆå§‹åŒ–Matrix
 				float[] values=new float[9];
 				mCurrentMatrix.getValues(values);
 				scale = checkMaxScale(scale, values);
@@ -311,29 +311,29 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *  »ñÈ¡Ëõ·ÅµÄÖĞĞÄµã¡£
+		 *  è·å–ç¼©æ”¾çš„ä¸­å¿ƒç‚¹ã€‚
 		 *  @param scale
 		 *  @param values
 		 *  @return   
 		 */
 		private PointF getCenter(float scale,float[] values) {
-			//Ëõ·Å¼¶±ğĞ¡ÓÚÔ­Ê¼Ëõ·Å¼¶±ğÊ±»òÕßÎª·Å´ó×´Ì¬Ê±£¬·µ»ØImageViewÖĞĞÄµã×÷ÎªËõ·ÅÖĞĞÄµã
+			//ç¼©æ”¾çº§åˆ«å°äºåŸå§‹ç¼©æ”¾çº§åˆ«æ—¶æˆ–è€…ä¸ºæ”¾å¤§çŠ¶æ€æ—¶ï¼Œè¿”å›ImageViewä¸­å¿ƒç‚¹ä½œä¸ºç¼©æ”¾ä¸­å¿ƒç‚¹
 			if(scale*values[Matrix.MSCALE_X]<mScale||scale>=1){
 				return new PointF(getWidth()/2,getHeight()/2);
 			}
 			float cx=getWidth()/2;
 			float cy=getHeight()/2;
-			//ÒÔImageViewÖĞĞÄµãÎªËõ·ÅÖĞĞÄ£¬ÅĞ¶ÏËõ·ÅºóµÄÍ¼Æ¬×ó±ßÔµÊÇ·ñ»áÀë¿ªImageView×ó±ßÔµ£¬ÊÇµÄ»°ÒÔ×ó±ßÔµÎªXÖáÖĞĞÄ
+			//ä»¥ImageViewä¸­å¿ƒç‚¹ä¸ºç¼©æ”¾ä¸­å¿ƒï¼Œåˆ¤æ–­ç¼©æ”¾åçš„å›¾ç‰‡å·¦è¾¹ç¼˜æ˜¯å¦ä¼šç¦»å¼€ImageViewå·¦è¾¹ç¼˜ï¼Œæ˜¯çš„è¯ä»¥å·¦è¾¹ç¼˜ä¸ºXè½´ä¸­å¿ƒ
 			if((getWidth()/2-values[Matrix.MTRANS_X])*scale<getWidth()/2)
 				cx=0;
-			//ÅĞ¶ÏËõ·ÅºóµÄÓÒ±ßÔµÊÇ·ñ»áÀë¿ªImageViewÓÒ±ßÔµ£¬ÊÇµÄ»°ÒÔÓÒ±ßÔµÎªXÖáÖĞĞÄ
+			//åˆ¤æ–­ç¼©æ”¾åçš„å³è¾¹ç¼˜æ˜¯å¦ä¼šç¦»å¼€ImageViewå³è¾¹ç¼˜ï¼Œæ˜¯çš„è¯ä»¥å³è¾¹ç¼˜ä¸ºXè½´ä¸­å¿ƒ
 			if((mImageWidth*values[Matrix.MSCALE_X]+values[Matrix.MTRANS_X])*scale<getWidth())
 				cx=getWidth();
 			return new PointF(cx,cy);
 		}
 
 		/**  
-		 *  ¼ìÑéscale£¬Ê¹Í¼ÏñËõ·Åºó²»»á³¬³ö×î´ó±¶Êı
+		 *  æ£€éªŒscaleï¼Œä½¿å›¾åƒç¼©æ”¾åä¸ä¼šè¶…å‡ºæœ€å¤§å€æ•°
 		 *  @param scale
 		 *  @param values
 		 *  @return   
@@ -345,19 +345,19 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *   ÖØÖÃMatrix
+		 *   é‡ç½®Matrix
 		 */
 		private void reSetMatrix() {
 			if(checkRest()){
 				mCurrentMatrix.set(mMatrix);
 				setImageMatrix(mCurrentMatrix);
 			}else {
-				//ÅĞ¶ÏYÖáÊÇ·ñĞèÒª¸üÕı
+				//åˆ¤æ–­Yè½´æ˜¯å¦éœ€è¦æ›´æ­£
 				float[] values=new float[9];
 				getImageMatrix().getValues(values);
 				float height=mImageHeight*values[Matrix.MSCALE_Y];
 				if(height<getHeight()){
-					//ÔÚÍ¼Æ¬ÕæÊµ¸ß¶ÈĞ¡ÓÚÈİÆ÷¸ß¶ÈÊ±£¬YÖá¾ÓÖĞ£¬YÖáÀíÏëÆ«ÒÆÁ¿ÎªÁ½Õß¸ß¶È²î/2£¬
+					//åœ¨å›¾ç‰‡çœŸå®é«˜åº¦å°äºå®¹å™¨é«˜åº¦æ—¶ï¼ŒYè½´å±…ä¸­ï¼ŒYè½´ç†æƒ³åç§»é‡ä¸ºä¸¤è€…é«˜åº¦å·®/2ï¼Œ
 					float topMargin=(getHeight()-height)/2;
 					if(topMargin!=values[Matrix.MTRANS_Y]){
 						mCurrentMatrix.set(getImageMatrix());
@@ -369,49 +369,49 @@ public class MatrixImageView extends ImageView{
 		}
 
 		/**  
-		 *  ÅĞ¶ÏÊÇ·ñĞèÒªÖØÖÃ
-		 *  @return  µ±Ç°Ëõ·Å¼¶±ğĞ¡ÓÚÄ£°åËõ·Å¼¶±ğÊ±£¬ÖØÖÃ 
+		 *  åˆ¤æ–­æ˜¯å¦éœ€è¦é‡ç½®
+		 *  @return  å½“å‰ç¼©æ”¾çº§åˆ«å°äºæ¨¡æ¿ç¼©æ”¾çº§åˆ«æ—¶ï¼Œé‡ç½® 
 		 */
 		private boolean checkRest() {
 			// TODO Auto-generated method stub
 			float[] values=new float[9];
 			getImageMatrix().getValues(values);
-			//»ñÈ¡µ±Ç°XÖáËõ·Å¼¶±ğ
+			//è·å–å½“å‰Xè½´ç¼©æ”¾çº§åˆ«
 			float scale=values[Matrix.MSCALE_X];
-			//»ñÈ¡Ä£°åµÄXÖáËõ·Å¼¶±ğ£¬Á½Õß×ö±È½Ï
+			//è·å–æ¨¡æ¿çš„Xè½´ç¼©æ”¾çº§åˆ«ï¼Œä¸¤è€…åšæ¯”è¾ƒ
 			return scale<mScale;
 		}
 
 		/**  
-		 *  ÅĞ¶ÏÊÇ·ñÖ§³ÖMatrix
+		 *  åˆ¤æ–­æ˜¯å¦æ”¯æŒMatrix
 		 */
 		private void isMatrixEnable() {
-			//µ±¼ÓÔØ³ö´íÊ±£¬²»¿ÉËõ·Å
+			//å½“åŠ è½½å‡ºé”™æ—¶ï¼Œä¸å¯ç¼©æ”¾
 			if(getScaleType()!=ScaleType.CENTER){
 				setScaleType(ScaleType.MATRIX);
 			}else {
-				mMode=MODE_UNABLE;//ÉèÖÃÎª²»Ö§³ÖÊÖÊÆ
+				mMode=MODE_UNABLE;//è®¾ç½®ä¸ºä¸æ”¯æŒæ‰‹åŠ¿
 			}
 		}
 
 		/**  
-		 *  ¼ÆËãÁ½¸öÊÖÖ¸¼äµÄ¾àÀë
+		 *  è®¡ç®—ä¸¤ä¸ªæ‰‹æŒ‡é—´çš„è·ç¦»
 		 *  @param event
 		 *  @return   
 		 */
 		private float distance(MotionEvent event) {
 			float dx = event.getX(1) - event.getX(0);
 			float dy = event.getY(1) - event.getY(0);
-			/** Ê¹ÓÃ¹´¹É¶¨Àí·µ»ØÁ½µãÖ®¼äµÄ¾àÀë */
+			/** ä½¿ç”¨å‹¾è‚¡å®šç†è¿”å›ä¸¤ç‚¹ä¹‹é—´çš„è·ç¦» */
 			return (float) Math.sqrt(dx * dx + dy * dy);
 		}
 
 		/**  
-		 *   Ë«»÷Ê±´¥·¢
+		 *   åŒå‡»æ—¶è§¦å‘
 		 */
 		public void onDoubleClick(){
 			float scale=isZoomChanged()?1:mDobleClickScale;
-			mCurrentMatrix.set(mMatrix);//³õÊ¼»¯Matrix
+			mCurrentMatrix.set(mMatrix);//åˆå§‹åŒ–Matrix
 			mCurrentMatrix.postScale(scale, scale,getWidth()/2,getHeight()/2);	
 			setImageMatrix(mCurrentMatrix);
 		}
@@ -425,12 +425,12 @@ public class MatrixImageView extends ImageView{
 		}
 		@Override
 		public boolean onDown(MotionEvent e) {
-			//²¶»ñDownÊÂ¼ş
+			//æ•è·Downäº‹ä»¶
 			return true;
 		}
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
-			//´¥·¢Ë«»÷ÊÂ¼ş
+			//è§¦å‘åŒå‡»äº‹ä»¶
 			listener.onDoubleClick();
 			return true;
 		}
@@ -479,9 +479,9 @@ public class MatrixImageView extends ImageView{
 	}
 	/** 
 	 * @ClassName: OnChildMovingListener 
-	 * @Description:  MatrixImageViewÒÆ¶¯¼àÌı½Ó¿Ú,ÓÃÒÔ×éÖ¯ViewPager¶ÔMove²Ù×÷µÄÀ¹½Ø
+	 * @Description:  MatrixImageViewç§»åŠ¨ç›‘å¬æ¥å£,ç”¨ä»¥ç»„ç»‡ViewPagerå¯¹Moveæ“ä½œçš„æ‹¦æˆª
 	 * @author LinJ
-	 * @date 2015-1-12 ÏÂÎç4:39:32 
+	 * @date 2015-1-12 ä¸‹åˆ4:39:32 
 	 *  
 	 */
 	public interface OnMovingListener{
@@ -491,9 +491,9 @@ public class MatrixImageView extends ImageView{
 
 	/** 
 	 * @ClassName: OnSingleTapListener 
-	 * @Description:  ¼àÌıViewPagerÆÁÄ»µ¥»÷ÊÂ¼ş£¬±¾ÖÊÊÇ¼àÌı×Ó¿Ø¼şMatrixImageViewµÄµ¥»÷ÊÂ¼ş
+	 * @Description:  ç›‘å¬ViewPagerå±å¹•å•å‡»äº‹ä»¶ï¼Œæœ¬è´¨æ˜¯ç›‘å¬å­æ§ä»¶MatrixImageViewçš„å•å‡»äº‹ä»¶
 	 * @author LinJ
-	 * @date 2015-1-12 ÏÂÎç4:48:52 
+	 * @date 2015-1-12 ä¸‹åˆ4:48:52 
 	 *  
 	 */
 	public interface OnSingleTapListener{

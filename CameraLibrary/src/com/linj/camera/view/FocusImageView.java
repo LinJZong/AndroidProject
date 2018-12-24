@@ -2,29 +2,25 @@ package com.linj.camera.view;
 
 
 
-import com.linj.cameralibrary.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.RelativeLayout;
+
+import com.linj.cameralibrary.R;
 
 /** 
  * @ClassName: FocusImageView 
- * @Description:¾Û½¹Ê±ÏÔÊ¾µÄImagView  
+ * @Description:èšç„¦æ—¶æ˜¾ç¤ºçš„ImagView  
  * @author LinJ
- * @date 2015-1-4 ÏÂÎç2:55:34 
+ * @date 2015-1-4 ä¸‹åˆ2:55:34 
  *  
  */
 public class FocusImageView extends ImageView {
@@ -53,29 +49,29 @@ public class FocusImageView extends ImageView {
 		mFocusFailedImg=a.getResourceId(R.styleable.FocusImageView_focus_fail_id, NO_ID);
 		a.recycle();
 
-		//¾Û½¹Í¼Æ¬²»ÄÜÎª¿Õ
+		//èšç„¦å›¾ç‰‡ä¸èƒ½ä¸ºç©º
 		if (mFocusImg==NO_ID||mFocusSucceedImg==NO_ID||mFocusFailedImg==NO_ID) 
 			throw new RuntimeException("Animation is null");
 	}
 
 	/**  
-	 *  ÏÔÊ¾¾Û½¹Í¼°¸
-	 *  @param x ´¥ÆÁµÄx×ø±ê
-	 *  @param y ´¥ÆÁµÄy×ø±ê
+	 *  æ˜¾ç¤ºèšç„¦å›¾æ¡ˆ
+	 *  @param x è§¦å±çš„xåæ ‡
+	 *  @param y è§¦å±çš„yåæ ‡
 	 */
 	public void startFocus(Point point){
 		if (mFocusImg==NO_ID||mFocusSucceedImg==NO_ID||mFocusFailedImg==NO_ID) 
 			throw new RuntimeException("focus image is null");
-		//¸ù¾İ´¥ÃşµÄ×ø±êÉèÖÃ¾Û½¹Í¼°¸µÄÎ»ÖÃ
+		//æ ¹æ®è§¦æ‘¸çš„åæ ‡è®¾ç½®èšç„¦å›¾æ¡ˆçš„ä½ç½®
 		RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams) getLayoutParams();
 		params.topMargin= point.y-getHeight()/2;
 		params.leftMargin=point.x-getWidth()/2;
 		setLayoutParams(params);	
-		//ÉèÖÃ¿Ø¼ş¿É¼û£¬²¢¿ªÊ¼¶¯»­
+		//è®¾ç½®æ§ä»¶å¯è§ï¼Œå¹¶å¼€å§‹åŠ¨ç”»
 		setVisibility(View.VISIBLE);
 		setImageResource(mFocusImg);
 		startAnimation(mAnimation);	
-		//3ÃëºóÒş²ØView¡£ÔÚ´Ë´¦ÉèÖÃÊÇÓÉÓÚ¿ÉÄÜ¾Û½¹ÊÂ¼ş¿ÉÄÜ²»´¥·¢¡£
+		//3ç§’åéšè—Viewã€‚åœ¨æ­¤å¤„è®¾ç½®æ˜¯ç”±äºå¯èƒ½èšç„¦äº‹ä»¶å¯èƒ½ä¸è§¦å‘ã€‚
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -86,11 +82,18 @@ public class FocusImageView extends ImageView {
 	}
 	
 	/**  
-	*   ¾Û½¹³É¹¦»Øµ÷
+	*   èšç„¦æˆåŠŸå›è°ƒ
 	*/
 	public void onFocusSuccess(){
+		RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams) getLayoutParams();
+		if(params.topMargin==0&&params.leftMargin==0){
+			DisplayMetrics metrics = getResources().getDisplayMetrics();
+			params.topMargin= metrics.heightPixels/2-getHeight()/2;
+			params.leftMargin=metrics.widthPixels/2-getWidth()/2;
+			setLayoutParams(params);	
+		}
 		setImageResource(mFocusSucceedImg);
-		//ÒÆ³ıÔÚstartFocusÖĞÉèÖÃµÄcallback£¬1ÃëºóÒş²Ø¸Ã¿Ø¼ş
+		//ç§»é™¤åœ¨startFocusä¸­è®¾ç½®çš„callbackï¼Œ1ç§’åéšè—è¯¥æ§ä»¶
 		mHandler.removeCallbacks(null, null);
 		mHandler.postDelayed(new Runnable() {
 			@Override
@@ -103,11 +106,18 @@ public class FocusImageView extends ImageView {
 	}
 	
 	/**  
-	*   ¾Û½¹Ê§°Ü»Øµ÷
+	*   èšç„¦å¤±è´¥å›è°ƒ
 	*/
 	public void onFocusFailed(){
+		RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams) getLayoutParams();
+		if(params.topMargin==0&&params.leftMargin==0){
+			DisplayMetrics metrics = getResources().getDisplayMetrics();
+			params.topMargin= metrics.heightPixels/2-getHeight()/2;
+			params.leftMargin=metrics.widthPixels/2-getWidth()/2;
+			setLayoutParams(params);	
+		}
 		setImageResource(mFocusFailedImg);
-		//ÒÆ³ıÔÚstartFocusÖĞÉèÖÃµÄcallback£¬1ÃëºóÒş²Ø¸Ã¿Ø¼ş
+		//ç§»é™¤åœ¨startFocusä¸­è®¾ç½®çš„callbackï¼Œ1ç§’åéšè—è¯¥æ§ä»¶
 		mHandler.removeCallbacks(null, null);
 		mHandler.postDelayed(new Runnable() {
 			@Override
@@ -119,7 +129,7 @@ public class FocusImageView extends ImageView {
 	}
 
 	/**  
-	 * ÉèÖÃ¿ªÊ¼¾Û½¹Ê±µÄÍ¼Æ¬
+	 * è®¾ç½®å¼€å§‹èšç„¦æ—¶çš„å›¾ç‰‡
 	 *  @param focus   
 	 */
 	public void setFocusImg(int focus) {
@@ -127,7 +137,7 @@ public class FocusImageView extends ImageView {
 	}
 
 	/**  
-	 *  ÉèÖÃ¾Û½¹³É¹¦ÏÔÊ¾µÄÍ¼Æ¬
+	 *  è®¾ç½®èšç„¦æˆåŠŸæ˜¾ç¤ºçš„å›¾ç‰‡
 	 *  @param focusSucceed   
 	 */
 	public void setFocusSucceedImg(int focusSucceed) {

@@ -226,7 +226,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.linj.cameralibrary:focus_fail_id
         */
-        public static final int FocusImageView_focus_fail_id = 2;
+        public static int FocusImageView_focus_fail_id = 2;
         /**
           <p>This symbol is the offset where the {@link com.linj.cameralibrary.R.attr#focus_focusing_id}
           attribute's value can be found in the {@link #FocusImageView} array.
@@ -240,7 +240,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.linj.cameralibrary:focus_focusing_id
         */
-        public static final int FocusImageView_focus_focusing_id = 0;
+        public static int FocusImageView_focus_focusing_id = 0;
         /**
           <p>This symbol is the offset where the {@link com.linj.cameralibrary.R.attr#focus_success_id}
           attribute's value can be found in the {@link #FocusImageView} array.
@@ -254,7 +254,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.linj.cameralibrary:focus_success_id
         */
-        public static final int FocusImageView_focus_success_id = 1;
+        public static int FocusImageView_focus_success_id = 1;
         /** Attributes that can be used with a TempImageView.
            <p>Includes the following attributes:</p>
            <table>
@@ -281,6 +281,6 @@ theme attribute (in the form
 containing a value of this type.
           @attr name com.linj.cameralibrary:animat_id
         */
-        public static final int TempImageView_animat_id = 0;
+        public static int TempImageView_animat_id = 0;
     };
 }

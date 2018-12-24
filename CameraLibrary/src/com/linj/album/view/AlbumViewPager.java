@@ -1,18 +1,8 @@
 package com.linj.album.view;
 
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-
-import com.linj.FileOperateUtil;
-import com.linj.album.view.MatrixImageView.OnMovingListener;
-import com.linj.album.view.MatrixImageView.OnSingleTapListener;
-import com.linj.cameralibrary.R;
-import com.linj.imageloader.DisplayImageOptions;
-import com.linj.imageloader.ImageLoader;
-import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -21,37 +11,44 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.linj.FileOperateUtil;
+import com.linj.album.view.MatrixImageView.OnMovingListener;
+import com.linj.album.view.MatrixImageView.OnSingleTapListener;
+import com.linj.cameralibrary.R;
+import com.linj.imageloader.DisplayImageOptions;
+import com.linj.imageloader.ImageLoader;
+import com.linj.imageloader.displayer.MatrixBitmapDisplayer;
 
 
 /** 
  * @ClassName: AlbumViewPager 
- * @Description:  ×Ô¶¨Òåviewpager  ÓÅ»¯ÁËÊÂ¼şÀ¹½Ø
+ * @Description:  è‡ªå®šä¹‰viewpager  ä¼˜åŒ–äº†äº‹ä»¶æ‹¦æˆª
  * @author LinJ
- * @date 2015-1-9 ÏÂÎç5:33:33 
+ * @date 2015-1-9 ä¸‹åˆ5:33:33 
  *  
  */
 public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	public final static String TAG="AlbumViewPager";
 
-	/**  Í¼Æ¬¼ÓÔØÆ÷ ÓÅ»¯ÁËÁË»º´æ  */ 
+	/**  å›¾ç‰‡åŠ è½½å™¨ ä¼˜åŒ–äº†äº†ç¼“å­˜  */ 
 	private ImageLoader mImageLoader;
-	/**  ¼ÓÔØÍ¼Æ¬ÅäÖÃ²ÎÊı */ 
+	/**  åŠ è½½å›¾ç‰‡é…ç½®å‚æ•° */ 
 	private DisplayImageOptions mOptions;	
 
-	/**  µ±Ç°×Ó¿Ø¼şÊÇ·ñ´¦ÀíÍÏ¶¯×´Ì¬  */ 
+	/**  å½“å‰å­æ§ä»¶æ˜¯å¦å¤„ç†æ‹–åŠ¨çŠ¶æ€  */ 
 	private boolean mChildIsBeingDragged=false;
 
-	/**  ½çÃæµ¥»÷ÊÂ¼ş ÓÃÒÔÏÔÊ¾ºÍÒş²Ø²Ëµ¥À¸ */ 
+	/**  ç•Œé¢å•å‡»äº‹ä»¶ ç”¨ä»¥æ˜¾ç¤ºå’Œéšè—èœå•æ  */ 
 	private OnSingleTapListener onSingleTapListener;
 	
-	/**  ²¥·Å°´Å¥µã»÷ÊÂ¼ş */ 
+	/**  æ’­æ”¾æŒ‰é’®ç‚¹å‡»äº‹ä»¶ */ 
 	private OnPlayVideoListener onPlayVideoListener;
 	public AlbumViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mImageLoader= ImageLoader.getInstance(context);
-		//ÉèÖÃÍøÂçÍ¼Æ¬¼ÓÔØ²ÎÊı
+		//è®¾ç½®ç½‘ç»œå›¾ç‰‡åŠ è½½å‚æ•°
 		DisplayImageOptions.Builder builder= new DisplayImageOptions.Builder();
 		builder =builder
 				.showImageOnLoading(R.drawable.ic_stub)
@@ -66,10 +63,13 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	
 
 	/**  
-	 *  É¾³ıµ±Ç°Ïî
-	 *  @return  ¡°µ±Ç°Î»ÖÃ/×ÜÊıÁ¿¡±
+	 *  åˆ é™¤å½“å‰é¡¹
+	 *  @return  â€œå½“å‰ä½ç½®/æ€»æ•°é‡â€
 	 */
 	public String deleteCurrentPath(){
+		if(getAdapter()==null){
+			return "";
+		}
 		return ((ViewPagerAdapter)getAdapter()).deleteCurrentItem(getCurrentItem());
 
 	}
@@ -106,7 +106,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 	}
 
 	public class ViewPagerAdapter extends PagerAdapter {
-		private List<String> paths;//´óÍ¼µØÖ· Èç¹ûÎªÍøÂçÍ¼Æ¬ ÔòÎª´óÍ¼url
+		private List<String> paths;//å¤§å›¾åœ°å€ å¦‚æœä¸ºç½‘ç»œå›¾ç‰‡ åˆ™ä¸ºå¤§å›¾url
 		public ViewPagerAdapter(List<String> paths){
 			this.paths=paths;
 		}
@@ -118,8 +118,8 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 
 		@Override
 		public Object instantiateItem(ViewGroup viewGroup, int position) {
-			//×¢Òâ£¬ÕâÀï²»¿ÉÒÔ¼ÓinflateµÄÊ±ºòÖ±½ÓÌí¼Óµ½viewGroupÏÂ£¬¶øĞèÒªÓÃaddViewÖØĞÂÌí¼Ó
-			//ÒòÎªÖ±½Ó¼Óµ½viewGroupÏÂ»áµ¼ÖÂ·µ»ØµÄviewÎªviewGroup
+			//æ³¨æ„ï¼Œè¿™é‡Œä¸å¯ä»¥åŠ inflateçš„æ—¶å€™ç›´æ¥æ·»åŠ åˆ°viewGroupä¸‹ï¼Œè€Œéœ€è¦ç”¨addViewé‡æ–°æ·»åŠ 
+			//å› ä¸ºç›´æ¥åŠ åˆ°viewGroupä¸‹ä¼šå¯¼è‡´è¿”å›çš„viewä¸ºviewGroup
 			View imageLayout = inflate(getContext(),R.layout.item_album_pager, null);
 			viewGroup.addView(imageLayout);
 			assert imageLayout != null;
@@ -163,7 +163,7 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 
 		@Override
 		public int getItemPosition(Object object) {
-			//ÔÚnotifyDataSetChangedÊ±·µ»ØNone£¬ÖØĞÂ»æÖÆ
+			//åœ¨notifyDataSetChangedæ—¶è¿”å›Noneï¼Œé‡æ–°ç»˜åˆ¶
 			return POSITION_NONE;
 		}
 
@@ -177,8 +177,11 @@ public class AlbumViewPager extends ViewPager implements OnMovingListener {
 			return arg0 == arg1;			
 		}
 
-		//×Ô¶¨Òå»ñÈ¡µ±Ç°view·½·¨                              
+		//è‡ªå®šä¹‰è·å–å½“å‰viewæ–¹æ³•                              
 		public String deleteCurrentItem(int position) {
+			if(paths==null||paths.size()<=0){
+				return "";
+			}
 			String path=paths.get(position);
 			if(path!=null) {
 				FileOperateUtil.deleteSourceFile(path, getContext());

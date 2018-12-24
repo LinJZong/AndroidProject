@@ -5,41 +5,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.linj.FileOperateUtil;
-import com.linj.album.view.AlbumGridView;
-import com.linj.album.view.AlbumGridView.AlbumViewAdapter;
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
+
+import com.linj.FileOperateUtil;
+import com.linj.album.view.AlbumGridView;
 
 /** 
 * @ClassName: AlbumAty 
-* @Description: Ïà²áActivity
+* @Description: ç›¸å†ŒActivity
 * @author LinJ
-* @date 2015-1-6 ÏÂÎç5:03:48 
+* @date 2015-1-6 ä¸‹åˆ5:03:48 
 *  
 */
 public class AlbumAty extends Activity implements View.OnClickListener,AlbumGridView.OnCheckedChangeListener{
 	public final static String TAG="AlbumAty";
 	/**
-	 * ÏÔÊ¾Ïà²áµÄView
+	 * æ˜¾ç¤ºç›¸å†Œçš„View
 	 */
 	private AlbumGridView mAlbumView;
 
@@ -106,13 +103,13 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 	}
 
 	/**  
-	 *  ¼ÓÔØÍ¼Æ¬
-	 *  @param rootPath ¸ùÄ¿Â¼ÎÄ¼ş¼ĞÃû 
-	 *  @param format ĞèÒª¼ÓÔØµÄÎÄ¼ş¸ñÊ½ 
+	 *  åŠ è½½å›¾ç‰‡
+	 *  @param rootPath æ ¹ç›®å½•æ–‡ä»¶å¤¹å 
+	 *  @param format éœ€è¦åŠ è½½çš„æ–‡ä»¶æ ¼å¼ 
 	 */
 	public void loadAlbum(String rootPath,String format){
-		//»ñÈ¡¸ùÄ¿Â¼ÏÂËõÂÔÍ¼ÎÄ¼ş¼Ğ
-		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, rootPath);
+		//è·å–æ ¹ç›®å½•ä¸‹ç¼©ç•¥å›¾æ–‡ä»¶å¤¹
+		String thumbFolder=FileOperateUtil.getFolderPath(this, FileOperateUtil.TYPE_THUMBNAIL, Environment.getExternalStorageDirectory()+"/test");
 		List<File> files=FileOperateUtil.listFiles(thumbFolder, format);
 		if(files!=null&&files.size()>0){
 			List<String> paths=new ArrayList<String>();
@@ -188,8 +185,8 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 	
 	private void showDeleteDialog() {
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
-		builder.setMessage("È·¶¨ÒªÒªÉ¾³ı?")
-		.setPositiveButton("È·ÈÏ", new OnClickListener() {	
+		builder.setMessage("ç¡®å®šè¦è¦åˆ é™¤?")
+		.setPositiveButton("ç¡®è®¤", new OnClickListener() {	
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
@@ -202,7 +199,7 @@ public class AlbumAty extends Activity implements View.OnClickListener,AlbumGrid
 				leaveEdit();
 			}
 		})
-		.setNegativeButton("È¡Ïû", new OnClickListener() {			
+		.setNegativeButton("å–æ¶ˆ", new OnClickListener() {			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub

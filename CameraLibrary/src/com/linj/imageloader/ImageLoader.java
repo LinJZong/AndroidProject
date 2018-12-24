@@ -28,46 +28,46 @@ import android.widget.ImageView.ScaleType;
 
 /** 
  * @ClassName: ImageLoader 
- * @Description:  Í¼Æ¬¼ÓÔØÆ÷
+ * @Description:  å›¾ç‰‡åŠ è½½å™¨
  * @author LinJ
- * @date 2015-1-8 ÉÏÎç9:02:25 
+ * @date 2015-1-8 ä¸Šåˆ9:02:25 
  *  
  */
 public class ImageLoader {
 	private static final String TAG = "ImageLoader";
 	/**
-	 * µ¥Àı¶ÔÏó
+	 * å•ä¾‹å¯¹è±¡
 	 */
 	private static ImageLoader mInstance;
 	/**
-	 * ÏûÏ¢¶ÓÁĞ
+	 * æ¶ˆæ¯é˜Ÿåˆ—
 	 */
 	private LinkedBlockingDeque<Runnable> mTaskQueue;
 
 	/**
-	 * Í¼Æ¬»º´æµÄºËĞÄ¶ÔÏó
+	 * å›¾ç‰‡ç¼“å­˜çš„æ ¸å¿ƒå¯¹è±¡
 	 */
 	private LruCache<String, Bitmap> mLruCache;
 	/**
-	 * Ïß³Ì³Ø
+	 * çº¿ç¨‹æ± 
 	 */
 	private ExecutorService mThreadPool;
 	private static final int DEAFULT_THREAD_COUNT = 1;
 	/**
-	 * ¶ÓÁĞµÄµ÷¶È·½Ê½
+	 * é˜Ÿåˆ—çš„è°ƒåº¦æ–¹å¼
 	 */
 	private Type mType = Type.LIFO;
 
 	/**
-	 * ºóÌ¨ÂÖÑ¯Ïß³Ì
+	 * åå°è½®è¯¢çº¿ç¨‹
 	 */
 	private Thread mPoolThread;
 	/**
-	 * UIÏß³ÌÖĞµÄHandler
+	 * UIçº¿ç¨‹ä¸­çš„Handler
 	 */
 	private Handler mUIHandler;
 
-	/**   ĞÅºÅ¿ØÖÆ*/ 
+	/**   ä¿¡å·æ§åˆ¶*/ 
 	private Semaphore mSemaphoreThreadPool;
 
 	private Context mContext;
@@ -111,29 +111,29 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ³õÊ¼»¯
+	 * åˆå§‹åŒ–
 	 * 
 	 * @param threadCount
 	 * @param type
 	 */
 	private void init(int threadCount, Type type,Context context)
 	{
-		// »ñÈ¡ÎÒÃÇÓ¦ÓÃµÄ×î´ó¿ÉÓÃÄÚ´æ
+		// è·å–æˆ‘ä»¬åº”ç”¨çš„æœ€å¤§å¯ç”¨å†…å­˜
 		int maxMemory = (int) Runtime.getRuntime().maxMemory();
 		int cacheMemory = maxMemory / 8;
-		//×¢Òâ´Ë´¦Òª»ñÈ¡È«¾ÖContext£¬±ÜÃâÒıÓÃActivityÔì³É×ÊÔ´ÎŞ·¨ÊÍ·Å
+		//æ³¨æ„æ­¤å¤„è¦è·å–å…¨å±€Contextï¼Œé¿å…å¼•ç”¨Activityé€ æˆèµ„æºæ— æ³•é‡Šæ”¾
 		mContext=context.getApplicationContext();
 		mLruCache = new LruCache<String, Bitmap>(cacheMemory){
 			@Override
 			protected int sizeOf(String key, Bitmap value)
 			{
 				//				return value.getAllocationByteCount();
-				return value.getRowBytes() * value.getHeight(); //¾É°æ±¾·½·¨
+				return value.getRowBytes() * value.getHeight(); //æ—§ç‰ˆæœ¬æ–¹æ³•
 			}
 
 		};
 
-		// ´´½¨Ïß³Ì³Ø
+		// åˆ›å»ºçº¿ç¨‹æ± 
 		mThreadPool = Executors.newFixedThreadPool(threadCount);
 		mType = type;
 		mSemaphoreThreadPool = new Semaphore(threadCount,true);
@@ -141,11 +141,11 @@ public class ImageLoader {
 		initBackThread();
 	}
 	/**
-	 * ³õÊ¼»¯ºóÌ¨ÂÖÑ¯Ïß³Ì
+	 * åˆå§‹åŒ–åå°è½®è¯¢çº¿ç¨‹
 	 */
 	private void initBackThread()
 	{
-		// ºóÌ¨ÂÖÑ¯Ïß³Ì
+		// åå°è½®è¯¢çº¿ç¨‹
 		mPoolThread = new Thread()
 		{
 			@Override
@@ -153,11 +153,11 @@ public class ImageLoader {
 			{
 				while(true){
 					try {
-						// »ñÈ¡Ò»¸öĞÅºÅ£¬ÈôÎŞ¿ÉÓÃĞÅºÅ£¬×èÈûÏß³Ì
+						// è·å–ä¸€ä¸ªä¿¡å·ï¼Œè‹¥æ— å¯ç”¨ä¿¡å·ï¼Œé˜»å¡çº¿ç¨‹
 						mSemaphoreThreadPool.acquire();
-						// Ïß³Ì³ØÈ¥È¡³öÒ»¸öÈÎÎñ½øĞĞÖ´ĞĞ£¬µ±ÈÎÎñ¶ÓÁĞÎª¿ÕÊ±£¬×èÈûÏß³Ì
+						// çº¿ç¨‹æ± å»å–å‡ºä¸€ä¸ªä»»åŠ¡è¿›è¡Œæ‰§è¡Œï¼Œå½“ä»»åŠ¡é˜Ÿåˆ—ä¸ºç©ºæ—¶ï¼Œé˜»å¡çº¿ç¨‹
 						Runnable runnable=getTask();
-						//Ê¹ÓÃÏß³Ì³ØÖ´ĞĞÈÎÎñ
+						//ä½¿ç”¨çº¿ç¨‹æ± æ‰§è¡Œä»»åŠ¡
 						mThreadPool.execute(runnable);	
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -173,11 +173,11 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ¸ù¾İpathÎªimageviewÉèÖÃÍ¼Æ¬
+	 * æ ¹æ®pathä¸ºimageviewè®¾ç½®å›¾ç‰‡
 	 * 
-	 * @param path Í¼Æ¬Â·¾¶
-	 * @param imageView ¼ÓÔØÍ¼Æ¬µÄImageView
-	 * @param options Í¼Æ¬¼ÓÔØ²ÎÊı
+	 * @param path å›¾ç‰‡è·¯å¾„
+	 * @param imageView åŠ è½½å›¾ç‰‡çš„ImageView
+	 * @param options å›¾ç‰‡åŠ è½½å‚æ•°
 	 * @throws InterruptedException 
 	 */
 	public void loadImage( String path,  ImageView imageView, DisplayImageOptions options) 
@@ -189,7 +189,7 @@ public class ImageLoader {
 			{
 				public void handleMessage(Message msg)
 				{
-					// »ñÈ¡µÃµ½Í¼Æ¬£¬Îªimageview»Øµ÷ÉèÖÃÍ¼Æ¬
+					// è·å–å¾—åˆ°å›¾ç‰‡ï¼Œä¸ºimageviewå›è°ƒè®¾ç½®å›¾ç‰‡
 					ImgBeanHolder holder = (ImgBeanHolder) msg.obj;
 					Bitmap bm = holder.bitmap;
 					ImageView view = holder.imageView;
@@ -204,7 +204,7 @@ public class ImageLoader {
 			};
 		}
 
-		// ¸ù¾İpathÔÚ»º´æÖĞ»ñÈ¡bitmap
+		// æ ¹æ®pathåœ¨ç¼“å­˜ä¸­è·å–bitmap
 		Bitmap bm = getBitmapFromLruCache(path);
 
 		if (bm != null)
@@ -217,7 +217,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ¸ù¾İ´«ÈëµÄ²ÎÊı£¬ĞÂ½¨Ò»¸öÈÎÎñ
+	 * æ ¹æ®ä¼ å…¥çš„å‚æ•°ï¼Œæ–°å»ºä¸€ä¸ªä»»åŠ¡
 	 * 
 	 * @param path
 	 * @param imageView
@@ -234,15 +234,15 @@ public class ImageLoader {
 				Bitmap bm = null;
 				if (options.fromNet)
 				{
-					//ÏÈÈ¥»º´æÎÄ¼ş¼Ğ²éÕÒ
+					//å…ˆå»ç¼“å­˜æ–‡ä»¶å¤¹æŸ¥æ‰¾
 					File file = getDiskCacheDir(imageView.getContext(),
 							md5(path));
-					// Èç¹ûÔÚ»º´æÎÄ¼şÖĞ·¢ÏÖ
+					// å¦‚æœåœ¨ç¼“å­˜æ–‡ä»¶ä¸­å‘ç°
 					if (file.exists()){
 						bm = loadImageFromLocal(file.getAbsolutePath(),
 								imageView);
 					} else{
-						// ¼ì²âÊÇ·ñ¿ªÆôÓ²ÅÌ»º´æ
+						// æ£€æµ‹æ˜¯å¦å¼€å¯ç¡¬ç›˜ç¼“å­˜
 						if (options.cacheOnDisk){
 							boolean downloadState = DownloadImgUtils
 									.downloadImgByUrl(path, file);
@@ -258,13 +258,13 @@ public class ImageLoader {
 				} else{
 					bm = loadImageFromLocal(path, imageView);
 				}
-				// ÊÇ·ñ¿ªÆôÄÚ´æÖĞ»º´æ
+				// æ˜¯å¦å¼€å¯å†…å­˜ä¸­ç¼“å­˜
 				if (options.cacheInMemory) {
 					addBitmapToLruCache(path, bm);
 				}
-				//·¢ËÍÏûÏ¢ÖÁUIÏß³Ì
+				//å‘é€æ¶ˆæ¯è‡³UIçº¿ç¨‹
 				refreashBitmap(path, imageView, bm,options);
-				//ÊÍ·ÅĞÅºÅ
+				//é‡Šæ”¾ä¿¡å·
 				mSemaphoreThreadPool.release();
 			}
 
@@ -276,11 +276,11 @@ public class ImageLoader {
 			final ImageView imageView)
 	{
 		Bitmap bm;
-		// ¼ÓÔØÍ¼Æ¬
-		// Í¼Æ¬µÄÑ¹Ëõ
-		// 1¡¢»ñµÃÍ¼Æ¬ĞèÒªÏÔÊ¾µÄ´óĞ¡
+		// åŠ è½½å›¾ç‰‡
+		// å›¾ç‰‡çš„å‹ç¼©
+		// 1ã€è·å¾—å›¾ç‰‡éœ€è¦æ˜¾ç¤ºçš„å¤§å°
 		ImageSize imageSize = ImageSizeUtil.getImageViewSize(imageView);
-		// 2¡¢Ñ¹ËõÍ¼Æ¬
+		// 2ã€å‹ç¼©å›¾ç‰‡
 		bm = decodeSampledBitmapFromPath(path, imageSize.width,
 				imageSize.height);
 		return bm;
@@ -288,7 +288,7 @@ public class ImageLoader {
 
 
 	/**
-	 * ÀûÓÃÇ©Ãû¸¨ÖúÀà£¬½«×Ö·û´®×Ö½ÚÊı×é
+	 * åˆ©ç”¨ç­¾åè¾…åŠ©ç±»ï¼Œå°†å­—ç¬¦ä¸²å­—èŠ‚æ•°ç»„
 	 * 
 	 * @param str
 	 * @return
@@ -310,7 +310,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ·½Ê½¶ş
+	 * æ–¹å¼äºŒ
 	 * 
 	 * @param bytes
 	 * @return
@@ -321,9 +321,9 @@ public class ImageLoader {
 		String tmp = null;
 		for (byte b : bytes)
 		{
-			// ½«Ã¿¸ö×Ö½ÚÓë0xFF½øĞĞÓëÔËËã£¬È»ºó×ª»¯Îª10½øÖÆ£¬È»ºó½èÖúÓÚIntegerÔÙ×ª»¯Îª16½øÖÆ
+			// å°†æ¯ä¸ªå­—èŠ‚ä¸0xFFè¿›è¡Œä¸è¿ç®—ï¼Œç„¶åè½¬åŒ–ä¸º10è¿›åˆ¶ï¼Œç„¶åå€ŸåŠ©äºIntegerå†è½¬åŒ–ä¸º16è¿›åˆ¶
 			tmp = Integer.toHexString(0xFF & b);
-			if (tmp.length() == 1)// Ã¿¸ö×Ö½Ú8Îª£¬×ªÎª16½øÖÆ±êÖ¾£¬2¸ö16½øÖÆÎ»
+			if (tmp.length() == 1)// æ¯ä¸ªå­—èŠ‚8ä¸ºï¼Œè½¬ä¸º16è¿›åˆ¶æ ‡å¿—ï¼Œ2ä¸ª16è¿›åˆ¶ä½
 			{
 				tmp = "0" + tmp;
 			}
@@ -347,7 +347,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ½«Í¼Æ¬¼ÓÈëLruCache
+	 * å°†å›¾ç‰‡åŠ å…¥LruCache
 	 * 
 	 * @param path
 	 * @param bm
@@ -361,7 +361,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ¸ù¾İÍ¼Æ¬ĞèÒªÏÔÊ¾µÄ¿íºÍ¸ß¶ÔÍ¼Æ¬½øĞĞÑ¹Ëõ
+	 * æ ¹æ®å›¾ç‰‡éœ€è¦æ˜¾ç¤ºçš„å®½å’Œé«˜å¯¹å›¾ç‰‡è¿›è¡Œå‹ç¼©
 	 * 
 	 * @param path
 	 * @param width
@@ -371,7 +371,7 @@ public class ImageLoader {
 	protected Bitmap decodeSampledBitmapFromPath(String path, int width,
 			int height)
 	{
-		// »ñµÃÍ¼Æ¬µÄ¿íºÍ¸ß£¬²¢²»°ÑÍ¼Æ¬¼ÓÔØµ½ÄÚ´æÖĞ
+		// è·å¾—å›¾ç‰‡çš„å®½å’Œé«˜ï¼Œå¹¶ä¸æŠŠå›¾ç‰‡åŠ è½½åˆ°å†…å­˜ä¸­
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(path, options);
@@ -379,7 +379,7 @@ public class ImageLoader {
 		options.inSampleSize = ImageSizeUtil.caculateInSampleSize(options,
 				width, height);
 
-		// Ê¹ÓÃ»ñµÃµ½µÄInSampleSizeÔÙ´Î½âÎöÍ¼Æ¬
+		// ä½¿ç”¨è·å¾—åˆ°çš„InSampleSizeå†æ¬¡è§£æå›¾ç‰‡
 		options.inJustDecodeBounds = false;
 		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 		return bitmap;
@@ -388,7 +388,7 @@ public class ImageLoader {
 
 
 	/**
-	 * »ñµÃ»º´æÍ¼Æ¬µÄµØÖ·
+	 * è·å¾—ç¼“å­˜å›¾ç‰‡çš„åœ°å€
 	 * 
 	 * @param context
 	 * @param uniqueName
@@ -409,7 +409,7 @@ public class ImageLoader {
 	}
 
 	/**
-	 * ¸ù¾İpathÔÚ»º´æÖĞ»ñÈ¡bitmap
+	 * æ ¹æ®pathåœ¨ç¼“å­˜ä¸­è·å–bitmap
 	 * 
 	 * @param key
 	 * @return
@@ -421,7 +421,7 @@ public class ImageLoader {
 
 
 	/**
-	 * ´ÓÈÎÎñ¶ÓÁĞÈ¡³öÒ»¸ö·½·¨£¬µ±¶ÓÁĞÎª¿ÕÊ±£¬½«×èÈû¸Ã·½·¨
+	 * ä»ä»»åŠ¡é˜Ÿåˆ—å–å‡ºä¸€ä¸ªæ–¹æ³•ï¼Œå½“é˜Ÿåˆ—ä¸ºç©ºæ—¶ï¼Œå°†é˜»å¡è¯¥æ–¹æ³•
 	 * 
 	 * @return
 	 * @throws InterruptedException 
@@ -437,7 +437,7 @@ public class ImageLoader {
 		}
 	}
 	/**
-	 * ½«ÈÎÎñÌí¼ÓÈë¶ÓÁĞ
+	 * å°†ä»»åŠ¡æ·»åŠ å…¥é˜Ÿåˆ—
 	 * @param runnable
 	 * @throws InterruptedException
 	 */

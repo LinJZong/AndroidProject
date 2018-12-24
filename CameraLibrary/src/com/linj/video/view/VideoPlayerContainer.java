@@ -31,9 +31,9 @@ import android.view.View.OnClickListener;;
 
 /** 
  * @ClassName: VideoContainer 
- * @Description:  ÊÓÆµ²¥·ÅÆ÷ÈİÆ÷£¬°üº¬ÁËÊÓÆµ²Ù×÷µÄÒ»Ğ©¿Ø¼şºÍÊÓÆµ²¥·ÅSurfaceView
+ * @Description:  è§†é¢‘æ’­æ”¾å™¨å®¹å™¨ï¼ŒåŒ…å«äº†è§†é¢‘æ“ä½œçš„ä¸€äº›æ§ä»¶å’Œè§†é¢‘æ’­æ”¾SurfaceView
  * @author LinJ
- * @date 2015-1-21 ÏÂÎç4:49:31 
+ * @date 2015-1-21 ä¸‹åˆ4:49:31 
  *  
  */
 public class VideoPlayerContainer extends LinearLayout implements OnClickListener
@@ -97,7 +97,7 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		// ²¥·Å½áÊø£¬Òş²Ø¸Ã¿Ø¼ş
+		// æ’­æ”¾ç»“æŸï¼Œéšè—è¯¥æ§ä»¶
 		setVisibility(View.GONE);
 		mProgressBar.setProgress(0);
 		mCurrentTimeView.setText("00:00");
@@ -106,21 +106,21 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
-		// Ìø×ªÖÁÖ¸¶¨Ê±¼äºó£¬»Ö¸´²¥·Å
+		// è·³è½¬è‡³æŒ‡å®šæ—¶é—´åï¼Œæ¢å¤æ’­æ”¾
 		resumePlay();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// ÓÉÓÚÔÚÊ¹ÓÃÁËframelayout²¼¾Ö£¬ÎªÁË·ÀÖ¹µã»÷ÊÂ¼şÏÂ·¢¸øÏÂ·½µÄview£¬ÔÚ´Ë´¦²¶»ñµôµã»÷ÊÂ¼ş¡£
+		// ç”±äºåœ¨ä½¿ç”¨äº†framelayoutå¸ƒå±€ï¼Œä¸ºäº†é˜²æ­¢ç‚¹å‡»äº‹ä»¶ä¸‹å‘ç»™ä¸‹æ–¹çš„viewï¼Œåœ¨æ­¤å¤„æ•è·æ‰ç‚¹å‡»äº‹ä»¶ã€‚
 		return true;
 	}
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		//×¼±¸²¥·Å£¬ÏÔÊ¾¸Ã¿Ø¼ş
+		//å‡†å¤‡æ’­æ”¾ï¼Œæ˜¾ç¤ºè¯¥æ§ä»¶
 		setVisibility(View.VISIBLE);
 		int duration=mp.getDuration();
-		//ÉèÖÃ×î´óÊÂ¼ş£¬µ¥Î»Ãë
+		//è®¾ç½®æœ€å¤§äº‹ä»¶ï¼Œå•ä½ç§’
 		mDurationView.setText(mTimeFormat.format(new Date(duration)));
 		mProgressBar.setMax((int) Math.floor(duration/1000));
 		mp.start();
@@ -149,7 +149,7 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 		}
 	}
 	/**  
-	 *   »Ö¸´²¥·Å
+	 *   æ¢å¤æ’­æ”¾
 	 */
 	@Override
 	public void resumePlay() {
@@ -160,7 +160,7 @@ public class VideoPlayerContainer extends LinearLayout implements OnClickListene
 	}
 
 	/**  
-	 *   ÔİÍ£²¥·Å
+	 *   æš‚åœæ’­æ”¾
 	 */
 	@Override
 	public void pausedPlay() {

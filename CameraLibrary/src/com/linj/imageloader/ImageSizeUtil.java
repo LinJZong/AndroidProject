@@ -14,7 +14,7 @@ import android.widget.ImageView;
 public class ImageSizeUtil
 {
 	/**
-	 * ¸ù¾İĞèÇóµÄ¿íºÍ¸ßÒÔ¼°Í¼Æ¬Êµ¼ÊµÄ¿íºÍ¸ß¼ÆËãSampleSize
+	 * æ ¹æ®éœ€æ±‚çš„å®½å’Œé«˜ä»¥åŠå›¾ç‰‡å®é™…çš„å®½å’Œé«˜è®¡ç®—SampleSize
 	 * 
 	 * @param options
 	 * @param width
@@ -41,7 +41,7 @@ public class ImageSizeUtil
 	}
 
 	/**
-	 * ¸ù¾İImageView»ñÊÊµ±µÄÑ¹ËõµÄ¿íºÍ¸ß
+	 * æ ¹æ®ImageViewè·é€‚å½“çš„å‹ç¼©çš„å®½å’Œé«˜
 	 * 
 	 * @param imageView
 	 * @return
@@ -56,14 +56,14 @@ public class ImageSizeUtil
 
 		LayoutParams lp = imageView.getLayoutParams();
 
-		int width = imageView.getWidth();// »ñÈ¡imageviewµÄÊµ¼Ê¿í¶È
+		int width = imageView.getWidth();// è·å–imageviewçš„å®é™…å®½åº¦
 		if (width <= 0)
 		{
-			width = lp.width;// »ñÈ¡imageviewÔÚlayoutÖĞÉùÃ÷µÄ¿í¶È
+			width = lp.width;// è·å–imageviewåœ¨layoutä¸­å£°æ˜çš„å®½åº¦
 		}
 		if (width <= 0)
 		{
-			 //width = imageView.getMaxWidth();// ¼ì²é×î´óÖµ
+			 //width = imageView.getMaxWidth();// æ£€æŸ¥æœ€å¤§å€¼
 			width = getImageViewFieldValue(imageView, "mMaxWidth");
 		}
 		if (width <= 0)
@@ -71,14 +71,14 @@ public class ImageSizeUtil
 			width = displayMetrics.widthPixels;
 		}
 
-		int height = imageView.getHeight();// »ñÈ¡imageviewµÄÊµ¼Ê¸ß¶È
+		int height = imageView.getHeight();// è·å–imageviewçš„å®é™…é«˜åº¦
 		if (height <= 0)
 		{
-			height = lp.height;// »ñÈ¡imageviewÔÚlayoutÖĞÉùÃ÷µÄ¿í¶È
+			height = lp.height;// è·å–imageviewåœ¨layoutä¸­å£°æ˜çš„å®½åº¦
 		}
 		if (height <= 0)
 		{
-			height = getImageViewFieldValue(imageView, "mMaxHeight");// ¼ì²é×î´óÖµ
+			height = getImageViewFieldValue(imageView, "mMaxHeight");// æ£€æŸ¥æœ€å¤§å€¼
 		}
 		if (height <= 0)
 		{
@@ -97,7 +97,7 @@ public class ImageSizeUtil
 	}
 	
 	/**
-	 * Í¨¹ı·´Éä»ñÈ¡imageviewµÄÄ³¸öÊôĞÔÖµ
+	 * é€šè¿‡åå°„è·å–imageviewçš„æŸä¸ªå±æ€§å€¼
 	 * 
 	 * @param object
 	 * @param fieldName
